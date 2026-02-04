@@ -48,15 +48,16 @@ type UngTuyenFormValues = z.infer<typeof ungTuyenSchema>;
 interface UngTuyenModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: Omit<UngTuyen, 'id'>) => Promise<void>;
+  onSave: (data: Omit<UngTuyen, 'id'>, id?: string) => Promise<void>;
   initialData?: UngTuyen | null;
   fixedTinTuyenDung?: TinTuyenDung | null;
+  existingUngTuyens?: UngTuyen[];
 }
 
 const workerRepo = new NguoiLaoDongRepository();
 const congTyRepo = new CongTyRepository();
 
-const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, initialData, fixedTinTuyenDung }) => {
+const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, initialData, fixedTinTuyenDung, existingUngTuyens = [] }) => {
   const [workers, setWorkers] = useState<NguoiLaoDong[]>([]);
   const [companies, setCompanies] = useState<CongTy[]>([]);
   const [existingWorker, setExistingWorker] = useState<NguoiLaoDong | null>(null);
@@ -167,16 +168,53 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
         } as any);
       }
 
-      // 2. Save recruitment data
+      // 2. Check for EXISTING application for this worker (UPSERT/REPLACE Logic)
+      // Only do this if we are NOT in edit mode (initialData is null)
+      let existingApp: UngTuyen | undefined;
+      let historyToKeep: any[] = [];
+      
+      if (!initialData && workerId) {
+        existingApp = existingUngTuyens.find(ut => ut.nguoiLaoDongId === workerId);
+        if (existingApp) {
+           // Archive current state to history
+           // Transition Logic:
+           // CHO_PV -> TU_CHOI
+           // DANG_NHAN_VIEC -> DA_NGHI_VIEC
+           // Others -> Keep as is
+           let archivedStatus = existingApp.trangThaiTuyen;
+           if (archivedStatus === TrangThaiTuyen.CHO_PHONG_VAN) archivedStatus = TrangThaiTuyen.TU_CHOI;
+           if (archivedStatus === TrangThaiTuyen.DANG_NHAN_VIEC) archivedStatus = TrangThaiTuyen.DA_NGHI_VIEC;
+
+           // Find company name for history (since we only have ID in UngTuyen)
+           const oldCompany = companies.find(c => c.id === existingApp?.congTyId);
+
+           const historyEntry = {
+             ngayPhongVanCu: existingApp.ngayPhongVan,
+             lyDo: 'Ứng tuyển mới (Thay thế)',
+             tenCongTy: oldCompany?.tenCongTy || 'N/A',
+             quanLy: oldCompany?.quanLy || [],
+             ngayCapNhat: new Date().toISOString(),
+             trangThaiTuyen: archivedStatus
+           };
+           
+           historyToKeep = [...(existingApp.lichSuPhongVan || []), historyEntry];
+        }
+      }
+
+      // 3. Save recruitment data
       const ungTuyenData: Omit<UngTuyen, 'id'> = {
         nguoiLaoDongId: workerId,
         congTyId: values.congTyId,
         ngayPhongVan: values.ngayPhongVan || null,
         trangThaiTuyen: values.trangThaiTuyen,
         ghiChu: values.ghiChu || null,
+        lichSuPhongVan: existingApp ? historyToKeep : (initialData?.lichSuPhongVan || [])
       };
+      
+      // If replacing (existingApp found) -> Pass existingApp.id to update
+      const idToUpdate = existingApp ? existingApp.id : undefined;
 
-      await onSave(ungTuyenData);
+      await onSave(ungTuyenData, idToUpdate);
     } catch (error) {
       console.error('Lỗi khi lưu dữ liệu:', error);
       alert('Không thể lưu thông tin ứng tuyển');

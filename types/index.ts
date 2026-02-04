@@ -92,11 +92,11 @@ export interface UngTuyen {
   ghiChu: string | null;
   lichSuPhongVan?: {
     ngayPhongVanCu: string | null;
-    ngayPhongVanMoi: string | null;
     lyDo?: string;
     tenCongTy?: string; // Tên công ty tại thời điểm đó
     quanLy?: QuanLy[];
     ngayCapNhat: string;
+    trangThaiTuyen: TrangThaiTuyen;
   }[];
   createdAt?: string;
   updatedAt?: string;
