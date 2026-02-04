@@ -48,7 +48,7 @@ export default function NguoiLaoDongPage() {
   };
 
   const loadMore = useCallback(async () => {
-    if (loadingMore || !hasMore || searchTerm) return;
+    if (loadingMore || !hasMore) return;
     setLoadingMore(true);
     const lastItem = data[data.length - 1];
     const result = await repo.getPaginated(pageSize, lastItem?.updatedAt as unknown as string);
@@ -56,12 +56,12 @@ export default function NguoiLaoDongPage() {
     setData(prev => [...prev, ...result.items]);
     setHasMore(result.hasMore);
     setLoadingMore(false);
-  }, [loadingMore, hasMore, searchTerm, data]);
+  }, [loadingMore, hasMore, data]);
 
   // Infinite Scroll Observer
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore && !loadingMore && !searchTerm) {
+      if (entries[0].isIntersecting && hasMore && !loadingMore) {
         loadMore();
       }
     }, { threshold: 0.1 });
@@ -71,13 +71,20 @@ export default function NguoiLaoDongPage() {
     }
 
     return () => observer.disconnect();
-  }, [loadMore, hasMore, loadingMore, searchTerm]);
+  }, [loadMore, hasMore, loadingMore]);
 
   const filteredData = data.filter(item => 
     item.tenNguoiLaoDong.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (item.soDienThoai && item.soDienThoai.includes(searchTerm)) ||
     (item.cccd && item.cccd.includes(searchTerm))
   );
+
+  // Auto-fetch if filtered results are too few
+  useEffect(() => {
+    if (searchTerm && filteredData.length < 5 && hasMore && !loadingMore && !loading) {
+      loadMore();
+    }
+  }, [searchTerm, filteredData.length, hasMore, loadingMore, loading, loadMore]);
 
   const handleCreate = async (values: Omit<NguoiLaoDong, 'id'>) => {
     try {
@@ -206,14 +213,18 @@ export default function NguoiLaoDongPage() {
               </div>
 
               <div ref={loaderRef} className="py-8 flex justify-center">
-                {(loadingMore || (hasMore && !searchTerm)) && (
+                {(loadingMore || (hasMore)) && (
                   <div className="flex items-center gap-2 text-slate-400">
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-slate-300"></div>
-                    <span className="text-sm font-medium">Đang tải thêm...</span>
+                    <span className="text-sm font-medium">
+                      {searchTerm ? 'Đang tìm kiếm thêm...' : 'Đang tải thêm...'}
+                    </span>
                   </div>
                 )}
-                {!hasMore && data.length > 0 && !searchTerm && (
-                  <span className="text-sm text-slate-300 font-medium">Đã tải hết danh sách</span>
+                {!hasMore && data.length > 0 && (
+                  <span className="text-sm text-slate-300 font-medium tracking-wide border-t border-slate-50 pt-4 w-full text-center">
+                    {searchTerm ? `Đã tìm xong trong ${data.length} bản ghi` : 'Đã tải hết danh sách'}
+                  </span>
                 )}
               </div>
             </div>
