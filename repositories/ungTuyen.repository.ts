@@ -18,7 +18,7 @@ export class UngTuyenRepository {
     return [];
   }
 
-  async getPaginated(limit: number, lastUpdatedAt?: string): Promise<{ items: UngTuyen[], hasMore: boolean }> {
+  async getPaginated(limit: number, lastUpdatedAt?: string, lastId?: string): Promise<{ items: UngTuyen[], hasMore: boolean }> {
     let q;
     const dbRef = ref(database, this.dbPath);
     
@@ -36,7 +36,9 @@ export class UngTuyenRepository {
         id: key,
       })).sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
 
-      if (lastUpdatedAt && list.length > 0) {
+      if (lastId) {
+        list = list.filter(item => item.id !== lastId);
+      } else if (lastUpdatedAt) {
         list = list.filter(item => item.updatedAt !== lastUpdatedAt);
       }
 
