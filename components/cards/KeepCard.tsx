@@ -231,7 +231,7 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
                       const success = await copyToClipboard(data.ghiChu || '');
                       if (success) toast.success('Đã sao chép ghi chú');
                     }}
-                    className="p-1 text-amber-500 hover:text-amber-700 hover:bg-amber-100 rounded-md transition-colors opacity-0 group-hover/note:opacity-100"
+                    className="p-1 text-amber-500 hover:text-amber-700 hover:bg-amber-100 rounded-md transition-colors"
                     title="Sao chép"
                   >
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -266,7 +266,7 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
                       const success = await copyToClipboard(data.ghiChuPV || '');
                       if (success) toast.success('Đã sao chép hướng dẫn');
                     }}
-                    className="p-1 text-blue-500 hover:text-blue-700 hover:bg-blue-100 rounded-md transition-colors opacity-0 group-hover/note-pv:opacity-100"
+                    className="p-1 text-blue-500 hover:text-blue-700 hover:bg-blue-100 rounded-md transition-colors"
                     title="Sao chép"
                   >
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
