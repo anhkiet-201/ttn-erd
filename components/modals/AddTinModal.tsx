@@ -293,7 +293,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
           <TextareaAutosize
             {...register('moTa')}
             placeholder="Nội dung tuyển dụng..."
-            className="w-full resize-none border-none outline-none text-base md:text-lg text-gray-800 placeholder-gray-500 font-medium min-h-[60px] bg-transparent"
+            className="w-full resize-none border-none outline-none text-[14px] text-gray-800 placeholder-gray-500 font-medium min-h-[60px] bg-transparent"
             minRows={3}
             autoFocus={!initialData} 
           />
