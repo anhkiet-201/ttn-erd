@@ -340,83 +340,87 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
           {errors.moTa && <p className="text-[11px] text-red-500 font-bold mb-2 ml-1">{errors.moTa.message}</p>}
 
           <div className="space-y-4 mt-4">
-            <div className="animate-in fade-in slide-in-from-top-1 duration-200">
-              <div className="flex items-center gap-1.5 mb-1.5 ml-1">
-                <div className="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center">
-                  <svg className="w-2.5 h-2.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500/80">Công ty tuyển dụng</span>
-              </div>
-              <select
-                {...register('congTyId')}
-                className={`w-full px-3 py-2.5 bg-gray-50/50 rounded-xl text-sm border transition-all focus:ring-1 focus:ring-slate-200 text-gray-700 outline-none ${errors.congTyId ? 'border-red-300 bg-red-50/10' : 'border-gray-100'}`}
-              >
-                <option value="">-- Chọn công ty --</option>
-                {congTys.map(c => (
-                  <option key={c.id} value={c.id}>{c.tenCongTy}</option>
-                ))}
-              </select>
-              {errors.congTyId && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.congTyId.message}</p>}
-            </div>
-
-            <div className="animate-in fade-in slide-in-from-top-1 duration-200">
-              <div className="flex items-center gap-1.5 mb-1.5 ml-1">
-                <div className="w-4 h-4 rounded-full bg-blue-50 flex items-center justify-center">
-                  <svg className="w-2.5 h-2.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500/80">Quản lý khu vực (Tùy chọn)</span>
-              </div>
-              <div className={`bg-gray-50/50 rounded-xl p-3 border transition-all ${errors.quanLyIds ? 'border-red-300 bg-red-50/10' : 'border-gray-100 focus-within:border-slate-200'}`}>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {watch('quanLyIds')?.map(id => {
-                    const q = quanLys.find(item => item.id === id);
-                    if (!q) return null;
-                    return (
-                      <span key={id} className="inline-flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-100 rounded-lg text-xs font-bold text-gray-700 shadow-sm animate-in zoom-in-95 duration-200">
-                        {q.tenQuanLy}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const current = watch('quanLyIds') || [];
-                            setValue('quanLyIds', current.filter(itemId => itemId !== id));
-                          }}
-                          className="w-4 h-4 flex items-center justify-center rounded-full hover:bg-red-50 hover:text-red-500 transition-colors"
-                        >
-                          <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </span>
-                    );
-                  })}
+            {(showCongTy || watch('congTyId')) && (
+              <div className="animate-in fade-in slide-in-from-top-1 duration-200">
+                <div className="flex items-center gap-1.5 mb-1.5 ml-1">
+                  <div className="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center">
+                    <svg className="w-2.5 h-2.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500/80">Công ty tuyển dụng</span>
                 </div>
                 <select
-                  className="w-full bg-transparent text-sm text-gray-700 outline-none border-t border-gray-100 pt-2"
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (!val) return;
-                    const current = watch('quanLyIds') || [];
-                    if (!current.includes(val)) {
-                      setValue('quanLyIds', [...current, val]);
-                    }
-                    e.target.value = ''; // Reset select
-                  }}
+                  {...register('congTyId')}
+                  className={`w-full px-3 py-2.5 bg-gray-50/50 rounded-xl text-sm border transition-all focus:ring-1 focus:ring-slate-200 text-gray-700 outline-none ${errors.congTyId ? 'border-red-300 bg-red-50/10' : 'border-gray-100'}`}
                 >
-                  <option value="">-- Thêm quản lý khu vực --</option>
-                  {quanLys
-                    .filter(q => !watch('quanLyIds')?.includes(q.id))
-                    .map(q => (
-                      <option key={q.id} value={q.id}>{q.tenQuanLy} - {q.soDienThoai}</option>
-                    )
-                  )}
+                  <option value="">-- Chọn công ty --</option>
+                  {congTys.map(c => (
+                    <option key={c.id} value={c.id}>{c.tenCongTy}</option>
+                  ))}
                 </select>
+                {errors.congTyId && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.congTyId.message}</p>}
               </div>
-              {errors.quanLyIds && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.quanLyIds.message}</p>}
-            </div>
+            )}
+
+            {(showQuanLy || (watch('quanLyIds') && watch('quanLyIds').length > 0)) && (
+              <div className="animate-in fade-in slide-in-from-top-1 duration-200">
+                <div className="flex items-center gap-1.5 mb-1.5 ml-1">
+                  <div className="w-4 h-4 rounded-full bg-blue-50 flex items-center justify-center">
+                    <svg className="w-2.5 h-2.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500/80">Quản lý khu vực (Tùy chọn)</span>
+                </div>
+                <div className={`bg-gray-50/50 rounded-xl p-3 border transition-all ${errors.quanLyIds ? 'border-red-300 bg-red-50/10' : 'border-gray-100 focus-within:border-slate-200'}`}>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {watch('quanLyIds')?.map(id => {
+                      const q = quanLys.find(item => item.id === id);
+                      if (!q) return null;
+                      return (
+                        <span key={id} className="inline-flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-100 rounded-lg text-xs font-bold text-gray-700 shadow-sm animate-in zoom-in-95 duration-200">
+                          {q.tenQuanLy}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const current = watch('quanLyIds') || [];
+                              setValue('quanLyIds', current.filter(itemId => itemId !== id));
+                            }}
+                            className="w-4 h-4 flex items-center justify-center rounded-full hover:bg-red-50 hover:text-red-500 transition-colors"
+                          >
+                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                  <select
+                    className="w-full bg-transparent text-sm text-gray-700 outline-none border-t border-gray-100 pt-2"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (!val) return;
+                      const current = watch('quanLyIds') || [];
+                      if (!current.includes(val)) {
+                        setValue('quanLyIds', [...current, val]);
+                      }
+                      e.target.value = ''; // Reset select
+                    }}
+                  >
+                    <option value="">-- Thêm quản lý khu vực --</option>
+                    {quanLys
+                      .filter(q => !watch('quanLyIds')?.includes(q.id))
+                      .map(q => (
+                        <option key={q.id} value={q.id}>{q.tenQuanLy} - {q.soDienThoai}</option>
+                      )
+                    )}
+                  </select>
+                </div>
+                {errors.quanLyIds && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.quanLyIds.message}</p>}
+              </div>
+            )}
 
             {(showDiaChi || watch('diaChi') || watch('mapUrl')) && (
               <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
@@ -490,6 +494,27 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
 
         <div className="flex items-center justify-between px-2 py-2 md:px-4 md:py-2 border-t border-transparent bg-white">
           <div className="flex items-center gap-1">
+            <button 
+              type="button" 
+              onClick={() => setShowCongTy(!showCongTy)}
+              className={`p-2 rounded-full transition-colors ${showCongTy || watch('congTyId') ? 'bg-gray-100 text-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
+              title="Thêm Công Ty"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </button>
+
+            <button 
+              type="button" 
+              onClick={() => setShowQuanLy(!showQuanLy)}
+              className={`p-2 rounded-full transition-colors ${showQuanLy || (watch('quanLyIds') && watch('quanLyIds').length > 0) ? 'bg-gray-100 text-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
+              title="Quản lý khu vực"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </button>
             <button 
               type="button" 
               onClick={() => setShowDiaChi(!showDiaChi)}
