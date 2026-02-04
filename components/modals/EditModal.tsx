@@ -25,12 +25,14 @@ export function EditModal({
 
   useEffect(() => {
     if (isOpen) {
+      document.body.style.overflow = 'hidden';
       // Try to acquire lock when modal opens
       acquireLock();
     }
 
     // Release lock when modal closes
     return () => {
+      document.body.style.overflow = 'unset';
       if (isOwnLock) {
         releaseLock();
       }

@@ -183,6 +183,8 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
 
   useEffect(() => {
     if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      
       congTyRepo.getAll().then(setCongTys);
       
       tinRepo.getAll().then(tins => {
@@ -203,6 +205,10 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
         });
       });
     }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [isOpen]);
 
   useEffect(() => {
