@@ -49,7 +49,7 @@ export default function UngTuyenPage() {
     
     // Fallback object nếu không tìm thấy worker
     const fallbackWorker = { 
-      tenNguoiLaoDong: workers.length > 0 ? 'Đang cập nhật...' : 'Đang tải...', 
+      tenNguoiLaoDong: workers.length > 0 ? 'Đang cập nhật...' : '-', 
       soDienThoai: '', 
       namSinh: 0, 
       gioiTinh: GioiTinh.NAM, 
@@ -109,13 +109,41 @@ export default function UngTuyenPage() {
     }
   };
 
+  const handleQuickStatusUpdate = async (id: string, newStatus: string) => {
+    try {
+      await ungTuyenRepo.update(id, { trangThaiTuyen: newStatus } as any);
+      toast.success('Đã cập nhật trạng thái');
+    } catch (error) {
+      console.error('Lỗi update status:', error);
+      toast.error('Cập nhật thất bại');
+    }
+  };
+
   const getStatusColor = (status: TrangThaiTuyen) => {
     switch (status) {
       case TrangThaiTuyen.DANG_NHAN_VIEC: return 'bg-emerald-50 text-emerald-700 border-emerald-100';
       case TrangThaiTuyen.TU_CHOI: return 'bg-rose-50 text-rose-700 border-rose-100';
       case TrangThaiTuyen.CHO_PHONG_VAN: return 'bg-blue-50 text-blue-700 border-blue-100';
       case TrangThaiTuyen.TOI_LICH_PHONG_VAN: return 'bg-amber-50 text-amber-700 border-amber-100';
+      case TrangThaiTuyen.DA_NGHI_VIEC: return 'bg-slate-100 text-slate-600 border-slate-200';
+      case TrangThaiTuyen.CONG_TY_NGUNG_TUYEN: return 'bg-red-50 text-red-700 border-red-100';
+      case TrangThaiTuyen.KHONG_DEN_PHONG_VAN: return 'bg-orange-50 text-orange-700 border-orange-100';
+      case TrangThaiTuyen.CHO_XAC_NHAN: return 'bg-purple-50 text-purple-700 border-purple-100';
       default: return 'bg-slate-50 text-slate-600 border-slate-100';
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case TrangThaiTuyen.CHO_PHONG_VAN: return 'Chờ phỏng vấn';
+      case TrangThaiTuyen.TOI_LICH_PHONG_VAN: return 'Tới lịch PV';
+      case TrangThaiTuyen.DANG_NHAN_VIEC: return 'Đang nhận việc';
+      case TrangThaiTuyen.TU_CHOI: return 'Từ chối';
+      case TrangThaiTuyen.CONG_TY_NGUNG_TUYEN: return 'Công ty ngừng tuyển';
+      case TrangThaiTuyen.KHONG_DEN_PHONG_VAN: return 'Không đến phỏng vấn';
+      case TrangThaiTuyen.CHO_XAC_NHAN: return 'Chờ xác nhận';
+      case TrangThaiTuyen.DA_NGHI_VIEC: return 'Đã nghỉ việc';
+      default: return status.replace(/_/g, ' ');
     }
   };
 
@@ -231,10 +259,19 @@ export default function UngTuyenPage() {
                         <td className="px-4 py-4">
                           <div className="text-xs font-bold text-slate-800 truncate max-w-[200px]">{item.congTy?.tenCongTy || 'N/A'}</div>
                         </td>
-                        <td className="px-4 py-4 text-center uppercase">
-                          <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border tracking-wider inline-block ${getStatusColor(item.trangThaiTuyen)}`}>
-                            {item.trangThaiTuyen.replace(/_/g, ' ')}
-                          </span>
+                        <td className="px-4 py-4 text-center">
+                          <select
+                            value={item.trangThaiTuyen}
+                            onChange={(e) => handleQuickStatusUpdate(item.id, e.target.value)}
+                            className={`text-[10px] font-bold px-2 py-1 rounded-lg border tracking-wider uppercase bg-transparent outline-none cursor-pointer ${getStatusColor(item.trangThaiTuyen)}`}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {Object.entries(TrangThaiTuyen).map(([key, value]) => (
+                              <option key={key} value={value} className="bg-white text-slate-800">
+                                {getStatusLabel(value)}
+                              </option>
+                            ))}
+                          </select>
                         </td>
                         <td className="px-4 py-4">
                           <p className="text-xs text-slate-600 line-clamp-2 italic max-w-[200px]" title={item.ghiChu || ''}>
@@ -303,10 +340,22 @@ export default function UngTuyenPage() {
                     {/* Middle: Job & Status */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border uppercase tracking-wider ${getStatusColor(item.trangThaiTuyen)}`}>
-                          {item.trangThaiTuyen.replace(/_/g, ' ')}
-                        </span>
-                        {item.ngayPhongVan && (
+                        <div className="flex items-center gap-2 mt-2">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Trạng thái:</span>
+                    <select
+                      value={item.trangThaiTuyen}
+                      onChange={(e) => handleQuickStatusUpdate(item.id, e.target.value)}
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase outline-none bg-transparent ${getStatusColor(item.trangThaiTuyen)}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                       {Object.entries(TrangThaiTuyen).map(([key, value]) => (
+                          <option key={key} value={value} className="bg-white text-slate-800">
+                            {getStatusLabel(value)}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+      {item.ngayPhongVan && (
                           <span className="text-[10px] font-bold text-amber-600 px-2.5 py-1 bg-amber-50 border border-amber-100 rounded-lg uppercase tracking-wider">
                             PV: {format(new Date(item.ngayPhongVan), 'dd/MM/yyyy')}
                           </span>

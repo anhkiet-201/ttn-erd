@@ -86,6 +86,7 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
       if (initialData) {
         const worker = workers.find(w => w.id === initialData.nguoiLaoDongId);
         if (worker) {
+          setExistingWorker(worker);
           reset({
             cccd: worker.cccd || '',
             congTyId: initialData.congTyId,
@@ -141,16 +142,20 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
       let workerId: string;
       
       // 1. Create or update worker
-      if (existingWorker) {
+      // Safety check: Try to find worker by CCCD one last time before creating
+      const workerByCCCD = workers.find(w => w.cccd === values.cccd);
+      const targetWorker = existingWorker || workerByCCCD;
+
+      if (targetWorker) {
         // Update existing worker
-        await workerRepo.update(existingWorker.id, {
+        await workerRepo.update(targetWorker.id, {
           tenNguoiLaoDong: values.tenNguoiLaoDong,
           soDienThoai: values.soDienThoai,
           namSinh: values.namSinh,
           gioiTinh: values.gioiTinh,
           cccd: values.cccd,
         } as any);
-        workerId = existingWorker.id;
+        workerId = targetWorker.id;
       } else {
         // Create new worker
         workerId = await workerRepo.create({
