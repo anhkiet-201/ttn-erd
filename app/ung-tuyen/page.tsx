@@ -130,13 +130,16 @@ export default function UngTuyenPage() {
       const item = ungTuyens.find(ut => ut.id === id);
       if (!item) return;
 
-      const companyName = companies.find(c => c.id === item.congTyId)?.tenCongTy || 'N/A';
+      const company = companies.find(c => c.id === item.congTyId);
+      const companyName = company?.tenCongTy || 'N/A';
+      const managers = company?.quanLy || [];
 
       const historyEntry = {
         ngayPhongVanCu: item.ngayPhongVan,
         ngayPhongVanMoi: ngayMoi,
         lyDo,
         tenCongTy: companyName,
+        quanLy: managers,
         ngayCapNhat: new Date().toISOString()
       };
 
@@ -424,7 +427,18 @@ export default function UngTuyenPage() {
                                           <span className="text-[10px] font-bold text-slate-600">Ngày cập nhật</span>
                                           <span className="text-[10px] text-slate-500">{his.ngayCapNhat ? format(new Date(his.ngayCapNhat), 'HH:mm dd/MM/yyyy') : '-'}</span>
                                         </div>
-                                        {his.tenCongTy && <span className="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">{his.tenCongTy}</span>}
+                                        <div className="flex flex-col items-end gap-0.5">
+                                          {his.tenCongTy && <span className="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">{his.tenCongTy}</span>}
+                                          {his.quanLy && his.quanLy.length > 0 && (
+                                            <div className="flex flex-col items-end">
+                                              {his.quanLy.map(ql => (
+                                                <span key={ql.id} className="text-[8px] font-medium text-slate-400">
+                                                  QL: {ql.tenQuanLy} 
+                                                </span>
+                                              ))}
+                                            </div>
+                                          )}
+                                        </div>
                                       </div>
                                       
                                       <div className="flex items-center gap-2 text-xs bg-white p-1.5 rounded border border-slate-100">

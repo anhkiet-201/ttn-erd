@@ -28,7 +28,6 @@ export interface TinTuyenDung {
   phuCap: PhuCap[];
   congTy: CongTy;
   ghiChu: string | null;
-  quanLy: QuanLy[];
   mapUrl: string | null;
   diaChi: string | null;
   trangThai: TrangThai;
@@ -49,6 +48,7 @@ export interface CongTy {
   tenCongTy: string;
   khuVuc: KhuVuc;
   tinTuyenDung: TinTuyenDung[];
+  quanLy: QuanLy[];
   createdAt?: number;
   updatedAt?: number;
 }
@@ -94,6 +94,7 @@ export interface UngTuyen {
     ngayPhongVanMoi: string | null;
     lyDo?: string;
     tenCongTy?: string; // Tên công ty tại thời điểm đó
+    quanLy?: QuanLy[];
     ngayCapNhat: string;
   }[];
   createdAt?: string;
