@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useUI } from '@/components/providers/UIProvider';
 
 const menuSections = [
   {
@@ -67,8 +68,6 @@ const menuSections = [
   }
 ];
 
-import { useUI } from '@/components/providers/UIProvider';
-
 export default function Sidebar() {
   const pathname = usePathname();
   const { isSidebarOpen, closeSidebar } = useUI();
@@ -97,7 +96,7 @@ export default function Sidebar() {
               <h3 className={`
                 px-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]
                 transition-opacity duration-300
-                ${!isSidebarOpen && 'lg:opacity-100 opacity-0 md:opacity-0 pointer-events-none'}
+                ${!isSidebarOpen ? 'lg:opacity-100 opacity-0 md:opacity-0 pointer-events-none' : 'opacity-100'}
               `}>
                 {section.title}
               </h3>
@@ -111,7 +110,7 @@ export default function Sidebar() {
                       href={item.path}
                       onClick={closeSidebar}
                       className={`
-                        group flex items-center h-12 px-4 rounded-2xl transition-all duration-300
+                        group relative flex items-center h-12 px-4 rounded-2xl transition-all duration-300
                         ${isActive 
                           ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' 
                           : 'text-slate-500 hover:bg-white hover:shadow-md hover:text-blue-600 active:scale-95'
