@@ -3,28 +3,39 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { CongTyRepository } from '@/repositories/congTy.repository';
-import { CongTy } from '@/types';
+import { QuanLyRepository } from '@/repositories/quanLy.repository';
+import { CongTy, QuanLy } from '@/types';
 import CongTyModal from '@/components/modals/CongTyModal';
 import Sidebar from '@/components/layout/Sidebar';
 import { useUI } from '@/components/providers/UIProvider';
 
 const repository = new CongTyRepository();
+const quanLyRepository = new QuanLyRepository();
 
 export default function CongTyPage() {
   const { user } = useAuthContext();
   const { toggleSidebar } = useUI();
   const [data, setData] = useState<CongTy[]>([]);
+  const [quanLys, setQuanLys] = useState<QuanLy[]>([]); // State for live managers
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<CongTy | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const unsubscribe = repository.subscribeAll((items) => {
+    const unsubCongTy = repository.subscribeAll((items) => {
       setData(items);
       setLoading(false);
     });
-    return () => unsubscribe();
+
+    const unsubQuanLy = quanLyRepository.subscribeAll((items) => {
+      setQuanLys(items);
+    });
+
+    return () => {
+      unsubCongTy();
+      unsubQuanLy();
+    };
   }, []);
 
   const handleEdit = (item: CongTy) => {
@@ -43,9 +54,24 @@ export default function CongTyPage() {
     }
   };
 
-  const filteredData = data.filter(item => 
+  const filteredData = data.map(congTy => {
+    // Deep join: Map managers inside company to live managers data
+    let updatedCongTy = { ...congTy };
+    if (Array.isArray(updatedCongTy.quanLy)) {
+      updatedCongTy.quanLy = updatedCongTy.quanLy.map(q => {
+        const liveManager = quanLys.find(m => m.id === q.id);
+        return liveManager || q;
+      });
+    }
+    return updatedCongTy;
+  }).filter(item => 
     item.tenCongTy.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.khuVuc?.tenKhuVuc.toLowerCase().includes(searchQuery.toLowerCase())
+    item.khuVuc?.tenKhuVuc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    // Search by manager
+    (Array.isArray(item.quanLy) && item.quanLy.some(q => 
+      q.tenQuanLy.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      q.soDienThoai.includes(searchQuery)
+    ))
   );
 
   return (
@@ -116,32 +142,47 @@ export default function CongTyPage() {
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Tên Công Ty</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider w-1/3">Tên Công Ty</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Khu Vực</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Quản Lý</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Thao Tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {loading ? (
                   <tr>
-                    <td colSpan={3} className="px-6 py-10 text-center text-gray-500">Đang tải dữ liệu...</td>
+                    <td colSpan={4} className="px-6 py-10 text-center text-gray-500">Đang tải dữ liệu...</td>
                   </tr>
                 ) : filteredData.length === 0 ? (
                   <tr>
-                    <td colSpan={3} className="px-6 py-10 text-center text-gray-500">Không tìm thấy công ty nào</td>
+                    <td colSpan={4} className="px-6 py-10 text-center text-gray-500">Không tìm thấy công ty nào</td>
                   </tr>
                 ) : (
                   filteredData.map((item) => (
                     <tr key={item.id} className="hover:bg-gray-50 transition-colors group">
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 align-top">
                         <div className="text-sm font-semibold text-gray-900">{item.tenCongTy}</div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 align-top">
                         <span className="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
                           {item.khuVuc?.tenKhuVuc || 'N/A'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4 align-top">
+                        {Array.isArray(item.quanLy) && item.quanLy.length > 0 ? (
+                          <div className="space-y-1.5">
+                            {item.quanLy.map((ql, idx) => (
+                              <div key={idx} className="flex flex-col">
+                                <span className="text-xs font-bold text-gray-700">{ql.tenQuanLy}</span>
+                                <span className="text-[11px] text-blue-600 font-medium">{ql.soDienThoai}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-gray-400 italic">Chưa có quản lý</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-right align-top">
                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button 
                             onClick={() => handleEdit(item)}
@@ -184,9 +225,35 @@ export default function CongTyPage() {
                   <div className="flex justify-between items-start gap-3 mb-3">
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-base text-gray-900 mb-1 break-words">{item.tenCongTy}</h3>
-                      <span className="inline-block px-2.5 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
-                        {item.khuVuc?.tenKhuVuc || 'N/A'}
-                      </span>
+                      <div className="flex flex-wrap gap-2 items-center mt-1">
+                        <span className="inline-block px-2.5 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+                          {item.khuVuc?.tenKhuVuc || 'N/A'}
+                        </span>
+                        {Array.isArray(item.quanLy) && item.quanLy.length > 0 && (
+                          <span className="inline-block px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">
+                            {item.quanLy.length} quản lý
+                          </span>
+                        )}
+                      </div>
+                      
+                      {/* Mobile Manager List */}
+                      {Array.isArray(item.quanLy) && item.quanLy.length > 0 && (
+                        <div className="mt-3 grid grid-cols-1 gap-2">
+                          {item.quanLy.map((ql, idx) => (
+                            <div key={idx} className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
+                              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-gray-100 shadow-sm text-gray-500">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-xs font-bold text-gray-700">{ql.tenQuanLy}</span>
+                                <span className="text-[10px] text-blue-600 font-medium">{ql.soDienThoai}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="flex gap-2 pt-3 border-t border-gray-100">
