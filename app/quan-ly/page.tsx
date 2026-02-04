@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { QuanLyRepository } from '@/repositories/quanLy.repository';
 import { QuanLy } from '@/types';
-import { QuanLyModal } from '@/components/modals/QuanLyModal';
+import QuanLyModal from '@/components/modals/QuanLyModal';
 import Sidebar from '@/components/layout/Sidebar';
 import { useUI } from '@/components/providers/UIProvider';
 

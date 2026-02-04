@@ -8,7 +8,7 @@ import { TinTuyenDungRepository } from '@/repositories/tinTuyenDung.repository';
 import { QuanLyRepository } from '@/repositories/quanLy.repository';
 import { CongTyRepository } from '@/repositories/congTy.repository';
 import { TinTuyenDung, QuanLy, CongTy } from '@/types';
-import { AddTinModal } from '@/components/modals/AddTinModal';
+import AddTinModal from '@/components/modals/AddTinModal';
 import Sidebar from '@/components/layout/Sidebar';
 import { useUI } from '@/components/providers/UIProvider';
 

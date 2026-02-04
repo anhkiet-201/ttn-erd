@@ -21,7 +21,7 @@ interface KhuVucModalProps {
 
 const repository = new KhuVucRepository();
 
-export function KhuVucModal({ isOpen, onClose, data }: KhuVucModalProps) {
+export default function KhuVucModal({ isOpen, onClose, data }: KhuVucModalProps) {
   const [loading, setLoading] = useState(false);
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<KhuVucFormValues>({

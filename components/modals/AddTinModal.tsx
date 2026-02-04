@@ -154,7 +154,7 @@ interface AddTinModalProps {
   initialData?: TinTuyenDung | null;
 }
 
-export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinModalProps) {
+export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinModalProps) {
   const [congTys, setCongTys] = useState<CongTy[]>([]);
   const [quanLys, setQuanLys] = useState<QuanLy[]>([]);
   const [isSaving, setIsSaving] = useState(false);

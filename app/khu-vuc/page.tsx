@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { KhuVucRepository } from '@/repositories/khuVuc.repository';
 import { KhuVuc } from '@/types';
-import { KhuVucModal } from '@/components/modals/KhuVucModal';
-import { Sidebar } from '@/components/layout/Sidebar';
+import KhuVucModal from '@/components/modals/KhuVucModal';
+import Sidebar from '@/components/layout/Sidebar';
 import { useUI } from '@/components/providers/UIProvider';
 
 const repository = new KhuVucRepository();

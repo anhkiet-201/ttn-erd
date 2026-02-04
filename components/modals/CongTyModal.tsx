@@ -24,7 +24,7 @@ interface CongTyModalProps {
 const congTyRepo = new CongTyRepository();
 const khuVucRepo = new KhuVucRepository();
 
-export function CongTyModal({ isOpen, onClose, data }: CongTyModalProps) {
+export default function CongTyModal({ isOpen, onClose, data }: CongTyModalProps) {
   const [khuVucs, setKhuVucs] = useState<KhuVuc[]>([]);
   const [loading, setLoading] = useState(false);
 

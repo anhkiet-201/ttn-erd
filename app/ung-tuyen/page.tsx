@@ -4,47 +4,92 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
 import { UngTuyenRepository } from '@/repositories/ungTuyen.repository';
 import { NguoiLaoDongRepository } from '@/repositories/nguoiLaoDong.repository';
-import { TinTuyenDungRepository } from '@/repositories/tinTuyenDung.repository';
-import { UngTuyen, UngTuyenWithDetails, NguoiLaoDong, TinTuyenDung, TrangThaiTuyen } from '@/types';
+import { CongTyRepository } from '@/repositories/congTy.repository';
+import { UngTuyen, UngTuyenWithDetails, NguoiLaoDong, TinTuyenDung, TrangThaiTuyen, GioiTinh, CongTy } from '@/types';
 import UngTuyenModal from '@/components/modals/UngTuyenModal';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
+import { useAuthContext } from '@/components/auth/AuthProvider';
+import { useUI } from '@/components/providers/UIProvider';
 
 const ungTuyenRepo = new UngTuyenRepository();
 const workerRepo = new NguoiLaoDongRepository();
-const jobRepo = new TinTuyenDungRepository();
+const congTyRepo = new CongTyRepository();
 
 export default function UngTuyenPage() {
+  const { user } = useAuthContext();
+  const { toggleSidebar } = useUI();
   const [ungTuyens, setUngTuyens] = useState<UngTuyen[]>([]);
   const [workers, setWorkers] = useState<NguoiLaoDong[]>([]);
-  const [jobs, setJobs] = useState<TinTuyenDung[]>([]);
+  const [companies, setCompanies] = useState<CongTy[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<UngTuyen | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const unsubUngTuyen = ungTuyenRepo.subscribeAll(setUngTuyens);
-    const unsubWorkers = workerRepo.subscribeAll(setWorkers);
-    const unsubJobs = jobRepo.subscribeAll(setJobs);
-    setLoading(false);
+    const unsubWorker = workerRepo.subscribeAll(setWorkers);
+    const unsubCongTy = congTyRepo.subscribeAll((data) => {
+      setCompanies(data);
+      setLoading(false);
+    });
 
     return () => {
       unsubUngTuyen();
-      unsubWorkers();
-      unsubJobs();
+      unsubWorker();
+      unsubCongTy();
     };
   }, []);
 
   const joinedData: UngTuyenWithDetails[] = ungTuyens.map(ut => {
-    const worker = workers.find(w => w.id === ut.nguoiLaoDongId) || { tenNguoiLaoDong: 'Ẩn danh', soDienThoai: '', namSinh: 0, gioiTinh: 'NAM' } as any;
-    const job = jobs.find(j => j.id === ut.tinTuyenDungId) || { moTa: 'Tin đã xóa' } as any;
+    // Nếu chưa load xong workers thì có thể worker chưa về kịp, tạm thời hiển thị placeholder loading hoặc ID
+    const worker = workers.find(w => w.id === ut.nguoiLaoDongId);
+    
+    // Fallback object nếu không tìm thấy worker
+    const fallbackWorker = { 
+      tenNguoiLaoDong: workers.length > 0 ? 'Đang cập nhật...' : 'Đang tải...', 
+      soDienThoai: '', 
+      namSinh: 0, 
+      gioiTinh: GioiTinh.NAM, 
+      cccd: '' 
+    } as any;
+
+    const company = companies.find(c => c.id === ut.congTyId) || { tenCongTy: 'N/A' } as any;
     return {
       ...ut,
-      nguoiLaoDong: worker,
-      tinTuyenDung: job,
+      nguoiLaoDong: worker || fallbackWorker,
+      congTy: company,
     };
   });
+
+  const filteredData = joinedData.filter(item => {
+    const search = searchQuery.toLowerCase();
+    return (
+      item.nguoiLaoDong.tenNguoiLaoDong.toLowerCase().includes(search) ||
+      (item.nguoiLaoDong.soDienThoai && item.nguoiLaoDong.soDienThoai.includes(search)) ||
+      (item.nguoiLaoDong.cccd && item.nguoiLaoDong.cccd.includes(search)) ||
+      (item.congTy?.tenCongTy && item.congTy.tenCongTy.toLowerCase().includes(search))
+    );
+  });
+
+  const handleCreate = async (values: Omit<UngTuyen, 'id'>) => {
+    try {
+      await ungTuyenRepo.create(values);
+      setIsModalOpen(false);
+      
+      // Force refresh worker data to ensure latest updates are shown
+      // This handles the latency in realtime subscription updates for newly created workers
+      const latestWorkers = await workerRepo.getAll();
+      setWorkers(latestWorkers);
+      
+      toast.success('Gán ứng tuyển thành công');
+    } catch (error) {
+      console.error('Lỗi khi tạo:', error);
+      toast.error('Gán ứng tuyển thất bại');
+    }
+  };
 
   const handleUpdate = async (values: Omit<UngTuyen, 'id'>) => {
     if (!editingItem) return;
@@ -52,6 +97,11 @@ export default function UngTuyenPage() {
       await ungTuyenRepo.update(editingItem.id, values);
       setIsModalOpen(false);
       setEditingItem(null);
+      
+      // Force refresh worker data
+      const latestWorkers = await workerRepo.getAll();
+      setWorkers(latestWorkers);
+
       toast.success('Cập nhật trạng thái thành công');
     } catch (error) {
       console.error('Lỗi khi cập nhật:', error);
@@ -70,107 +120,238 @@ export default function UngTuyenPage() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden">
-      <Sidebar />
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-200">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+    <div className="min-h-screen bg-white">
+      {/* Header phong cách Google Keep */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 h-16 flex items-center px-4 gap-2 md:gap-4">
+        <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
+          <button 
+            onClick={toggleSidebar}
+            className="p-2 hover:bg-gray-100 rounded-full text-gray-600 transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-sm flex-shrink-0">
+              <span className="text-lg md:text-xl font-bold">E</span>
+            </div>
+            <span className="text-xl md:text-[22px] font-medium text-gray-700 tracking-tight hidden min-[400px]:block">ERD</span>
+          </div>
+        </div>
+
+        <div className="flex-1 max-w-2xl mx-2 md:mx-4 min-w-0">
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg className="w-5 h-5 text-gray-400 group-focus-within:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-slate-800">Quản lý Ứng tuyển</h1>
-              <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Theo dõi tiến độ phỏng vấn</p>
-            </div>
+            <input
+              type="text"
+              placeholder="Tìm kiếm theo Tên, SĐT, CCCD hoặc Công ty..."
+              className="block w-full h-10 md:h-11 bg-gray-100 border-none rounded-lg pl-10 md:pl-11 pr-4 focus:bg-white focus:ring-0 focus:shadow-md transition-all text-sm text-gray-700 truncate"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
-        </header>
+        </div>
 
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex items-center gap-1 md:gap-2 ml-auto flex-shrink-0">
+          <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 border border-blue-200 font-bold">
+            {(user?.displayName?.[0] || user?.email?.[0] || 'U').toUpperCase()}
+          </div>
+        </div>
+      </header>
+
+      <div className="flex pt-16">
+        <Sidebar />
+
+        {/* Main Content */}
+        <main className="flex-1 ml-0 md:ml-20 lg:ml-72 p-4 md:p-8">
+          <div className="flex items-center justify-between mb-8 max-w-7xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-800">Quản lý Ứng tuyển</h2>
+            <button 
+              onClick={() => {
+                setEditingItem(null);
+                setIsModalOpen(true);
+              }}
+              className="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-blue-50"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              <span className="font-semibold">Thêm Mới</span>
+            </button>
+          </div>
+
+        <div className="flex-1 overflow-y-auto p-4 md:p-6">
           {loading ? (
             <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
-          ) : joinedData.length > 0 ? (
-            <div className="space-y-4 max-w-5xl mx-auto">
-              {joinedData.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || '')).map((item) => (
-                <div 
-                  key={item.id} 
-                  className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row gap-6 relative group overflow-hidden"
-                >
-                  <div className={`absolute top-0 left-0 w-1 h-full ${getStatusColor(item.trangThaiTuyen).split(' ')[1].replace('text', 'bg')}`} />
-                  
-                  {/* Left: Worker Info */}
-                  <div className="flex-shrink-0 w-full md:w-48 pl-2">
-                    <h3 className="text-base font-bold text-slate-800 mb-1">{item.nguoiLaoDong.tenNguoiLaoDong}</h3>
-                    <p className="text-sm font-bold text-indigo-600 mb-2">{item.nguoiLaoDong.soDienThoai}</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold text-slate-400 px-2 py-0.5 bg-slate-50 rounded-full uppercase tracking-tighter">
-                        {item.nguoiLaoDong.namSinh} • {item.nguoiLaoDong.gioiTinh}
-                      </span>
-                    </div>
-                  </div>
+          ) : filteredData.length > 0 ? (
+            <div className="max-w-7xl mx-auto space-y-4">
+              {/* Desktop Table View */}
+              <div className="hidden xl:block bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[1200px]">
+                  <thead>
+                    <tr className="bg-slate-50/50 border-b border-slate-100">
+                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ứng viên / SĐT</th>
+                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Năm sinh / GT</th>
+                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">CCCD</th>
+                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Ngày PV</th>
+                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Công ty</th>
+                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Trạng thái</th>
+                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ghi chú</th>
+                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {filteredData.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || '')).map((item) => (
+                      <tr key={item.id} className="hover:bg-slate-50/50 transition-colors group">
+                        <td className="px-4 py-4">
+                          <div className="font-bold text-slate-800 text-sm">{item.nguoiLaoDong.tenNguoiLaoDong}</div>
+                          <div className="text-xs font-semibold text-blue-600">{item.nguoiLaoDong.soDienThoai}</div>
+                        </td>
+                        <td className="px-4 py-4 text-center">
+                          <div className="text-xs font-bold text-slate-600">{item.nguoiLaoDong.namSinh}</div>
+                          <div className="text-[10px] font-bold text-slate-400 uppercase">{item.nguoiLaoDong.gioiTinh}</div>
+                        </td>
+                        <td className="px-4 py-4 text-center">
+                          <div className="text-xs font-medium text-slate-600">{item.nguoiLaoDong.cccd || '-'}</div>
+                        </td>
+                        <td className="px-4 py-4 text-center uppercase">
+                          {item.ngayPhongVan ? (
+                            <div className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg inline-block">
+                              {format(new Date(item.ngayPhongVan), 'dd/MM/yyyy')}
+                            </div>
+                          ) : <span className="text-slate-300">-</span>}
+                        </td>
+                        <td className="px-4 py-4">
+                          <div className="text-xs font-bold text-slate-800 truncate max-w-[200px]">{item.congTy?.tenCongTy || 'N/A'}</div>
+                        </td>
+                        <td className="px-4 py-4 text-center uppercase">
+                          <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border tracking-wider inline-block ${getStatusColor(item.trangThaiTuyen)}`}>
+                            {item.trangThaiTuyen.replace(/_/g, ' ')}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4">
+                          <p className="text-xs text-slate-600 line-clamp-2 italic max-w-[200px]" title={item.ghiChu || ''}>
+                            {item.ghiChu || <span className="text-slate-300">Không có ghi chú</span>}
+                          </p>
+                        </td>
+                        <td className="px-4 py-4 text-right">
+                          <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button 
+                              onClick={() => {
+                                setEditingItem(item as any);
+                                setIsModalOpen(true);
+                              }}
+                              className="p-2 hover:bg-white border border-transparent hover:border-blue-200 text-slate-400 hover:text-blue-600 rounded-lg transition-all"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                              </svg>
+                            </button>
+                            <button 
+                              onClick={async () => {
+                                if (confirm('Xóa bản ghi ứng tuyển này?')) {
+                                  await ungTuyenRepo.delete(item.id);
+                                  toast.success('Đã xóa');
+                                }
+                              }}
+                              className="p-2 hover:bg-white border border-transparent hover:border-red-200 text-slate-400 hover:text-red-500 rounded-lg transition-all"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-                  {/* Middle: Job & Status */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border uppercase tracking-wider ${getStatusColor(item.trangThaiTuyen)}`}>
-                        {item.trangThaiTuyen.replace(/_/g, ' ')}
-                      </span>
-                      {item.ngayPhongVan && (
-                        <span className="text-[10px] font-bold text-amber-600 px-2.5 py-1 bg-amber-50 border border-amber-100 rounded-lg uppercase tracking-wider">
-                          PV: {format(new Date(item.ngayPhongVan), 'dd/MM/yyyy')}
+              {/* Mobile/Tablet Card View */}
+              <div className="xl:hidden space-y-4">
+                {filteredData.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || '')).map((item) => (
+                  <div 
+                    key={item.id} 
+                    className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row gap-6 relative group overflow-hidden"
+                  >
+                    <div className={`absolute top-0 left-0 w-1 h-full ${getStatusColor(item.trangThaiTuyen).split(' ')[1].replace('text', 'bg')}`} />
+                    
+                    {/* Left: Worker Info */}
+                    <div className="flex-shrink-0 w-full md:w-48 pl-2">
+                      <h3 className="text-base font-bold text-slate-800 mb-1">{item.nguoiLaoDong.tenNguoiLaoDong}</h3>
+                      <p className="text-sm font-bold text-blue-600 mb-2">{item.nguoiLaoDong.soDienThoai}</p>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="text-[10px] font-bold text-slate-400 px-2 py-0.5 bg-slate-50 rounded-full uppercase tracking-tighter">
+                          {item.nguoiLaoDong.namSinh} • {item.nguoiLaoDong.gioiTinh}
                         </span>
+                        {item.nguoiLaoDong.cccd && (
+                          <span className="text-[10px] font-bold text-slate-400 px-2 py-0.5 bg-slate-50 rounded-full uppercase tracking-tighter">
+                            CCCD: {item.nguoiLaoDong.cccd}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Middle: Job & Status */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg border uppercase tracking-wider ${getStatusColor(item.trangThaiTuyen)}`}>
+                          {item.trangThaiTuyen.replace(/_/g, ' ')}
+                        </span>
+                        {item.ngayPhongVan && (
+                          <span className="text-[10px] font-bold text-amber-600 px-2.5 py-1 bg-amber-50 border border-amber-100 rounded-lg uppercase tracking-wider">
+                            PV: {format(new Date(item.ngayPhongVan), 'dd/MM/yyyy')}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-slate-800 font-bold mb-1 truncate">{item.congTy?.tenCongTy || 'N/A'}</p>
+                      
+                      {item.ghiChu && (
+                        <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Ghi chú</p>
+                          <p className="text-sm text-slate-700 font-medium">{item.ghiChu}</p>
+                        </div>
                       )}
                     </div>
-                    <p className="text-sm text-slate-600 line-clamp-2 italic mb-3">"{item.tinTuyenDung.moTa}"</p>
-                    
-                    {item.ghiChu && (
-                      <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
-                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Ghi chú gần nhất</p>
-                        <p className="text-sm text-slate-700 font-medium">{item.ghiChu}</p>
-                      </div>
-                    )}
-                  </div>
 
-                  {/* Right: Actions */}
-                  <div className="flex flex-row md:flex-col justify-end gap-2 pr-2">
-                    <button 
-                      onClick={() => {
-                        setEditingItem(item as any);
-                        setIsModalOpen(true);
-                      }}
-                      className="p-3 bg-white border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 rounded-xl transition-all shadow-sm"
-                      title="Cập nhật trạng thái"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </button>
-                    <button 
-                      onClick={async () => {
-                        if (confirm('Xóa bản ghi ứng tuyển này?')) {
-                          await ungTuyenRepo.delete(item.id);
-                          toast.success('Đã xóa');
-                        }
-                      }}
-                      className="p-3 bg-white border border-slate-200 hover:border-red-300 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-xl transition-all shadow-sm"
-                      title="Xóa"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
+                    {/* Right: Actions */}
+                    <div className="flex flex-row md:flex-col justify-end gap-2 pr-2">
+                      <button 
+                        onClick={() => {
+                          setEditingItem(item as any);
+                          setIsModalOpen(true);
+                        }}
+                        className="p-3 bg-white border border-slate-200 hover:border-blue-300 hover:bg-blue-50 text-slate-400 hover:text-blue-600 rounded-xl transition-all shadow-sm"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </button>
+                      <button 
+                        onClick={async () => {
+                          if (confirm('Xóa bản ghi ứng tuyển này?')) {
+                            await ungTuyenRepo.delete(item.id);
+                            toast.success('Đã xóa');
+                          }
+                        }}
+                        className="p-3 bg-white border border-slate-200 hover:border-red-300 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-xl transition-all shadow-sm"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-
-                  <div className="absolute top-2 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-[10px] font-bold text-slate-300">
-                      Cập nhật: {item.updatedAt ? format(new Date(item.updatedAt), 'HH:mm dd/MM', { locale: vi }) : ''}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center h-64 bg-white rounded-3xl border-2 border-dashed border-slate-100 p-8 text-center max-w-md mx-auto">
@@ -179,12 +360,13 @@ export default function UngTuyenPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-slate-600 mb-1">Chưa có ai ứng tuyển</h3>
-              <p className="text-sm text-slate-400">Sử dụng nút "Ứng tuyển" tại trang Tin Tuyển Dụng để bắt đầu.</p>
+              <h3 className="text-lg font-bold text-slate-600 mb-1">Không tìm thấy ứng tuyển nào</h3>
+              <p className="text-sm text-slate-400">Thử thay đổi từ khóa tìm kiếm hoặc lọc theo tiêu chí khác.</p>
             </div>
           )}
         </div>
-      </main>
+        </main>
+      </div>
 
       <UngTuyenModal
         isOpen={isModalOpen}
@@ -192,7 +374,7 @@ export default function UngTuyenPage() {
           setIsModalOpen(false);
           setEditingItem(null);
         }}
-        onSave={handleUpdate}
+        onSave={editingItem ? handleUpdate : handleCreate}
         initialData={editingItem}
       />
     </div>

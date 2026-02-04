@@ -64,6 +64,7 @@ export interface NguoiLaoDong {
   soDienThoai: string | null;
   namSinh: number;
   gioiTinh: GioiTinh;
+  cccd: string | null;
   createdAt?: number;
   updatedAt?: number;
 }
@@ -84,7 +85,7 @@ export interface GhiChu extends Tag {}
 export interface UngTuyen {
   id: string;
   nguoiLaoDongId: string;
-  tinTuyenDungId: string;
+  congTyId: string;
   ngayPhongVan: string | null;
   trangThaiTuyen: TrangThaiTuyen;
   ghiChu: string | null;
@@ -93,9 +94,9 @@ export interface UngTuyen {
 }
 
 // Joined data type for UI
-export interface UngTuyenWithDetails extends Omit<UngTuyen, 'nguoiLaoDongId' | 'tinTuyenDungId'> {
+export interface UngTuyenWithDetails extends Omit<UngTuyen, 'nguoiLaoDongId' | 'congTyId'> {
   nguoiLaoDong: NguoiLaoDong;
-  tinTuyenDung: TinTuyenDung;
+  congTy: CongTy;
 }
 
 // Lock interface for edit locking

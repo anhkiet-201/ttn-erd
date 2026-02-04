@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { CongTyRepository } from '@/repositories/congTy.repository';
 import { CongTy } from '@/types';
-import { CongTyModal } from '@/components/modals/CongTyModal';
-import { Sidebar } from '@/components/layout/Sidebar';
+import CongTyModal from '@/components/modals/CongTyModal';
+import Sidebar from '@/components/layout/Sidebar';
 import { useUI } from '@/components/providers/UIProvider';
 
 const repository = new CongTyRepository();

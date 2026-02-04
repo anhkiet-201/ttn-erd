@@ -23,7 +23,7 @@ interface QuanLyModalProps {
   data?: QuanLy | null;
 }
 
-export function QuanLyModal({ isOpen, onClose, data }: QuanLyModalProps) {
+export default function QuanLyModal({ isOpen, onClose, data }: QuanLyModalProps) {
   const [isSaving, setIsSaving] = useState(false);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<QuanLyFormValues>({

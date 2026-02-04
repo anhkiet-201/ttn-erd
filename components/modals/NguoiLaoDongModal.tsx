@@ -11,6 +11,7 @@ const nguoiLaoDongSchema = z.object({
   soDienThoai: z.string().min(10, 'Số điện thoại không hợp lệ').nullable(),
   namSinh: z.number().min(1900, 'Năm sinh không hợp lệ').max(new Date().getFullYear()),
   gioiTinh: z.nativeEnum(GioiTinh),
+  cccd: z.string().nullable(),
 });
 
 type NguoiLaoDongFormValues = z.infer<typeof nguoiLaoDongSchema>;
@@ -30,6 +31,7 @@ const NguoiLaoDongModal: React.FC<NguoiLaoDongModalProps> = ({ isOpen, onClose, 
       soDienThoai: '',
       namSinh: new Date().getFullYear() - 20,
       gioiTinh: GioiTinh.NAM,
+      cccd: '',
     },
   });
 
@@ -41,6 +43,7 @@ const NguoiLaoDongModal: React.FC<NguoiLaoDongModalProps> = ({ isOpen, onClose, 
           soDienThoai: initialData.soDienThoai,
           namSinh: initialData.namSinh,
           gioiTinh: initialData.gioiTinh,
+          cccd: initialData.cccd || '',
         });
       } else {
         reset({
@@ -48,6 +51,7 @@ const NguoiLaoDongModal: React.FC<NguoiLaoDongModalProps> = ({ isOpen, onClose, 
           soDienThoai: '',
           namSinh: new Date().getFullYear() - 20,
           gioiTinh: GioiTinh.NAM,
+          cccd: '',
         });
       }
     }
@@ -95,6 +99,18 @@ const NguoiLaoDongModal: React.FC<NguoiLaoDongModalProps> = ({ isOpen, onClose, 
               placeholder="Nhập số điện thoại..."
             />
             {errors.soDienThoai && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.soDienThoai.message}</p>}
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">
+              Số CCCD
+            </label>
+            <input
+              {...register('cccd')}
+              className={`w-full px-4 py-2.5 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.cccd ? 'border-red-300' : 'border-slate-100'}`}
+              placeholder="Nhập số CCCD..."
+            />
+            {errors.cccd && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.cccd.message}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">

@@ -5,10 +5,14 @@ import Sidebar from '@/components/layout/Sidebar';
 import { NguoiLaoDongRepository } from '@/repositories/nguoiLaoDong.repository';
 import { NguoiLaoDong, GioiTinh } from '@/types';
 import NguoiLaoDongModal from '@/components/modals/NguoiLaoDongModal';
+import { useAuthContext } from '@/components/auth/AuthProvider';
+import { useUI } from '@/components/providers/UIProvider';
 
 const repo = new NguoiLaoDongRepository();
 
 export default function NguoiLaoDongPage() {
+  const { user } = useAuthContext();
+  const { toggleSidebar } = useUI();
   const [data, setData] = useState<NguoiLaoDong[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,7 +29,8 @@ export default function NguoiLaoDongPage() {
 
   const filteredData = data.filter(item => 
     item.tenNguoiLaoDong.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (item.soDienThoai && item.soDienThoai.includes(searchTerm))
+    (item.soDienThoai && item.soDienThoai.includes(searchTerm)) ||
+    (item.cccd && item.cccd.includes(searchTerm))
   );
 
   const handleCreate = async (values: Omit<NguoiLaoDong, 'id'>) => {
@@ -61,53 +66,69 @@ export default function NguoiLaoDongPage() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden">
-      <Sidebar />
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Header */}
-        <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-200">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-slate-800">Người lao động</h1>
-              <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">Quản lý hồ sơ ứng viên</p>
-            </div>
-          </div>
-
-          <button
-            onClick={() => {
-              setEditingItem(null);
-              setIsModalOpen(true);
-            }}
-            className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm transition-all shadow-lg shadow-blue-200 active:scale-95"
+    <div className="min-h-screen bg-white">
+      {/* Header phong cách Google Keep */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 h-16 flex items-center px-4 gap-2 md:gap-4">
+        <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
+          <button 
+            onClick={toggleSidebar}
+            className="p-2 hover:bg-gray-100 rounded-full text-gray-600 transition-colors"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-            Thêm mới
           </button>
-        </header>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-sm flex-shrink-0">
+              <span className="text-lg md:text-xl font-bold">E</span>
+            </div>
+            <span className="text-xl md:text-[22px] font-medium text-gray-700 tracking-tight hidden min-[400px]:block">ERD</span>
+          </div>
+        </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {/* Search Bar */}
-          <div className="mb-6 relative max-w-md">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex-1 max-w-2xl mx-2 md:mx-4 min-w-0">
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg className="w-5 h-5 text-gray-400 group-focus-within:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-            </span>
+            </div>
             <input
               type="text"
-              placeholder="Tìm kiếm theo tên hoặc SĐT..."
+              placeholder="Tìm kiếm người lao động..."
+              className="block w-full h-10 md:h-11 bg-gray-100 border-none rounded-lg pl-10 md:pl-11 pr-4 focus:bg-white focus:ring-0 focus:shadow-md transition-all text-sm text-gray-700 truncate"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm focus:ring-2 focus:ring-blue-100 outline-none transition-all shadow-sm"
             />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1 md:gap-2 ml-auto flex-shrink-0">
+          <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 border border-blue-200 font-bold">
+            {(user?.displayName?.[0] || user?.email?.[0] || 'U').toUpperCase()}
+          </div>
+        </div>
+      </header>
+
+      <div className="flex pt-16">
+        <Sidebar />
+
+        {/* Main Content */}
+        <main className="flex-1 ml-0 md:ml-20 lg:ml-72 p-4 md:p-8">
+          <div className="flex items-center justify-between mb-8 max-w-7xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-800">Người lao động</h2>
+            <button 
+              onClick={() => {
+                setEditingItem(null);
+                setIsModalOpen(true);
+              }}
+              className="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-blue-50"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              <span className="font-semibold">Thêm Mới</span>
+            </button>
           </div>
 
           {loading ? (
@@ -115,7 +136,7 @@ export default function NguoiLaoDongPage() {
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
           ) : filteredData.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-7xl mx-auto">
               {filteredData.map((item) => (
                 <div key={item.id} className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all group border-b-4 border-b-blue-500">
                   <div className="flex justify-between items-start mb-4">
@@ -165,11 +186,20 @@ export default function NguoiLaoDongPage() {
                     </svg>
                     {item.soDienThoai || 'Chưa có SĐT'}
                   </div>
+
+                  {item.cccd && (
+                    <div className="flex items-center gap-2 text-sm text-slate-500 mt-1">
+                      <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V4a2 2 0 114 0v2m-4 0h4" />
+                      </svg>
+                      CCCD: {item.cccd}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-64 bg-white rounded-3xl border-2 border-dashed border-slate-100 p-8 text-center">
+            <div className="flex flex-col items-center justify-center h-64 bg-white rounded-3xl border-2 border-dashed border-slate-100 p-8 text-center mx-auto max-w-7xl">
               <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
                 <svg className="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -179,8 +209,8 @@ export default function NguoiLaoDongPage() {
               <p className="text-sm text-slate-400">Thử thay đổi từ khóa tìm kiếm hoặc thêm người mới.</p>
             </div>
           )}
-        </div>
-      </main>
+        </main>
+      </div>
 
       <NguoiLaoDongModal
         isOpen={isModalOpen}
