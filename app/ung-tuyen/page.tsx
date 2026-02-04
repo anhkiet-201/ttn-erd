@@ -7,6 +7,7 @@ import { NguoiLaoDongRepository } from '@/repositories/nguoiLaoDong.repository';
 import { CongTyRepository } from '@/repositories/congTy.repository';
 import { UngTuyen, UngTuyenWithDetails, NguoiLaoDong, TinTuyenDung, TrangThaiTuyen, GioiTinh, CongTy } from '@/types';
 import UngTuyenModal from '@/components/modals/UngTuyenModal';
+import RescheduleModal from '@/components/modals/RescheduleModal';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
@@ -26,6 +27,11 @@ export default function UngTuyenPage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<UngTuyen | null>(null);
+  const [expandedHistories, setExpandedHistories] = useState<Set<string>>(new Set());
+  
+  const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
+  const [rescheduleItem, setRescheduleItem] = useState<UngTuyen | null>(null);
+
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -119,6 +125,39 @@ export default function UngTuyenPage() {
     }
   };
 
+  const handleReschedule = async (id: string, ngayMoi: string, lyDo: string) => {
+    try {
+      const item = ungTuyens.find(ut => ut.id === id);
+      if (!item) return;
+
+      const companyName = companies.find(c => c.id === item.congTyId)?.tenCongTy || 'N/A';
+
+      const historyEntry = {
+        ngayPhongVanCu: item.ngayPhongVan,
+        ngayPhongVanMoi: ngayMoi,
+        lyDo,
+        tenCongTy: companyName,
+        ngayCapNhat: new Date().toISOString()
+      };
+
+      const updatedHistory = [...(item.lichSuPhongVan || []), historyEntry];
+
+      await ungTuyenRepo.update(id, {
+        ngayPhongVan: ngayMoi,
+        lichSuPhongVan: updatedHistory,
+        trangThaiTuyen: TrangThaiTuyen.TOI_LICH_PHONG_VAN, // Tự động chuyển trạng thái
+        updatedAt: new Date().toISOString()
+      } as any);
+
+      toast.success('Đã hẹn lại lịch phỏng vấn');
+      setIsRescheduleOpen(false);
+      setRescheduleItem(null);
+    } catch (error) {
+      console.error('Lỗi hẹn lại lịch:', error);
+      toast.error('Không thể cập nhật lịch');
+    }
+  };
+
   const getStatusColor = (status: TrangThaiTuyen) => {
     switch (status) {
       case TrangThaiTuyen.DANG_NHAN_VIEC: return 'bg-emerald-50 text-emerald-700 border-emerald-100';
@@ -131,6 +170,16 @@ export default function UngTuyenPage() {
       case TrangThaiTuyen.CHO_XAC_NHAN: return 'bg-purple-50 text-purple-700 border-purple-100';
       default: return 'bg-slate-50 text-slate-600 border-slate-100';
     }
+  };
+
+  const toggleHistory = (id: string) => {
+    const newSet = new Set(expandedHistories);
+    if (newSet.has(id)) {
+      newSet.delete(id);
+    } else {
+      newSet.add(id);
+    }
+    setExpandedHistories(newSet);
   };
 
   const getStatusLabel = (status: string) => {
@@ -224,54 +273,105 @@ export default function UngTuyenPage() {
               <div className="hidden xl:block bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm overflow-x-auto">
                 <table className="w-full text-left border-collapse min-w-[1200px]">
                   <thead>
-                    <tr className="bg-slate-50/50 border-b border-slate-100">
-                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ứng viên / SĐT</th>
-                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Năm sinh / GT</th>
-                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">CCCD</th>
-                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Ngày PV</th>
-                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Công ty</th>
-                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Trạng thái</th>
-                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ghi chú</th>
-                      <th className="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Thao tác</th>
+                    <tr className="bg-slate-50 border-b border-slate-200">
+                      <th className="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Ứng viên / SĐT</th>
+                      <th className="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Năm sinh / GT</th>
+                      <th className="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">CCCD</th>
+                      <th className="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Lịch Phỏng Vấn</th>
+                      <th className="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Công ty</th>
+                      <th className="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Trạng thái</th>
+                      <th className="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Ghi chú</th>
+                      <th className="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Thao tác</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-50">
                     {filteredData.sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || '')).map((item) => (
-                      <tr key={item.id} className="hover:bg-slate-50/50 transition-colors group">
+                      <React.Fragment key={item.id}>
+                      <tr className="hover:bg-slate-50/50 transition-colors group">
                         <td className="px-4 py-4">
-                          <div className="font-bold text-slate-800 text-sm">{item.nguoiLaoDong.tenNguoiLaoDong}</div>
-                          <div className="text-xs font-semibold text-blue-600">{item.nguoiLaoDong.soDienThoai}</div>
+                          <div className="font-bold text-slate-800 text-sm mb-0.5">{item.nguoiLaoDong.tenNguoiLaoDong}</div>
+                          <div className="text-xs font-semibold text-blue-600 bg-blue-50 inline-block px-2 py-0.5 rounded-md">{item.nguoiLaoDong.soDienThoai}</div>
                         </td>
                         <td className="px-4 py-4 text-center">
-                          <div className="text-xs font-bold text-slate-600">{item.nguoiLaoDong.namSinh}</div>
-                          <div className="text-[10px] font-bold text-slate-400 uppercase">{item.nguoiLaoDong.gioiTinh}</div>
+                          <div className="text-xs font-bold text-slate-700">{item.nguoiLaoDong.namSinh}</div>
+                          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">{item.nguoiLaoDong.gioiTinh}</div>
                         </td>
                         <td className="px-4 py-4 text-center">
-                          <div className="text-xs font-medium text-slate-600">{item.nguoiLaoDong.cccd || '-'}</div>
-                        </td>
-                        <td className="px-4 py-4 text-center uppercase">
-                          {item.ngayPhongVan ? (
-                            <div className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg inline-block">
-                              {format(new Date(item.ngayPhongVan), 'dd/MM/yyyy')}
-                            </div>
-                          ) : <span className="text-slate-300">-</span>}
+                          <div className="text-xs font-medium text-slate-600 font-mono">{item.nguoiLaoDong.cccd || '-'}</div>
                         </td>
                         <td className="px-4 py-4">
-                          <div className="text-xs font-bold text-slate-800 truncate max-w-[200px]">{item.congTy?.tenCongTy || 'N/A'}</div>
+                          <div className="flex flex-col items-center justify-center gap-1.5 min-w-[140px]">
+                            {item.ngayPhongVan ? (
+                              <div className="flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100 shadow-sm hover:shadow-md transition-all group/date cursor-default">
+                                <svg className="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span className="text-xs font-bold text-amber-700">{format(new Date(item.ngayPhongVan), 'dd/MM/yyyy')}</span>
+                              </div>
+                            ) : (
+                                <span className="text-xs text-slate-400 font-medium italic py-1.5">- Chưa xếp lịch -</span>
+                            )}
+                             
+                             <div className="flex items-center gap-1 bg-slate-50 rounded-lg p-1 border border-slate-100">
+                                <button
+                                  onClick={(e) => {
+                                      e.stopPropagation();
+                                      setRescheduleItem(item as any);
+                                      setIsRescheduleOpen(true);
+                                  }}
+                                  title="Hẹn lại lịch"
+                                  className="p-1.5 hover:bg-white hover:text-blue-600 text-slate-400 rounded-md transition-all shadow-sm hover:shadow active:scale-95"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                  </svg>
+                                </button>
+                                
+                                {item.lichSuPhongVan && item.lichSuPhongVan.length > 0 && (
+                                   <>
+                                     <div className="w-px h-3 bg-slate-200 mx-0.5"></div>
+                                     <button
+                                       onClick={(e) => {
+                                         e.stopPropagation();
+                                         toggleHistory(item.id);
+                                       }}
+                                       className={`flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md transition-all ${
+                                         expandedHistories.has(item.id) 
+                                           ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' 
+                                           : 'hover:bg-white text-slate-500 hover:text-slate-700 hover:shadow-sm'
+                                       }`}
+                                     >
+                                       <span>Waitlist ({item.lichSuPhongVan.length})</span>
+                                       <svg className={`w-3 h-3 transition-transform duration-300 ${expandedHistories.has(item.id) ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                       </svg>
+                                     </button>
+                                   </>
+                                )}
+                             </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4">
+                          <div className="text-sm font-bold text-slate-700 truncate max-w-[180px]" title={item.congTy?.tenCongTy}>{item.congTy?.tenCongTy || 'N/A'}</div>
                         </td>
                         <td className="px-4 py-4 text-center">
-                          <select
+                          <div className="relative inline-block">
+                             <select
                             value={item.trangThaiTuyen}
                             onChange={(e) => handleQuickStatusUpdate(item.id, e.target.value)}
-                            className={`text-[10px] font-bold px-2 py-1 rounded-lg border tracking-wider uppercase bg-transparent outline-none cursor-pointer ${getStatusColor(item.trangThaiTuyen)}`}
+                            className={`appearance-none text-[10px] font-bold pl-3 pr-8 py-1.5 rounded-full border shadow-sm outline-none cursor-pointer transition-all hover:opacity-90 ${getStatusColor(item.trangThaiTuyen)}`}
                             onClick={(e) => e.stopPropagation()}
                           >
                             {Object.entries(TrangThaiTuyen).map(([key, value]) => (
-                              <option key={key} value={value} className="bg-white text-slate-800">
+                              <option key={key} value={value} className="bg-white text-slate-800 py-1">
                                 {getStatusLabel(value)}
                               </option>
                             ))}
                           </select>
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-current opacity-60">
+                            <svg className="h-3 w-3 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" fillRule="evenodd"></path></svg>
+                          </div>
+                          </div>
                         </td>
                         <td className="px-4 py-4">
                           <p className="text-xs text-slate-600 line-clamp-2 italic max-w-[200px]" title={item.ghiChu || ''}>
@@ -307,6 +407,47 @@ export default function UngTuyenPage() {
                           </div>
                         </td>
                       </tr>
+
+                      {/* Accordion Row for History */}
+                      {expandedHistories.has(item.id) && item.lichSuPhongVan && (
+                        <tr className="bg-slate-50/50 animate-in fade-in slide-in-from-top-2 duration-200">
+                          <td colSpan={8} className="px-4 py-4 border-b border-slate-100 bg-slate-50">
+                            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm w-full">
+                               <p className="font-bold text-xs text-slate-700 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">
+                                 Lịch sử thay đổi phỏng vấn ({item.lichSuPhongVan.length})
+                               </p>
+                               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                 {item.lichSuPhongVan.map((his, idx) => (
+                                    <div key={idx} className="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col gap-1.5 hover:border-blue-100 transition-colors">
+                                      <div className="flex justify-between items-start">
+                                        <div className="flex flex-col">
+                                          <span className="text-[10px] font-bold text-slate-600">Ngày cập nhật</span>
+                                          <span className="text-[10px] text-slate-500">{his.ngayCapNhat ? format(new Date(his.ngayCapNhat), 'HH:mm dd/MM/yyyy') : '-'}</span>
+                                        </div>
+                                        {his.tenCongTy && <span className="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">{his.tenCongTy}</span>}
+                                      </div>
+                                      
+                                      <div className="flex items-center gap-2 text-xs bg-white p-1.5 rounded border border-slate-100">
+                                        <span className="text-slate-400 line-through">{his.ngayPhongVanCu ? format(new Date(his.ngayPhongVanCu), 'dd/MM/yyyy') : '---'}</span>
+                                        <svg className="w-3 h-3 text-slate-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                        <span className="font-bold text-amber-600">{his.ngayPhongVanMoi ? format(new Date(his.ngayPhongVanMoi), 'dd/MM/yyyy') : 'N/A'}</span>
+                                      </div>
+                                      
+                                      {his.lyDo && (
+                                        <div className="mt-0.5">
+                                          <span className="text-[9px] font-bold text-slate-500 block mb-0.5">Lý do/Ghi chú:</span>
+                                          <p className="text-[10px] italic text-slate-600 bg-amber-50/50 p-1.5 rounded border border-amber-100/50">"{his.lyDo}"</p>
+                                        </div>
+                                      )}
+                                    </div>
+                                 ))}
+                               </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                      
+                      </React.Fragment>
                     ))}
                   </tbody>
                 </table>
@@ -426,6 +567,18 @@ export default function UngTuyenPage() {
         onSave={editingItem ? handleUpdate : handleCreate}
         initialData={editingItem}
       />
+
+      {rescheduleItem && (
+        <RescheduleModal
+          isOpen={isRescheduleOpen}
+          onClose={() => {
+            setIsRescheduleOpen(false);
+            setRescheduleItem(null);
+          }}
+          item={rescheduleItem}
+          onSave={handleReschedule}
+        />
+      )}
     </div>
   );
 }

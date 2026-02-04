@@ -89,6 +89,13 @@ export interface UngTuyen {
   ngayPhongVan: string | null;
   trangThaiTuyen: TrangThaiTuyen;
   ghiChu: string | null;
+  lichSuPhongVan?: {
+    ngayPhongVanCu: string | null;
+    ngayPhongVanMoi: string | null;
+    lyDo?: string;
+    tenCongTy?: string; // Tên công ty tại thời điểm đó
+    ngayCapNhat: string;
+  }[];
   createdAt?: string;
   updatedAt?: string;
 }
