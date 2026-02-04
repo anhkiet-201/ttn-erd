@@ -22,7 +22,7 @@ interface TagObj {
 const tinTuyenDungSchema = z.object({
   moTa: z.string().min(1, 'Vui lòng nhập nội dung'),
   congTyId: z.string().min(1, 'Vui lòng chọn công ty'),
-  quanLyId: z.string().min(1, 'Vui lòng chọn quản lý khu vực'),
+  quanLyIds: z.array(z.string()).min(1, 'Vui lòng chọn ít nhất một quản lý'),
   diaChi: z.string().optional(),
   mapUrl: z.string().optional(),
   trangThai: z.nativeEnum(TrangThai),
@@ -180,7 +180,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
       phuCap: [],
       ghiChu: '',
       congTyId: '',
-      quanLyId: '',
+      quanLyIds: [],
     }
   });
 
@@ -225,7 +225,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
         reset({
           moTa: initialData.moTa,
           congTyId: initialData.congTy?.id || '',
-          quanLyId: initialData.quanLy?.id || '',
+          quanLyIds: Array.isArray(initialData.quanLy) ? initialData.quanLy.map(q => q.id) : [],
           diaChi: initialData.diaChi || '',
           mapUrl: initialData.mapUrl || '',
           trangThai: initialData.trangThai,
@@ -245,7 +245,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
           trangThai: TrangThai.DANG_TUYEN,
           moTa: '',
           congTyId: '',
-          quanLyId: '',
+          quanLyIds: [],
           diaChi: '',
           mapUrl: '',
           yeuCau: [],
@@ -271,12 +271,12 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
     setIsSaving(true);
     try {
       const selectedCongTy = congTys.find(c => c.id === values.congTyId);
-      const selectedQuanLy = quanLys.find(q => q.id === values.quanLyId);
+      const selectedQuanLys = quanLys.filter(q => values.quanLyIds.includes(q.id));
       
       const tinData = {
         moTa: values.moTa,
         congTy: selectedCongTy as any, 
-        quanLy: selectedQuanLy || null,
+        quanLy: selectedQuanLys,
         diaChi: values.diaChi || null,
         mapUrl: values.mapUrl || null,
         trangThai: values.trangThai,
@@ -339,17 +339,56 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
               </div>
             )}
 
-            {(showQuanLy || watch('quanLyId')) && (
+            {(showQuanLy || (watch('quanLyIds') && watch('quanLyIds').length > 0)) && (
               <div className="animate-in fade-in slide-in-from-top-1 duration-200">
-                <select
-                  {...register('quanLyId')}
-                  className="w-full px-3 py-2 bg-gray-50 rounded-lg text-sm border-none focus:ring-1 focus:ring-gray-200 text-gray-700 outline-none"
-                >
-                  <option value="">-- Chọn quản lý khu vực --</option>
-                  {quanLys.map(q => (
-                    <option key={q.id} value={q.id}>{q.tenQuanLy} - {q.soDienThoai}</option>
-                  ))}
-                </select>
+                <div className="bg-gray-50 rounded-xl p-3 border border-transparent focus-within:border-gray-200 transition-all">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Quản lý khu vực (Chọn nhiều)</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {watch('quanLyIds')?.map(id => {
+                      const q = quanLys.find(item => item.id === id);
+                      if (!q) return null;
+                      return (
+                        <span key={id} className="inline-flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-200 rounded-lg text-xs font-bold text-gray-700 shadow-sm animate-in zoom-in-95 duration-200">
+                          {q.tenQuanLy}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const current = watch('quanLyIds') || [];
+                              setValue('quanLyIds', current.filter(itemId => itemId !== id));
+                            }}
+                            className="w-4 h-4 flex items-center justify-center rounded-full hover:bg-red-50 hover:text-red-500 transition-colors"
+                          >
+                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                  <select
+                    className="w-full bg-transparent text-sm text-gray-700 outline-none border-t border-gray-100 pt-2"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (!val) return;
+                      const current = watch('quanLyIds') || [];
+                      if (!current.includes(val)) {
+                        setValue('quanLyIds', [...current, val]);
+                      }
+                      e.target.value = ''; // Reset select
+                    }}
+                  >
+                    <option value="">-- Thêm quản lý khu vực --</option>
+                    {quanLys
+                      .filter(q => !watch('quanLyIds')?.includes(q.id))
+                      .map(q => (
+                        <option key={q.id} value={q.id}>{q.tenQuanLy} - {q.soDienThoai}</option>
+                      )
+                    )}
+                  </select>
+                </div>
               </div>
             )}
 

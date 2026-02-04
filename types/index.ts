@@ -28,7 +28,7 @@ export interface TinTuyenDung {
   phuCap: PhuCap[];
   congTy: CongTy;
   ghiChu: string | null;
-  quanLy: QuanLy | null;
+  quanLy: QuanLy[];
   mapUrl: string | null;
   diaChi: string | null;
   trangThai: TrangThai;

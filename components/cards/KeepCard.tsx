@@ -96,29 +96,33 @@ export function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepCardProps
         </h3>
 
         {/* Manager Info */}
-        {data.quanLy && (
-          <div className="flex items-center gap-2 mb-3 bg-blue-50/50 p-2 rounded-lg border border-blue-100/50 transition-all hover:bg-blue-50">
-            <div className="w-8 h-8 rounded-full bg-white border border-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0 shadow-sm">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-bold text-blue-700/60 uppercase tracking-widest leading-none mb-1">Quản lý khu vực</p>
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[13px] font-bold text-gray-800 truncate">{data.quanLy.tenQuanLy}</span>
-                <a 
-                  href={`tel:${data.quanLy.soDienThoai}`}
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex items-center gap-1.5 px-2 py-1 bg-green-500 text-white rounded-md text-[11px] font-bold hover:bg-green-600 transition-colors shadow-sm shadow-green-100"
-                >
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+        {Array.isArray(data.quanLy) && data.quanLy.length > 0 && (
+          <div className="space-y-2 mb-3">
+            {data.quanLy.map((ql, idx) => (
+              <div key={ql.id || idx} className="flex items-center gap-2 bg-blue-50/50 p-2 rounded-lg border border-blue-100/50 transition-all hover:bg-blue-50">
+                <div className="w-8 h-8 rounded-full bg-white border border-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0 shadow-sm">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
-                  {data.quanLy.soDienThoai}
-                </a>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-bold text-blue-700/60 uppercase tracking-widest leading-none mb-1">Quản lý khu vực</p>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[13px] font-bold text-gray-800 truncate">{ql.tenQuanLy}</span>
+                    <a 
+                      href={`tel:${ql.soDienThoai}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center gap-1.5 px-2 py-1 bg-green-500 text-white rounded-md text-[11px] font-bold hover:bg-green-600 transition-colors shadow-sm shadow-green-100"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      {ql.soDienThoai}
+                    </a>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         )}
 
