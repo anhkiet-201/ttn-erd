@@ -18,8 +18,8 @@ export function MasonryGrid({ children }: MasonryGridProps) {
   return (
     <Masonry
       breakpointCols={breakpointColumns}
-      className="flex -ml-4 w-auto"
-      columnClassName="pl-4"
+      className="flex -ml-6 w-auto"
+      columnClassName="pl-6"
     >
       {children}
     </Masonry>

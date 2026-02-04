@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import Sidebar from '@/components/layout/Sidebar';
 import { MasonryGrid } from '@/components/layout/MasonryGrid';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { TinTuyenDungRepository } from '@/repositories/tinTuyenDung.repository';
@@ -27,79 +28,37 @@ export default function TinTuyenDungPage() {
   const [quanLys, setQuanLys] = useState<QuanLy[]>([]);
   const [congTys, setCongTys] = useState<CongTy[]>([]);
   const [khuVucs, setKhuVucs] = useState<KhuVuc[]>([]);
-  const [selectedKhuVuc, setSelectedKhuVuc] = useState<string>('all');
   const [loading, setLoading] = useState(true);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTin, setSelectedTin] = useState<TinTuyenDung | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedTin, setSelectedTin] = useState<TinTuyenDung | undefined>();
+  const [selectedKhuVuc, setSelectedKhuVuc] = useState<string>('all');
 
   useEffect(() => {
-    const unsubTins = tinRepository.subscribeAll((items) => {
-      setTins(items);
-      setLoading(false);
-    });
+    const unsubTin = tinRepository.subscribeAll(setTins);
+    const unsubQuanLy = quanLyRepository.subscribeAll(setQuanLys);
+    const unsubCongTy = congTyRepository.subscribeAll(setCongTys);
+    const unsubKhuVuc = khuVucRepository.subscribeAll(setKhuVucs);
 
-    const unsubQuanLys = quanLyRepository.subscribeAll((items) => {
-      setQuanLys(items);
-    });
-
-    const unsubCongTys = congTyRepository.subscribeAll((items) => {
-      setCongTys(items);
-    });
-
-    const unsubKhuVucs = khuVucRepository.subscribeAll((items) => {
-      setKhuVucs(items);
-    });
+    setLoading(false);
 
     return () => {
-      unsubTins();
-      unsubQuanLys();
-      unsubCongTys();
-      unsubKhuVucs();
+      unsubTin();
+      unsubQuanLy();
+      unsubCongTy();
+      unsubKhuVuc();
     };
   }, []);
 
-  // Client-side join logic
-  const joinedData = useMemo(() => {
-    return tins.map(tin => {
-      let updatedTin = { ...tin };
-
-      if (tin.congTy?.id) {
-        const liveCongTy = congTys.find(live => live.id === tin.congTy?.id);
-        if (liveCongTy) {
-          const joinedCongTy = { ...liveCongTy };
-          
-          if (Array.isArray(joinedCongTy.quanLy)) {
-            joinedCongTy.quanLy = joinedCongTy.quanLy.map(q => {
-              const liveManager = quanLys.find(m => m.id === q.id);
-              return liveManager || q;
-            });
-          }
-          
-          if (joinedCongTy.khuVuc?.id) {
-            const liveKhuVuc = khuVucs.find(kv => kv.id === joinedCongTy.khuVuc.id);
-            if (liveKhuVuc) {
-              joinedCongTy.khuVuc = liveKhuVuc;
-            }
-          }
-          
-          updatedTin.congTy = joinedCongTy;
-        }
-      }
-
-      if (Array.isArray(tin.quanLy)) {
-        updatedTin.quanLy = tin.quanLy.map(q => {
-          const liveData = quanLys.find(live => live.id === q.id);
-          return liveData || q;
-        });
-      }
-
-      return updatedTin;
-    });
-  }, [tins, congTys, quanLys, khuVucs]);
+  const data = useMemo(() => {
+    return tins.map(tin => ({
+      ...tin,
+      congTy: congTys.find(c => c.id === tin.congTyId)
+    }));
+  }, [tins, congTys]);
 
   const filteredData = useMemo(() => {
-    return joinedData.filter(item => {
+    return data.filter(item => {
       const search = searchQuery.toLowerCase();
       const matchesSearch = item.moTa?.toLowerCase().includes(search) || 
                             item.congTy?.tenCongTy?.toLowerCase().includes(search);
@@ -108,33 +67,61 @@ export default function TinTuyenDungPage() {
 
       return matchesSearch && matchesKhuVuc;
     });
-  }, [joinedData, searchQuery, selectedKhuVuc]);
+  }, [data, searchQuery, selectedKhuVuc]);
 
   const handleEditTin = (tin: TinTuyenDung) => {
     setSelectedTin(tin);
     setIsAddModalOpen(true);
   };
 
+  const handleOpenAddModal = () => {
+    setSelectedTin(undefined);
+    setIsAddModalOpen(true);
+  };
+
   const handleCloseModal = () => {
     setIsAddModalOpen(false);
-    setSelectedTin(null);
+    setSelectedTin(undefined);
+  };
+
+  const handleDeleteTin = async (id: string) => {
+    try {
+      await tinRepository.delete(id);
+    } catch (error) {
+      console.error('Không thể xóa tin:', error);
+    }
+  };
+
+  const handleToggleTag = async (id: string, category: 'yeuCau' | 'phucLoi' | 'phuCap', tagId: string) => {
+    try {
+      const tin = tins.find(t => t.id === id);
+      if (!tin) return;
+      
+      const categoryTags = tin[category] as any[];
+      const newTags = categoryTags.map(tag => 
+        tag.id === tagId 
+        ? { ...tag, isDeactivated: !tag.isDeactivated } 
+        : tag
+      );
+
+      await tinRepository.update(id, { [category]: newTags });
+    } catch (error) {
+      console.error('Lỗi cập nhật tag:', error);
+    }
   };
 
   return (
     <GlassLayout
       searchQuery={searchQuery}
       onSearchChange={setSearchQuery}
-      searchPlaceholder="Tìm kiếm nội dung tin hoặc tên công ty..."
+      searchPlaceholder="Tìm kiếm mô tả, công ty..."
     >
       <GlassPageHeader 
         title="Ghi Chú Tuyển Dụng"
-        subtitle={`Đang hiển thị ${filteredData.length} tin đăng đang hoạt động`}
+        subtitle={`Hiện có ${filteredData.length} tin đăng đang hiển thị`}
         action={{
           label: "Tạo Tin Mới",
-          onClick: () => {
-            setSelectedTin(null);
-            setIsAddModalOpen(true);
-          }
+          onClick: handleOpenAddModal
         }}
       />
 
@@ -159,37 +146,16 @@ export default function TinTuyenDungPage() {
       ) : filteredData.length > 0 ? (
         <div className="pb-20">
             <MasonryGrid>
-            {filteredData.map((item) => (
-                <GlassJobCard 
-                key={item.id} 
-                data={item} 
-                onClick={() => handleEditTin(item)}
-                onDelete={async (id: string) => {
-                    try {
-                    await tinRepository.delete(id);
-                    } catch (error) {
-                    console.error('Không thể xóa tin:', error);
-                    }
-                }}
-                onToggleTag={async (id: string, category: 'yeuCau' | 'phucLoi' | 'phuCap', tagId: string) => {
-                    try {
-                    const tin = tins.find(t => t.id === id);
-                    if (!tin) return;
-                    
-                    const categoryTags = tin[category] as any[];
-                    const newTags = categoryTags.map(tag => 
-                        tag.id === tagId 
-                        ? { ...tag, isDeactivated: !tag.isDeactivated } 
-                        : tag
-                    );
-
-                    await tinRepository.update(id, { [category]: newTags });
-                    } catch (error) {
-                    console.error('Lỗi cập nhật tag:', error);
-                    }
-                }}
-                />
-            ))}
+              {filteredData.map((item) => (
+                <div key={item.id} className="mb-6">
+                  <GlassJobCard 
+                    data={item} 
+                    onClick={() => handleEditTin(item)}
+                    onDelete={handleDeleteTin}
+                    onToggleTag={handleToggleTag}
+                  />
+                </div>
+              ))}
             </MasonryGrid>
         </div>
       ) : (
