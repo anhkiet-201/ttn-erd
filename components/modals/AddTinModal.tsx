@@ -165,6 +165,8 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
     phuCap: [] as string[]
   });
 
+  const [filteredQuanLys, setFilteredQuanLys] = useState<QuanLy[]>([]); // Danh sách quản lý theo công ty đã chọn
+
   const [showCongTy, setShowCongTy] = useState(false);
   const [showQuanLy, setShowQuanLy] = useState(false);
   const [showDiaChi, setShowDiaChi] = useState(false);
@@ -188,13 +190,28 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
   const yeuCauTags = watch('yeuCau') || [];
   const phucLoiTags = watch('phucLoi') || [];
   const phuCapTags = watch('phuCap') || [];
+  const selectedCongTyId = watch('congTyId');
+
+  // Effect: Khi congTyId thay đổi -> cập nhật danh sách quanLy
+  useEffect(() => {
+    if (!selectedCongTyId) {
+      setFilteredQuanLys([]);
+      return;
+    }
+    const company = congTys.find(c => c.id === selectedCongTyId);
+    if (company && company.quanLy) {
+      setFilteredQuanLys(company.quanLy);
+    } else {
+      setFilteredQuanLys([]);
+    }
+  }, [selectedCongTyId, congTys]);
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       
       const unsubCongTys = congTyRepo.subscribeAll(setCongTys);
-      const unsubQuanLys = quanLyRepo.subscribeAll(setQuanLys);
+      // Không cần subscribeAll QuanLy nữa, vì sẽ lấy từ CongTy
       
       tinRepo.getAll().then(tins => {
         const uniqueYeuCau = new Set<string>();
@@ -216,7 +233,6 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
 
       return () => {
         unsubCongTys();
-        unsubQuanLys();
         document.body.style.overflow = 'unset';
       };
     }
@@ -285,7 +301,8 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
     setIsSaving(true);
     try {
       const selectedCongTy = congTys.find(c => c.id === values.congTyId);
-      const selectedQuanLys = quanLys.filter(q => values.quanLyIds.includes(q.id));
+      // Lấy data quản lý từ danh sách đã lọc (theo công ty), không phải toàn bộ hệ thống
+      const selectedQuanLys = filteredQuanLys.filter(q => values.quanLyIds.includes(q.id));
       
       const tinData = {
         moTa: values.moTa,
@@ -376,7 +393,8 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
                 <div className={`bg-gray-50/50 rounded-xl p-3 border transition-all ${errors.quanLyIds ? 'border-red-300 bg-red-50/10' : 'border-gray-100 focus-within:border-slate-200'}`}>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {watch('quanLyIds')?.map(id => {
-                      const q = quanLys.find(item => item.id === id);
+                      // Tìm trong filteredQuanLys trước
+                      const q = filteredQuanLys.find(item => item.id === id);
                       if (!q) return null;
                       return (
                         <span key={id} className="inline-flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-100 rounded-lg text-xs font-bold text-gray-700 shadow-sm animate-in zoom-in-95 duration-200">
@@ -410,7 +428,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
                     }}
                   >
                     <option value="">-- Thêm quản lý khu vực --</option>
-                    {quanLys
+                    {filteredQuanLys
                       .filter(q => !watch('quanLyIds')?.includes(q.id))
                       .map(q => (
                         <option key={q.id} value={q.id}>{q.tenQuanLy} - {q.soDienThoai}</option>

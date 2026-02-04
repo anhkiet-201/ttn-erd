@@ -27,6 +27,7 @@ export interface TinTuyenDung {
   phucLoi: PhucLoi[];
   phuCap: PhuCap[];
   congTy: CongTy;
+  quanLy: QuanLy[];
   ghiChu: string | null;
   mapUrl: string | null;
   diaChi: string | null;
