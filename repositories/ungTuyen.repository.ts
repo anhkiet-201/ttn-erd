@@ -1,4 +1,4 @@
-import { ref, get, set, push, remove, update, onValue, off } from 'firebase/database';
+import { ref, get, set, push, remove, update, onValue, off, query, orderByChild, limitToLast, endAt } from 'firebase/database';
 import { database } from '@/lib/firebase/config';
 import { UngTuyen } from '@/types';
 
@@ -13,9 +13,39 @@ export class UngTuyenRepository {
       return Object.keys(data).map(key => ({
         ...data[key],
         id: key,
-      }));
+      })).sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
     }
     return [];
+  }
+
+  async getPaginated(limit: number, lastUpdatedAt?: string): Promise<{ items: UngTuyen[], hasMore: boolean }> {
+    let q;
+    const dbRef = ref(database, this.dbPath);
+    
+    if (lastUpdatedAt) {
+      q = query(dbRef, orderByChild('updatedAt'), endAt(lastUpdatedAt), limitToLast(limit + 1));
+    } else {
+      q = query(dbRef, orderByChild('updatedAt'), limitToLast(limit));
+    }
+
+    const snapshot = await get(q);
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      let list = Object.keys(data).map(key => ({
+        ...data[key],
+        id: key,
+      })).sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+
+      if (lastUpdatedAt && list.length > 0) {
+        list = list.filter(item => item.updatedAt !== lastUpdatedAt);
+      }
+
+      return {
+        items: list,
+        hasMore: list.length >= limit
+      };
+    }
+    return { items: [], hasMore: false };
   }
 
   subscribeAll(callback: (data: UngTuyen[]) => void) {
