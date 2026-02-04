@@ -171,6 +171,9 @@ interface AddTinModalProps {
   initialData?: TinTuyenDung | null;
 }
 
+import GlassModal from '../glass/GlassModal';
+import GlassButton from '../glass/GlassButton';
+
 export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinModalProps) {
   const [congTys, setCongTys] = useState<CongTy[]>([]);
   const [quanLys, setQuanLys] = useState<QuanLy[]>([]);
@@ -183,13 +186,12 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
   });
 
   const [showCongTy, setShowCongTy] = useState(false);
-
   const [showTags, setShowTags] = useState(false);
   const [showGhiChu, setShowGhiChu] = useState(false);
 
   const { register, handleSubmit, setValue, watch, reset, formState: { errors, isValid } } = useForm<TinTuyenDungFormValues>({
     resolver: zodResolver(tinTuyenDungSchema),
-    mode: 'onChange', // Validate on every change for reactive button state
+    mode: 'onChange',
     defaultValues: {
       trangThai: TrangThai.DANG_TUYEN,
       yeuCau: [],
@@ -209,9 +211,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      
       const unsubCongTys = congTyRepo.subscribeAll(setCongTys);
-      // Không cần subscribeAll QuanLy nữa, vì sẽ lấy từ CongTy
       
       tinRepo.getAll().then(tins => {
         const uniqueYeuCau = new Set<string>();
@@ -258,7 +258,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
 
         if (initialData.congTy) setShowCongTy(true);
         if (initialData.yeuCau?.length || initialData.phucLoi?.length || initialData.phuCap?.length) setShowTags(true);
-        if (initialData.ghiChu) setShowGhiChu(true);
+        if (initialData.ghiChu || initialData.ghiChuPV) setShowGhiChu(true);
       } else {
         reset({
           trangThai: TrangThai.DANG_TUYEN,
@@ -281,27 +281,18 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
 
   const onInvalid = (data: any) => {
     console.error('Lỗi xác thực:', data);
-    const firstError = Object.values(data)[0] as any;
-    if (firstError) {
-      alert(`Vui lòng kiểm tra lại: ${firstError.message}`);
-    }
   };
 
   const handleSave = async (values: TinTuyenDungFormValues) => {
-    if (!values.moTa.trim()) {
-      onClose();
-      return;
-    }
+    if (!values.moTa.trim()) return;
 
-    console.log('Bắt đầu lưu Tin tuyển dụng:', values);
     setIsSaving(true);
     try {
       const selectedCongTy = congTys.find(c => c.id === values.congTyId);
-      
       const tinData = {
         moTa: values.moTa,
         congTy: selectedCongTy as any, 
-        quanLy: [], // Luôn rỗng vì giờ dùng quản lý của công ty
+        quanLy: [],
         trangThai: values.trangThai,
         hinhThucTuyen: values.hinhThucTuyen,
         yeuCau: values.yeuCau || [],
@@ -321,223 +312,158 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
       onClose();
     } catch (error) {
       console.error('Lỗi chi tiết khi lưu:', error);
-      alert('Lỗi lưu dữ liệu: ' + (error as any)?.message || 'Vui lòng kiểm tra lại');
     } finally {
       setIsSaving(false);
     }
   };
 
-  const modalRef = useRef<HTMLDivElement>(null);
+  const footer = (
+    <div className="flex items-center justify-between w-full">
+      <div className="flex items-center gap-1.5">
+        <button 
+          type="button" 
+          onClick={() => setShowCongTy(!showCongTy)}
+          className={`p-2.5 rounded-2xl transition-all active:scale-90 ${showCongTy || watch('congTyId') ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:bg-gray-100'}`}
+          title="Đơn vị"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        </button>
 
-  if (!isOpen) return null;
+        <button 
+          type="button" 
+          onClick={() => setShowTags(!showTags)}
+          className={`p-2.5 rounded-2xl transition-all active:scale-90 ${showTags ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:bg-gray-100'}`}
+          title="Thông tin nhãn"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+          </svg>
+        </button>
+
+        <button 
+          type="button" 
+          onClick={() => setShowGhiChu(!showGhiChu)}
+          className={`p-2.5 rounded-2xl transition-all active:scale-90 ${showGhiChu ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:bg-gray-100'}`}
+          title="Ghi chú thêm"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+        </button>
+
+        <div className="h-5 w-px bg-gray-100 mx-1"></div>
+
+        <select 
+          {...register('hinhThucTuyen')}
+          className="text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 border-none outline-none focus:ring-0 cursor-pointer px-3 py-2 rounded-xl"
+        >
+          <option value={HinhThucTuyen.CHINH_THUC}>Chính thức</option>
+          <option value={HinhThucTuyen.THOI_VU}>Thời vụ</option>
+        </select>
+      </div>
+
+      <div className="flex gap-3">
+        <GlassButton
+          onClick={handleSubmit(handleSave, onInvalid)}
+          disabled={isSaving || !isValid}
+        >
+          {isSaving ? 'Đang lưu...' : 'Lưu & Đóng'}
+        </GlassButton>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px] p-4">
-      <div 
-        ref={modalRef}
-        className="w-full max-w-[600px] bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] transition-all"
-        style={{
-          boxShadow: '0 1px 2px 0 rgba(60,64,67,0.302), 0 2px 6px 2px rgba(60,64,67,0.149)'
-        }}
-      >
-        <div className="overflow-y-auto px-4 py-3 md:px-6 md:py-4 flex-1">
+    <GlassModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={initialData ? 'Sửa tin tuyển dụng' : 'Tạo tin mới'}
+      subtitle={initialData ? `Mã tin: ${initialData.id.slice(0, 8)}` : 'Đăng bài tuyển dụng mới lên hệ thống'}
+      footer={footer}
+      maxWidth="max-w-2xl"
+    >
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Nội dung tuyển dụng</label>
           <TextareaAutosize
             {...register('moTa')}
-            placeholder="Nội dung tuyển dụng..."
-            className="w-full resize-none border-none outline-none text-[14px] text-gray-800 placeholder-gray-500 font-medium min-h-[60px] bg-transparent"
-            minRows={3}
+            placeholder="Mô tả công việc, mức lương, địa điểm..."
+            className="w-full resize-none border-gray-100 bg-gray-50/50 rounded-2xl p-4 outline-none text-sm font-bold text-gray-800 placeholder-gray-400 min-h-[100px] focus:ring-2 focus:ring-blue-100 transition-all border"
             autoFocus={!initialData} 
           />
-          {errors.moTa && <p className="text-[11px] text-red-500 font-bold mb-2 ml-1">{errors.moTa.message}</p>}
+        </div>
 
-          <div className="space-y-4 mt-4">
-            {(showCongTy || watch('congTyId')) && (
-              <div className="animate-in fade-in slide-in-from-top-1 duration-200">
-                <div className="flex items-center gap-1.5 mb-1.5 ml-1">
-                  <div className="w-4 h-4 rounded-full bg-slate-100 flex items-center justify-center">
-                    <svg className="w-2.5 h-2.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                  </div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500/80">Công ty tuyển dụng</span>
-                </div>
-                <select
-                  {...register('congTyId')}
-                  className={`w-full px-3 py-2.5 bg-gray-50/50 rounded-xl text-sm border transition-all focus:ring-1 focus:ring-slate-200 text-gray-700 outline-none ${errors.congTyId ? 'border-red-300 bg-red-50/10' : 'border-gray-100'}`}
-                >
-                  <option value="">-- Chọn công ty --</option>
-                  {congTys.map(c => (
-                    <option key={c.id} value={c.id}>{c.tenCongTy}</option>
-                  ))}
-                </select>
-                {errors.congTyId && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.congTyId.message}</p>}
-              </div>
-            )}
+        <div className="space-y-4">
+          {(showCongTy || watch('congTyId')) && (
+            <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Đơn vị chủ quản</label>
+              <select
+                {...register('congTyId')}
+                className={`w-full px-4 py-3 bg-gray-50/50 rounded-2xl text-sm font-bold border transition-all focus:ring-2 focus:ring-blue-100 outline-none ${errors.congTyId ? 'border-red-300' : 'border-gray-100'}`}
+              >
+                <option value="">-- Chọn công ty --</option>
+                {congTys.map(c => (
+                  <option key={c.id} value={c.id}>{c.tenCongTy}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
-
-
-
-            {(showTags || yeuCauTags.length > 0 || phucLoiTags.length > 0 || phuCapTags.length > 0) && (
-              <div className="space-y-3 animate-in fade-in slide-in-from-top-1 duration-200 pt-2 border-t border-gray-100">
-                <TagInput 
-                  label="Yêu Cầu" 
+          {(showTags || yeuCauTags.length > 0 || phucLoiTags.length > 0 || phuCapTags.length > 0) && (
+            <div className="grid gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+               <TagInput 
+                  label="Yêu Cầu Tuyển Dụng" 
                   tags={yeuCauTags} 
                   onChange={(tags) => setValue('yeuCau', tags)} 
                   colorClass="blue"
-                  placeholder="Nam, 18-30 tuổi..."
+                  placeholder="Ví dụ: Nam, sức khỏe tốt..."
                   suggestions={suggestedTags.yeuCau}
                 />
                 <TagInput 
-                  label="Phúc Lợi" 
+                  label="Chế Độ Phúc Lợi" 
                   tags={phucLoiTags} 
                   onChange={(tags) => setValue('phucLoi', tags)} 
                   colorClass="green"
-                  placeholder="Lương tháng 13..."
+                  placeholder="Ví dụ: Bao cơm trưa..."
                   suggestions={suggestedTags.phucLoi}
                 />
                 <TagInput 
-                  label="Phụ Cấp" 
+                  label="Các Khoản Phụ Cấp" 
                   tags={phuCapTags} 
                   onChange={(tags) => setValue('phuCap', tags)} 
                   colorClass="orange"
-                  placeholder="Xăng xe, Cơm trưa..."
+                  placeholder="Ví dụ: Phụ cấp xăng xe..."
                   suggestions={suggestedTags.phuCap}
                 />
+            </div>
+          )}
+
+          {(showGhiChu || watch('ghiChu') || watch('ghiChuPV')) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-amber-500 uppercase tracking-widest ml-1">Ghi chú nội bộ</label>
+                <TextareaAutosize
+                  {...register('ghiChu')}
+                  placeholder="Lưu ý cho admin..."
+                  className="w-full bg-amber-50/20 border border-amber-100/50 rounded-2xl p-4 text-sm font-bold text-gray-700 outline-none placeholder-amber-200"
+                  minRows={2}
+                />
               </div>
-            )}
-
-            {/* Ghi chú nội bộ & Phỏng vấn */}
-            {(showGhiChu || watch('ghiChu') || watch('ghiChuPV')) && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
-                {/* Ghi chú nội bộ */}
-                {(showGhiChu || watch('ghiChu')) && (
-                  <div className="relative w-full px-3 py-3 rounded-xl bg-orange-50/20 border border-orange-100/50 transition-all focus-within:border-orange-200 focus-within:bg-orange-50/40">
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <div className="w-4 h-4 rounded-full bg-orange-100 flex items-center justify-center">
-                        <svg className="w-2.5 h-2.5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                      </div>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-orange-700/60 font-sans">
-                        Ghi chú nội bộ
-                      </span>
-                    </div>
-                    <TextareaAutosize
-                      {...register('ghiChu')}
-                      placeholder="Nhập ghi chú quan trọng cho tin này..."
-                      className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder-orange-300 resize-none font-medium leading-relaxed"
-                      minRows={1}
-                    />
-                  </div>
-                )}
-
-                {/* Ghi chú Phỏng vấn */}
-                {(showGhiChu || watch('ghiChuPV')) && (
-                  <div className="relative w-full px-3 py-3 rounded-xl bg-blue-50/20 border border-blue-100/50 transition-all focus-within:border-blue-200 focus-within:bg-blue-50/40">
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <div className="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center">
-                        <svg className="w-2.5 h-2.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
-                        </svg>
-                      </div>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-blue-700/60 font-sans">
-                        Ghi chú Phỏng vấn
-                      </span>
-                    </div>
-                    <TextareaAutosize
-                      {...register('ghiChuPV')}
-                      placeholder="Nhập ghi chú phỏng vấn (Lầu mấy, gặp ai...)..."
-                      className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder-blue-300 resize-none font-medium leading-relaxed"
-                      minRows={1}
-                    />
-                  </div>
-                )}
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-blue-500 uppercase tracking-widest ml-1">Ghi chú phỏng vấn</label>
+                <TextareaAutosize
+                  {...register('ghiChuPV')}
+                  placeholder="Lưu ý cho ứng viên..."
+                  className="w-full bg-blue-50/20 border border-blue-100/50 rounded-2xl p-4 text-sm font-bold text-gray-700 outline-none placeholder-blue-200"
+                  minRows={2}
+                />
               </div>
-            )}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between px-2 py-2 md:px-4 md:py-2 border-t border-transparent bg-white">
-          <div className="flex items-center gap-1">
-            <button 
-              type="button" 
-              onClick={() => setShowCongTy(!showCongTy)}
-              className={`p-2 rounded-full transition-colors ${showCongTy || watch('congTyId') ? 'bg-gray-100 text-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
-              title="Thêm Công Ty"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-            </button>
-
-
-
-
-            <button 
-              type="button" 
-              onClick={() => setShowTags(!showTags)}
-              className={`p-2 rounded-full transition-colors ${showTags ? 'bg-gray-100 text-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
-              title="Thêm Tags"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-              </svg>
-            </button>
-
-            <button 
-              type="button" 
-              onClick={() => setShowGhiChu(!showGhiChu)}
-              className={`p-2 rounded-full transition-colors ${showGhiChu ? 'bg-gray-100 text-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
-              title="Thêm Ghi Chú"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-            </button>
-            
-            <div className="h-4 w-px bg-gray-300 mx-1"></div>
-            
-            <select 
-              {...register('trangThai')}
-              className="text-xs font-bold text-gray-600 bg-transparent border-none outline-none focus:ring-0 cursor-pointer hover:bg-gray-50 py-1 px-2 rounded"
-            >
-              <option value={TrangThai.DANG_TUYEN}>Đang tuyển</option>
-              <option value={TrangThai.DA_NGUNG}>Đã ngừng</option>
-            </select>
-
-            <div className="h-4 w-px bg-gray-300 mx-1"></div>
-
-            <select 
-              {...register('hinhThucTuyen')}
-              className="text-xs font-bold text-blue-600 bg-blue-50/50 border-none outline-none focus:ring-0 cursor-pointer hover:bg-blue-100 py-1 px-2 rounded"
-            >
-              <option value={HinhThucTuyen.CHINH_THUC}>Chính thức</option>
-              <option value={HinhThucTuyen.THOI_VU}>Thời vụ</option>
-            </select>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <button
-              onClick={onClose}
-              type="button"
-              className="text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors"
-            >
-              Hủy
-            </button>
-            <button
-              onClick={handleSubmit(handleSave, onInvalid)}
-              disabled={isSaving || !isValid}
-              className={`px-5 py-2 text-sm font-medium rounded-[4px] transition-all border shadow-sm ${
-                isSaving || !isValid 
-                  ? 'bg-gray-50 text-gray-400 border-gray-100 cursor-not-allowed opacity-60' 
-                  : 'bg-white text-gray-800 border-gray-200 hover:bg-gray-100 active:scale-95'
-              }`}
-            >
-              {isSaving ? 'Đang lưu...' : 'Lưu & Đóng'}
-            </button>
-          </div>
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </GlassModal>
   );
 }

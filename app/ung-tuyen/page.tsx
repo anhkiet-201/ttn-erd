@@ -6,7 +6,7 @@ import { UngTuyenRepository } from '@/repositories/ungTuyen.repository';
 import { NguoiLaoDongRepository } from '@/repositories/nguoiLaoDong.repository';
 import { CongTyRepository } from '@/repositories/congTy.repository';
 import { KhuVucRepository } from '@/repositories/khuVuc.repository';
-import { UngTuyen, NguoiLaoDong, TrangThaiTuyen, GioiTinh, CongTy, KhuVuc } from '@/types';
+import { UngTuyen, NguoiLaoDong, TrangThaiTuyen, GioiTinh, CongTy, KhuVuc, UngTuyenWithDetails } from '@/types';
 import UngTuyenModal from '@/components/modals/UngTuyenModal';
 import RescheduleModal from '@/components/modals/RescheduleModal';
 import { toast } from 'react-hot-toast';
@@ -42,7 +42,7 @@ export default function UngTuyenPage() {
   const [expandedHistories, setExpandedHistories] = useState<Set<string>>(new Set());
   
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
-  const [rescheduleItem, setRescheduleItem] = useState<UngTuyen | null>(null);
+  const [rescheduleItem, setRescheduleItem] = useState<UngTuyenWithDetails | null>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [filterGioiTinh, setFilterGioiTinh] = useState<string>('ALL');

@@ -23,11 +23,15 @@ interface KhuVucModalProps {
 
 const repository = new KhuVucRepository();
 
+import GlassModal from '../glass/GlassModal';
+import GlassButton from '../glass/GlassButton';
+
 export default function KhuVucModal({ isOpen, onClose, data }: KhuVucModalProps) {
   const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<KhuVucFormValues>({
+  const { register, handleSubmit, formState: { errors, isValid }, reset } = useForm<KhuVucFormValues>({
     resolver: zodResolver(khuVucSchema),
+    mode: 'onChange'
   });
 
   useEffect(() => {
@@ -48,8 +52,6 @@ export default function KhuVucModal({ isOpen, onClose, data }: KhuVucModalProps)
     }
   }, [isOpen, data, reset]);
 
-  if (!isOpen) return null;
-
   const onSubmit = async (values: KhuVucFormValues) => {
     setLoading(true);
     try {
@@ -69,65 +71,62 @@ export default function KhuVucModal({ isOpen, onClose, data }: KhuVucModalProps)
     }
   };
 
+  const footer = (
+    <div className="flex gap-3 w-full">
+      <GlassButton
+        variant="secondary"
+        onClick={onClose}
+        className="flex-1"
+      >
+        Hủy
+      </GlassButton>
+      <GlassButton
+        onClick={handleSubmit(onSubmit)}
+        disabled={loading || !isValid}
+        className="flex-1"
+      >
+        {loading ? 'Đang lưu...' : 'Lưu Khu Vực'}
+      </GlassButton>
+    </div>
+  );
+
   return (
-    <div className="fixed inset-0 z-[60] md:flex md:items-center md:justify-center md:p-4 bg-black/40 backdrop-blur-[2px]">
-      <div className="bg-white w-full h-full md:h-auto md:max-w-md md:rounded-xl shadow-2xl flex flex-col border border-gray-200">
-        <div className="px-4 md:px-6 py-3 md:py-4 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-gray-800">{data ? 'Chỉnh Sửa Khu Vực' : 'Thêm Khu Vực Mới'}</h2>
-          <button onClick={onClose} className="p-2.5 md:p-2 hover:bg-gray-100 rounded-full text-gray-400 min-h-[44px] min-w-[44px] flex items-center justify-center">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+    <GlassModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={data ? 'Chỉnh Sửa Khu Vực' : 'Thêm Khu Vực Mới'}
+      subtitle={data ? `Mã KV: ${data.id.slice(0, 8)}` : 'Định nghĩa đơn vị hành chính hoặc khu vực mới'}
+      footer={footer}
+    >
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Tên khu vực</label>
+          <input
+            {...register('tenKhuVuc')}
+            className={`w-full px-4 py-3 bg-gray-50/50 rounded-2xl text-sm font-bold border transition-all focus:ring-2 focus:ring-blue-100 outline-none ${errors.tenKhuVuc ? 'border-red-300' : 'border-gray-100'}`}
+            placeholder="Ví dụ: Hồ Chí Minh, Bình Dương..."
+          />
+          {errors.tenKhuVuc && <p className="mt-1 text-[10px] text-red-500 font-black ml-1 uppercase">{errors.tenKhuVuc.message}</p>}
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-5">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Tên khu vực *</label>
-            <input
-              {...register('tenKhuVuc')}
-              className={`w-full px-4 py-2.5 border rounded-lg focus:ring-1 focus:ring-blue-500 outline-none ${errors.tenKhuVuc ? 'border-red-500' : 'border-gray-200'}`}
-              placeholder="Ví dụ: Hồ Chí Minh, Bình Dương..."
-            />
-            {errors.tenKhuVuc && <p className="mt-1 text-xs text-red-500">{errors.tenKhuVuc.message}</p>}
-          </div>
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Mô tả Địa chỉ</label>
+          <input
+            {...register('diaChi')}
+            className="w-full px-4 py-3 bg-gray-100/30 border border-gray-100 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-100 outline-none"
+            placeholder="Số nhà, tên đường hoặc mô tả ngắn..."
+          />
+        </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Địa chỉ</label>
-            <input
-              {...register('diaChi')}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 outline-none"
-              placeholder="Nhập địa chỉ của khu vực..."
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Link Google Maps</label>
-            <input
-              {...register('mapUrl')}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 outline-none"
-              placeholder="https://goo.gl/maps/..."
-            />
-          </div>
-
-          <div className="flex items-center justify-end gap-2 md:gap-3 pt-2 border-t border-gray-100 mt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-5 md:px-4 py-3 md:py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg min-h-[44px]"
-            >
-              Hủy
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-6 py-3 md:py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg disabled:opacity-50 min-h-[44px]"
-            >
-              {loading ? 'Đang lưu...' : 'Lưu Lại'}
-            </button>
-          </div>
-        </form>
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Toạ độ Bản đồ</label>
+          <input
+            {...register('mapUrl')}
+            className="w-full px-4 py-3 bg-gray-100/30 border border-gray-100 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-blue-100 outline-none"
+            placeholder="https://goo.gl/maps/..."
+          />
+        </div>
       </div>
-    </div>
+    </GlassModal>
   );
 }

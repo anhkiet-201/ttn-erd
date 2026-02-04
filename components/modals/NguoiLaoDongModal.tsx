@@ -23,9 +23,13 @@ interface NguoiLaoDongModalProps {
   initialData?: NguoiLaoDong | null;
 }
 
+import GlassModal from '../glass/GlassModal';
+import GlassButton from '../glass/GlassButton';
+
 const NguoiLaoDongModal: React.FC<NguoiLaoDongModalProps> = ({ isOpen, onClose, onSave, initialData }) => {
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<NguoiLaoDongFormValues>({
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting, isValid } } = useForm<NguoiLaoDongFormValues>({
     resolver: zodResolver(nguoiLaoDongSchema),
+    mode: 'onChange',
     defaultValues: {
       tenNguoiLaoDong: '',
       soDienThoai: '',
@@ -57,109 +61,110 @@ const NguoiLaoDongModal: React.FC<NguoiLaoDongModalProps> = ({ isOpen, onClose, 
     }
   }, [isOpen, initialData, reset]);
 
-  if (!isOpen) return null;
+  const footer = (
+    <div className="flex gap-3 w-full">
+      <GlassButton
+        variant="secondary"
+        onClick={onClose}
+        className="flex-1"
+      >
+        Hủy
+      </GlassButton>
+      <GlassButton
+        onClick={handleSubmit(onSave)}
+        disabled={isSubmitting || !isValid}
+        className="flex-1"
+      >
+        {isSubmitting ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Thêm mới'}
+      </GlassButton>
+    </div>
+  );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-slate-50/50">
-          <h2 className="text-lg font-bold text-slate-800">
-            {initialData ? 'Chỉnh sửa người lao động' : 'Thêm người lao động mới'}
-          </h2>
-          <button 
-            onClick={onClose}
-            className="p-2 hover:bg-white rounded-full transition-colors text-slate-400 hover:text-slate-600"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit(onSave)} className="p-6 space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">
-              Họ và tên
-            </label>
+    <GlassModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={initialData ? 'Sửa Người Lao Động' : 'Thêm Nhân Sự Mới'}
+      subtitle={initialData ? `Mã nhân sự: ${initialData.id.slice(0, 8)}` : 'Đăng ký thông viên viên lao động mới'}
+      footer={footer}
+    >
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Họ và Tên</label>
+          <div className="relative group">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
             <input
               {...register('tenNguoiLaoDong')}
-              className={`w-full px-4 py-2.5 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.tenNguoiLaoDong ? 'border-red-300' : 'border-slate-100'}`}
+              className={`w-full pl-11 pr-4 py-3 bg-gray-50/50 rounded-2xl text-sm font-bold border transition-all focus:ring-2 focus:ring-blue-100 outline-none ${errors.tenNguoiLaoDong ? 'border-red-300' : 'border-gray-100'}`}
               placeholder="Nhập tên người lao động..."
             />
-            {errors.tenNguoiLaoDong && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.tenNguoiLaoDong.message}</p>}
           </div>
+          {errors.tenNguoiLaoDong && <p className="mt-1 text-[10px] text-red-500 font-black ml-1 uppercase">{errors.tenNguoiLaoDong.message}</p>}
+        </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">
-              Số điện thoại
-            </label>
-            <input
-              {...register('soDienThoai')}
-              className={`w-full px-4 py-2.5 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.soDienThoai ? 'border-red-300' : 'border-slate-100'}`}
-              placeholder="Nhập số điện thoại..."
-            />
-            {errors.soDienThoai && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.soDienThoai.message}</p>}
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">
-              Số CCCD
-            </label>
-            <input
-              {...register('cccd')}
-              className={`w-full px-4 py-2.5 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.cccd ? 'border-red-300' : 'border-slate-100'}`}
-              placeholder="Nhập số CCCD..."
-            />
-            {errors.cccd && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.cccd.message}</p>}
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">
-                Năm sinh
-              </label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Số Điện Thoại</label>
+            <div className="relative group">
+               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </div>
               <input
-                type="number"
-                {...register('namSinh', { valueAsNumber: true })}
-                className={`w-full px-4 py-2.5 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.namSinh ? 'border-red-300' : 'border-slate-100'}`}
+                {...register('soDienThoai')}
+                className={`w-full pl-11 pr-4 py-3 bg-gray-50/50 rounded-2xl text-sm font-bold border transition-all focus:ring-2 focus:ring-blue-100 outline-none ${errors.soDienThoai ? 'border-red-300' : 'border-gray-100'}`}
+                placeholder="09xx xxx xxx"
               />
-              {errors.namSinh && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.namSinh.message}</p>}
             </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1">
-                Giới tính
-              </label>
-              <select
-                {...register('gioiTinh')}
-                className={`w-full px-4 py-2.5 bg-slate-50 border rounded-xl text-sm focus:ring-2 focus:ring-blue-100 outline-none transition-all ${errors.gioiTinh ? 'border-red-300' : 'border-slate-100'}`}
-              >
-                <option value={GioiTinh.NAM}>Nam</option>
-                <option value={GioiTinh.NU}>Nữ</option>
-              </select>
-              {errors.gioiTinh && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.gioiTinh.message}</p>}
-            </div>
+            {errors.soDienThoai && <p className="mt-1 text-[10px] text-red-500 font-black ml-1 uppercase">{errors.soDienThoai.message}</p>}
           </div>
 
-          <div className="flex gap-3 pt-4 border-t border-gray-50 mt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 px-4 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-50 rounded-xl transition-colors"
-            >
-              Hủy
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="flex-1 px-4 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95 disabled:opacity-50 disabled:active:scale-100"
-            >
-              {isSubmitting ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Thêm mới'}
-            </button>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Số CCCD</label>
+            <div className="relative group">
+               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.333 0 4 1 4 4m0 0H6" />
+                </svg>
+              </div>
+              <input
+                {...register('cccd')}
+                className={`w-full pl-11 pr-4 py-3 bg-gray-50/50 rounded-2xl text-sm font-bold border transition-all focus:ring-2 focus:ring-blue-100 outline-none ${errors.cccd ? 'border-red-300' : 'border-gray-100'}`}
+                placeholder="Nhập số CCCD..."
+              />
+            </div>
           </div>
-        </form>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Năm sinh</label>
+            <input
+              type="number"
+              {...register('namSinh', { valueAsNumber: true })}
+              className={`w-full px-4 py-3 bg-gray-50/50 rounded-2xl text-sm font-bold border transition-all focus:ring-2 focus:ring-blue-100 outline-none ${errors.namSinh ? 'border-red-300' : 'border-gray-100'}`}
+            />
+            {errors.namSinh && <p className="mt-1 text-[10px] text-red-500 font-black ml-1 uppercase">{errors.namSinh.message}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Giới tính</label>
+            <select
+              {...register('gioiTinh')}
+              className="w-full px-4 py-3 bg-gray-50/50 rounded-2xl text-sm font-bold border border-gray-100 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+            >
+              <option value={GioiTinh.NAM}>Nam</option>
+              <option value={GioiTinh.NU}>Nữ</option>
+            </select>
+          </div>
+        </div>
       </div>
-    </div>
+    </GlassModal>
   );
 };
 
