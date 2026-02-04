@@ -10,7 +10,7 @@ import { UngTuyen, NguoiLaoDong, TrangThaiTuyen, GioiTinh, CongTy, KhuVuc } from
 import UngTuyenModal from '@/components/modals/UngTuyenModal';
 import RescheduleModal from '@/components/modals/RescheduleModal';
 import { toast } from 'react-hot-toast';
-import { format } from 'date-fns';
+import { format, isToday, isTomorrow } from 'date-fns';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { useUI } from '@/components/providers/UIProvider';
 
@@ -282,6 +282,16 @@ export default function UngTuyenPage() {
     }
   };
 
+  const getRowHighlightClass = (dateStr?: string | null, status?: TrangThaiTuyen) => {
+    if (!dateStr || status !== TrangThaiTuyen.CHO_PHONG_VAN) return 'hover:bg-blue-50';
+    
+    const date = new Date(dateStr);
+    if (isToday(date)) return 'bg-amber-50/70 hover:bg-amber-100/80 transition-colors shadow-[inset_4px_0_0_0_#f59e0b]';
+    if (isTomorrow(date)) return 'bg-blue-50/70 hover:bg-blue-100/80 transition-colors shadow-[inset_4px_0_0_0_#3b82f6]';
+    
+    return 'hover:bg-blue-50';
+  };
+
   return (
     <div className="min-h-screen bg-transparent">
       <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 h-16 flex items-center px-4 gap-4">
@@ -411,7 +421,7 @@ export default function UngTuyenPage() {
                                 <tbody className="divide-y divide-gray-50">
                                     {filteredData.map((item) => (
                                         <React.Fragment key={item.id}>
-                                        <tr className="hover:bg-blue-50 transition-colors">
+                                        <tr className={`${getRowHighlightClass(item.ngayPhongVan || null, item.trangThaiTuyen)} transition-colors`}>
                                             <td className="px-6 py-4">
                                                 <div className="flex flex-col">
                                                     <span className="font-bold text-gray-900">{item.nguoiLaoDong.tenNguoiLaoDong}</span>
@@ -477,8 +487,12 @@ export default function UngTuyenPage() {
                         {/* Mobile List View */}
                         <div className="xl:hidden space-y-4 p-4">
                             {filteredData.map((item) => (
-                                <div key={item.id} className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm relative">
-                                     <div className={`absolute top-0 left-0 w-1 h-full ${getStatusConfig(item.trangThaiTuyen).color.split(' ')[0]}`} />
+                                <div key={item.id} className={`bg-white rounded-2xl p-4 border border-gray-100 shadow-sm relative overflow-hidden ${getRowHighlightClass(item.ngayPhongVan || null, item.trangThaiTuyen).includes('bg-amber-50') ? 'ring-2 ring-amber-400/50' : getRowHighlightClass(item.ngayPhongVan || null, item.trangThaiTuyen).includes('bg-blue-50') ? 'ring-2 ring-blue-400/50' : ''}`}>
+                                     <div className={`absolute top-0 left-0 w-1.5 h-full ${
+                                        getRowHighlightClass(item.ngayPhongVan || null, item.trangThaiTuyen).includes('bg-amber-50') ? 'bg-amber-500' : 
+                                        getRowHighlightClass(item.ngayPhongVan || null, item.trangThaiTuyen).includes('bg-blue-50') ? 'bg-blue-500' : 
+                                        getStatusConfig(item.trangThaiTuyen).color.split(' ')[0]
+                                     }`} />
                                      <div className="flex justify-between items-start mb-2">
                                         <h3 className="font-bold text-gray-900">{item.nguoiLaoDong.tenNguoiLaoDong}</h3>
                                         <span className="text-xs font-bold text-blue-600">{item.nguoiLaoDong.soDienThoai}</span>
