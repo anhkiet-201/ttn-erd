@@ -116,32 +116,41 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
           </h3>
 
           {/* Manager Info */}
-          {Array.isArray(data.quanLy) && data.quanLy.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-3">
-              {data.quanLy.map((ql, idx) => (
-                <div 
-                  key={ql.id || idx} 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigator.clipboard.writeText(ql.soDienThoai);
-                    toast.success(`Đã sao chép SĐT: ${ql.tenQuanLy}`);
-                  }}
-                  className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-50/50 border border-blue-100/50 rounded-md hover:bg-blue-50 transition-colors cursor-pointer group/ql active:scale-95 duration-75"
-                  title={`Sao chép SĐT: ${ql.soDienThoai}`}
-                >
-                  <div className="w-4 h-4 rounded-full bg-white border border-blue-100 flex items-center justify-center text-blue-500 flex-shrink-0 shadow-sm">
-                    <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
+          {/* Manager Info: Prioritize job-specific managers, otherwise show company managers */}
+          {(() => {
+            const managers = (Array.isArray(data.quanLy) && data.quanLy.length > 0) 
+              ? data.quanLy 
+              : (data.congTy?.quanLy || []);
+
+            if (managers.length === 0) return null;
+
+            return (
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {managers.map((ql, idx) => (
+                  <div 
+                    key={ql.id || idx} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigator.clipboard.writeText(ql.soDienThoai);
+                      toast.success(`Đã sao chép SĐT: ${ql.tenQuanLy}`);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-50/50 border border-blue-100/50 rounded-md hover:bg-blue-50 transition-colors cursor-pointer group/ql active:scale-95 duration-75"
+                    title={`Sao chép SĐT: ${ql.soDienThoai}`}
+                  >
+                    <div className="w-4 h-4 rounded-full bg-white border border-blue-100 flex items-center justify-center text-blue-500 flex-shrink-0 shadow-sm">
+                      <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-[11px] font-bold text-gray-700 leading-none">{ql.tenQuanLy}</span>
+                      <span className="text-[11px] font-bold text-blue-600/80 group-hover/ql:text-blue-700 leading-none">{ql.soDienThoai}</span>
+                    </div>
                   </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-[11px] font-bold text-gray-700 leading-none">{ql.tenQuanLy}</span>
-                    <span className="text-[11px] font-bold text-blue-600/80 group-hover/ql:text-blue-700 leading-none">{ql.soDienThoai}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            );
+          })()}
 
           {(data.diaChi || data.mapUrl) && (
             <div className="flex items-center gap-2 text-xs text-gray-500 mb-3 group/map">
