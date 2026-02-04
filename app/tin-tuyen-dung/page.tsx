@@ -6,19 +6,22 @@ import { KeepCard } from '@/components/cards/KeepCard';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { TinTuyenDungRepository } from '@/repositories/tinTuyenDung.repository';
 import { QuanLyRepository } from '@/repositories/quanLy.repository';
-import { TinTuyenDung, QuanLy } from '@/types';
+import { CongTyRepository } from '@/repositories/congTy.repository';
+import { TinTuyenDung, QuanLy, CongTy } from '@/types';
 import { AddTinModal } from '@/components/modals/AddTinModal';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { useUI } from '@/components/providers/UIProvider';
 
 const tinRepository = new TinTuyenDungRepository();
 const quanLyRepository = new QuanLyRepository();
+const congTyRepository = new CongTyRepository();
 
 export default function TinTuyenDungPage() {
   const { user } = useAuthContext();
   const { toggleSidebar } = useUI();
   const [tins, setTins] = useState<TinTuyenDung[]>([]);
   const [quanLys, setQuanLys] = useState<QuanLy[]>([]);
+  const [congTys, setCongTys] = useState<CongTy[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,22 +37,39 @@ export default function TinTuyenDungPage() {
       setQuanLys(items);
     });
 
+    const unsubCongTys = congTyRepository.subscribeAll((items) => {
+      setCongTys(items);
+    });
+
     return () => {
       unsubTins();
       unsubQuanLys();
+      unsubCongTys();
     };
   }, []);
 
-  // Client-side join: map manager IDs to latest manager data
+  // Client-side join: map manager and company IDs to latest data
   const data = tins.map(tin => {
-    if (!Array.isArray(tin.quanLy)) return tin;
+    // Join Manager data
+    let updatedTin = { ...tin };
     
-    const latestQuanLy = tin.quanLy.map(q => {
-      const liveData = quanLys.find(live => live.id === q.id);
-      return liveData || q; // Use live data if available, fallback to stored static data
-    });
+    if (Array.isArray(tin.quanLy)) {
+      const latestQuanLy = tin.quanLy.map(q => {
+        const liveData = quanLys.find(live => live.id === q.id);
+        return liveData || q;
+      });
+      updatedTin.quanLy = latestQuanLy;
+    }
 
-    return { ...tin, quanLy: latestQuanLy };
+    // Join Company data
+    if (tin.congTy?.id) {
+      const liveCongTy = congTys.find(live => live.id === tin.congTy?.id);
+      if (liveCongTy) {
+        updatedTin.congTy = liveCongTy;
+      }
+    }
+
+    return updatedTin;
   });
 
   const handleEditTin = (tin: TinTuyenDung) => {
