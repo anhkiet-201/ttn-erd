@@ -102,12 +102,12 @@ export default function KhuVucPage() {
                   <tr key={item.id} className="hover:bg-blue-50/30 transition-all group">
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 font-black text-lg group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-all duration-300">
                           {item.tenKhuVuc.charAt(0).toUpperCase()}
                         </div>
                         <div>
                           <div className="text-sm font-black text-gray-700 uppercase tracking-tight group-hover:text-blue-700 transition-colors">{item.tenKhuVuc}</div>
-                          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5 opacity-50">ID: {item.id.slice(0, 8)}...</div>
+                          <div className="inline-flex mt-1 px-2 py-0.5 rounded-md bg-blue-50/50 border border-blue-100 text-[9px] font-black text-blue-500 uppercase tracking-widest opacity-80">ID: {item.id.slice(0, 8)}</div>
                         </div>
                       </div>
                     </td>

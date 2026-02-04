@@ -306,9 +306,9 @@ export default function UngTuyenPage() {
 
   const getStatusConfig = (status: TrangThaiTuyen) => {
     switch (status) {
-      case TrangThaiTuyen.CHO_PHONG_VAN: return { label: 'Chờ phỏng vấn', color: 'bg-blue-50 text-blue-700 ring-blue-600/20' };
-      case TrangThaiTuyen.TOI_LICH_PHONG_VAN: return { label: 'Tới lịch PV', color: 'bg-amber-50 text-amber-700 ring-amber-600/20' };
-      case TrangThaiTuyen.DANG_NHAN_VIEC: return { label: 'Đang nhận việc', color: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20' };
+      case TrangThaiTuyen.CHO_PHONG_VAN: return { label: 'Chờ phỏng vấn', color: 'bg-blue-50 text-blue-700 ring-blue-600/20 shadow-[0_2px_10px_-3px_rgba(37,99,235,0.1)]' };
+      case TrangThaiTuyen.TOI_LICH_PHONG_VAN: return { label: 'Tới lịch PV', color: 'bg-amber-50 text-amber-700 ring-amber-600/20 shadow-[0_2px_10px_-3px_rgba(245,158,11,0.1)]' };
+      case TrangThaiTuyen.DANG_NHAN_VIEC: return { label: 'Đang nhận việc', color: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20 shadow-[0_2px_10px_-3px_rgba(16,185,129,0.1)]' };
       case TrangThaiTuyen.TU_CHOI: return { label: 'Từ chối', color: 'bg-rose-50 text-rose-700 ring-rose-600/20' };
       case TrangThaiTuyen.CONG_TY_NGUNG_TUYEN: return { label: 'Công ty ngừng tuyển', color: 'bg-slate-100 text-slate-600 ring-slate-500/20' };
       case TrangThaiTuyen.KHONG_DEN_PHONG_VAN: return { label: 'Không đến PV', color: 'bg-orange-50 text-orange-700 ring-orange-600/20' };
