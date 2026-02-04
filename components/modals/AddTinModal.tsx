@@ -22,7 +22,7 @@ interface TagObj {
 const tinTuyenDungSchema = z.object({
   moTa: z.string().min(1, 'Vui lòng nhập nội dung'),
   congTyId: z.string().min(1, 'Vui lòng chọn công ty'),
-  quanLyIds: z.array(z.string()).min(1, 'Vui lòng chọn ít nhất một quản lý'),
+  quanLyIds: z.array(z.string()).optional().default([]),
   diaChi: z.string().optional(),
   mapUrl: z.string().optional(),
   trangThai: z.nativeEnum(TrangThai),
@@ -368,7 +368,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500/80">Quản lý khu vực (Chọn nhiều)</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500/80">Quản lý khu vực (Tùy chọn)</span>
               </div>
               <div className={`bg-gray-50/50 rounded-xl p-3 border transition-all ${errors.quanLyIds ? 'border-red-300 bg-red-50/10' : 'border-gray-100 focus-within:border-slate-200'}`}>
                 <div className="flex flex-wrap gap-2 mb-2">
