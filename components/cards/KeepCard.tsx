@@ -9,15 +9,15 @@ interface KeepCardProps {
   data: TinTuyenDung;
   onClick?: (id: string) => void;
   onDelete?: (id: string) => void;
+  onToggleTag?: (id: string, category: 'yeuCau' | 'phucLoi' | 'phuCap', tagId: string) => void;
 }
 
-export function KeepCard({ data, onClick, onDelete }: KeepCardProps) {
+export function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepCardProps) {
   if (!data) return null;
 
   const isExpired = data.trangThai === TrangThai.DA_NGUNG;
-  const cardColor = isExpired ? 'bg-gray-100' : 'bg-white';
+  const cardColor = isExpired ? 'bg-gray-100 opacity-90' : 'bg-white';
 
-  // Defensive parsing of dates
   const safeDate = (date: any) => {
     if (!date) return null;
     try {
@@ -30,6 +30,37 @@ export function KeepCard({ data, onClick, onDelete }: KeepCardProps) {
 
   const updatedAt = safeDate(data.updatedAt);
 
+  const renderTag = (item: any, category: 'yeuCau' | 'phucLoi' | 'phuCap', baseClasses: string) => (
+    <span 
+      key={item.id} 
+      className={`
+        inline-flex items-center gap-1 px-2 py-0.5 border rounded-md text-[10px] font-medium whitespace-nowrap transition-all
+        ${item.isDeactivated ? 'line-through opacity-50 bg-gray-100 text-gray-400 border-gray-200' : baseClasses}
+      `}
+    >
+      <span className="flex-1">{item.noiDung}</span>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggleTag?.(data.id, category, item.id);
+        }}
+        className={`
+          flex-shrink-0 p-0.5 rounded-full hover:bg-black/5 transition-colors
+          ${item.isDeactivated ? 'text-gray-400' : 'text-gray-500 hover:text-red-500'}
+        `}
+        title={item.isDeactivated ? "Kích hoạt lại" : "Tạm dừng"}
+      >
+        <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {item.isDeactivated ? (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+          ) : (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M20 12H4" />
+          )}
+        </svg>
+      </button>
+    </span>
+  );
+
   return (
     <div 
       className={`
@@ -38,7 +69,6 @@ export function KeepCard({ data, onClick, onDelete }: KeepCardProps) {
         ring-inset hover:ring-1 hover:ring-gray-300 min-h-[100px]
       `}
     >
-      {/* Pin Icon */}
       {/* Copy Content Button */}
       <button 
         onClick={(e) => {
@@ -60,6 +90,7 @@ export function KeepCard({ data, onClick, onDelete }: KeepCardProps) {
             {data.congTy?.tenCongTy || 'Công ty ẩn danh'}
           </p>
         </div>
+        
         <h3 className="text-[14px] font-medium text-gray-800 mb-2 leading-relaxed whitespace-pre-wrap break-words">
           {data.moTa || 'Không có mô tả'}
         </h3>
@@ -89,31 +120,17 @@ export function KeepCard({ data, onClick, onDelete }: KeepCardProps) {
           </div>
         )}
 
+        {/* Tags */}
         <div className="flex flex-wrap gap-1.5 mb-2">
-          {/* Yêu Cầu - Slate (Neutral) */}
-          {Array.isArray(data.yeuCau) && data.yeuCau.map((item) => (
-            <span key={item.id} className="px-2.5 py-1 bg-slate-50 border border-slate-200 rounded-md text-[10px] text-slate-600 font-medium whitespace-nowrap">
-              {item.noiDung}
-            </span>
-          ))}
-
-          {/* Phúc Lợi - Emerald (Green) */}
-          {Array.isArray(data.phucLoi) && data.phucLoi.map((item) => (
-            <span key={item.id} className="px-2.5 py-1 bg-emerald-50 border border-emerald-100 rounded-md text-[10px] text-emerald-700 font-medium whitespace-nowrap">
-              {item.noiDung}
-            </span>
-          ))}
-
-          {/* Phụ Cấp - Rose (Warm) */}
-          {Array.isArray(data.phuCap) && data.phuCap.map((item) => (
-            <span key={item.id} className="px-2.5 py-1 bg-rose-50 border border-rose-100 rounded-md text-[10px] text-rose-700 font-medium whitespace-nowrap">
-              {item.noiDung}
-            </span>
-          ))}
-
-          <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold border whitespace-nowrap ${isExpired ? 'bg-gray-100 border-gray-200 text-gray-500' : 'bg-white border-blue-100 text-blue-600 shadow-sm'}`}>
-            {data.trangThai === TrangThai.DANG_TUYEN ? 'Đang tuyển' : 'Đã ngừng'}
-          </span>
+          {Array.isArray(data.yeuCau) && data.yeuCau.map((item) => 
+            renderTag(item, 'yeuCau', 'bg-slate-50 border-slate-200 text-slate-600')
+          )}
+          {Array.isArray(data.phucLoi) && data.phucLoi.map((item) => 
+            renderTag(item, 'phucLoi', 'bg-emerald-50 border-emerald-100 text-emerald-700')
+          )}
+          {Array.isArray(data.phuCap) && data.phuCap.map((item) => 
+            renderTag(item, 'phuCap', 'bg-rose-50 border-rose-100 text-rose-700')
+          )}
         </div>
       </div>
 

@@ -2,6 +2,7 @@
 export interface Tag {
   id: string;
   noiDung: string;
+  isDeactivated?: boolean;
 }
 
 export interface YeuCau extends Tag {}

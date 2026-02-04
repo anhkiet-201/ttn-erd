@@ -10,6 +10,13 @@ import { CongTyRepository } from '@/repositories/congTy.repository';
 import { v4 as uuidv4 } from 'uuid';
 import TextareaAutosize from 'react-textarea-autosize';
 
+// Tag type as defined in types/index.ts
+interface TagObj {
+  id: string;
+  noiDung: string;
+  isDeactivated?: boolean;
+}
+
 // Schema Validation
 const tinTuyenDungSchema = z.object({
   moTa: z.string().min(1, 'Vui lòng nhập nội dung'),
@@ -17,10 +24,9 @@ const tinTuyenDungSchema = z.object({
   diaChi: z.string().optional(),
   mapUrl: z.string().optional(),
   trangThai: z.nativeEnum(TrangThai),
-  yeuCau: z.array(z.string()).optional(),
-  phucLoi: z.array(z.string()).optional(),
-  phuCap: z.array(z.string()).optional(),
-  tieuDe: z.string().optional(),
+  yeuCau: z.array(z.any()).optional(),
+  phucLoi: z.array(z.any()).optional(),
+  phuCap: z.array(z.any()).optional(),
 });
 
 type TinTuyenDungFormValues = z.infer<typeof tinTuyenDungSchema>;
@@ -31,8 +37,8 @@ const congTyRepo = new CongTyRepository();
 // --- Tag Input Component ---
 interface TagInputProps {
   label: string;
-  tags: string[];
-  onChange: (tags: string[]) => void;
+  tags: TagObj[];
+  onChange: (tags: TagObj[]) => void;
   colorClass: string;
   placeholder?: string;
   suggestions?: string[];
@@ -44,8 +50,8 @@ const TagInput = ({ label, tags, onChange, colorClass, placeholder, suggestions 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const filteredSuggestions = suggestions
-    .filter(s => s.toLowerCase().includes(inputVal.toLowerCase()) && !tags.includes(s))
-    .slice(0, 5); // Limit to 5 suggestions
+    .filter(s => s.toLowerCase().includes(inputVal.toLowerCase()) && !tags.some(t => t.noiDung === s))
+    .slice(0, 5);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -68,18 +74,17 @@ const TagInput = ({ label, tags, onChange, colorClass, placeholder, suggestions 
 
   const addTag = (val: string) => {
     const trimmed = val.trim();
-    if (trimmed && !tags.includes(trimmed)) {
-      onChange([...tags, trimmed]);
+    if (trimmed && !tags.some(t => t.noiDung === trimmed)) {
+      onChange([...tags, { id: uuidv4(), noiDung: trimmed, isDeactivated: false }]);
       setInputVal('');
       setShowSuggestions(false);
     }
   };
 
-  const removeTag = (t: string) => {
-    onChange(tags.filter(tag => tag !== t));
+  const removeTag = (id: string) => {
+    onChange(tags.filter(tag => tag.id !== id));
   };
 
-  // Map color classes to specific styles - Premium/Elegant Palette
   const styles = {
     blue: { bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200', placeholder: 'placeholder-slate-400', tagBg: 'bg-slate-100', tagText: 'text-slate-700' },
     green: { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-100', placeholder: 'placeholder-emerald-400', tagBg: 'bg-emerald-100', tagText: 'text-emerald-800' },
@@ -93,11 +98,11 @@ const TagInput = ({ label, tags, onChange, colorClass, placeholder, suggestions 
       </span>
       <div className="flex flex-wrap gap-2 mt-4 relative">
         {tags.map((tag) => (
-          <span key={tag} className={`inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium ${styles.tagBg} ${styles.tagText}`}>
-            {tag}
+          <span key={tag.id} className={`inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium ${styles.tagBg} ${styles.tagText} ${tag.isDeactivated ? 'line-through opacity-50' : ''}`}>
+            {tag.noiDung}
             <button
               type="button"
-              onClick={() => removeTag(tag)}
+              onClick={() => removeTag(tag.id)}
               className="ml-1.5 hover:text-red-500 focus:outline-none"
             >
               ×
@@ -118,7 +123,6 @@ const TagInput = ({ label, tags, onChange, colorClass, placeholder, suggestions 
             className={`w-full bg-transparent outline-none text-sm ${styles.text} ${styles.placeholder}`}
           />
           
-          {/* Suggestions Dropdown */}
           {showSuggestions && inputVal && filteredSuggestions.length > 0 && (
             <div className="absolute top-full left-0 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-100 z-50 overflow-hidden">
               {filteredSuggestions.map((s, idx) => (
@@ -150,14 +154,12 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
   const [congTys, setCongTys] = useState<CongTy[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   
-  // Suggested Tags State
   const [suggestedTags, setSuggestedTags] = useState({
     yeuCau: [] as string[],
     phucLoi: [] as string[],
     phuCap: [] as string[]
   });
 
-  // State hiển thị
   const [showCongTy, setShowCongTy] = useState(false);
   const [showDiaChi, setShowDiaChi] = useState(false);
   const [showTags, setShowTags] = useState(false);
@@ -172,7 +174,6 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
     }
   });
 
-  // Watch values for tags to pass to TagInput
   const yeuCauTags = watch('yeuCau') || [];
   const phucLoiTags = watch('phucLoi') || [];
   const phuCapTags = watch('phuCap') || [];
@@ -181,7 +182,6 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
     if (isOpen) {
       congTyRepo.getAll().then(setCongTys);
       
-      // Fetch all tins to aggregate tags for suggestions
       tinRepo.getAll().then(tins => {
         const uniqueYeuCau = new Set<string>();
         const uniquePhucLoi = new Set<string>();
@@ -205,18 +205,15 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
   useEffect(() => {
     if (isOpen) {
       if (initialData) {
-        // Extract tag strings from object arrays
-        const getTagStrings = (tags: any[]) => Array.isArray(tags) ? tags.map(t => t.noiDung) : [];
-
         reset({
           moTa: initialData.moTa,
           congTyId: initialData.congTy?.id || '',
           diaChi: initialData.diaChi || '',
           mapUrl: initialData.mapUrl || '',
           trangThai: initialData.trangThai,
-          yeuCau: getTagStrings(initialData.yeuCau),
-          phucLoi: getTagStrings(initialData.phucLoi),
-          phuCap: getTagStrings(initialData.phuCap),
+          yeuCau: Array.isArray(initialData.yeuCau) ? initialData.yeuCau : [],
+          phucLoi: Array.isArray(initialData.phucLoi) ? initialData.phucLoi : [],
+          phuCap: Array.isArray(initialData.phuCap) ? initialData.phuCap : [],
         });
 
         if (initialData.congTy) setShowCongTy(true);
@@ -250,24 +247,18 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
     try {
       const selectedCongTy = congTys.find(c => c.id === values.congTyId);
       
-      const createTagObjects = (tags: string[] | undefined) => 
-        (tags || []).map(s => ({
-          id: uuidv4(),
-          noiDung: s.trim()
-        }));
-
       const tinData = {
         moTa: values.moTa,
-        congTy: selectedCongTy, 
+        congTy: selectedCongTy as any, 
         diaChi: values.diaChi || null,
         mapUrl: values.mapUrl || null,
         trangThai: values.trangThai,
-        yeuCau: createTagObjects(values.yeuCau),
-        phucLoi: createTagObjects(values.phucLoi),
-        phuCap: createTagObjects(values.phuCap),
+        yeuCau: values.yeuCau || [],
+        phucLoi: values.phucLoi || [],
+        phuCap: values.phuCap || [],
         ghiChu: initialData?.ghiChu || [],
         quanLy: initialData?.quanLy || [],
-      } as any; 
+      }; 
 
       if (initialData?.id) {
         await tinRepo.update(initialData.id, tinData);
@@ -299,7 +290,6 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
         }}
       >
         <div className="overflow-y-auto px-4 py-3 md:px-6 md:py-4 flex-1">
-          {/* Main Input - Mô tả */}
           <TextareaAutosize
             {...register('moTa')}
             placeholder="Nội dung tuyển dụng..."
@@ -309,7 +299,6 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
           />
 
           <div className="space-y-3 mt-3">
-            {/* Công ty */}
             {(showCongTy || watch('congTyId')) && (
               <div className="animate-in fade-in slide-in-from-top-1 duration-200">
                 <select
@@ -324,7 +313,6 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
               </div>
             )}
 
-            {/* Địa chỉ & Map */}
             {(showDiaChi || watch('diaChi') || watch('mapUrl')) && (
               <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
                 <input
@@ -340,7 +328,6 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
               </div>
             )}
 
-            {/* Tags Inputs */}
             {(showTags || yeuCauTags.length > 0 || phucLoiTags.length > 0 || phuCapTags.length > 0) && (
               <div className="space-y-3 animate-in fade-in slide-in-from-top-1 duration-200 pt-2 border-t border-gray-100">
                 <TagInput 
@@ -372,7 +359,6 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
           </div>
         </div>
 
-        {/* Footer Toolbar */}
         <div className="flex items-center justify-between px-2 py-2 md:px-4 md:py-2 border-t border-transparent bg-white">
           <div className="flex items-center gap-1">
             <button 

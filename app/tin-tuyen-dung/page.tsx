@@ -141,6 +141,24 @@ export default function TinTuyenDungPage() {
                         alert('Xóa tin thất bại!');
                       }
                     }}
+                    onToggleTag={async (id, category, tagId) => {
+                      try {
+                        const tin = data.find(t => t.id === id);
+                        if (!tin) return;
+
+                        const categoryTags = tin[category] as any[];
+                        const newTags = categoryTags.map(tag => 
+                          tag.id === tagId 
+                            ? { ...tag, isDeactivated: !tag.isDeactivated } 
+                            : tag
+                        );
+
+                        await repository.update(id, { [category]: newTags });
+                      } catch (error) {
+                        console.error('Lỗi cập nhật tag:', error);
+                        alert('Cập nhật trạng thái tag thất bại');
+                      }
+                    }}
                   />
                 ))}
             </MasonryGrid>
