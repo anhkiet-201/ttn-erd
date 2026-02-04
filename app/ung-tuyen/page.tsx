@@ -40,6 +40,9 @@ export default function UngTuyenPage() {
   const [rescheduleItem, setRescheduleItem] = useState<UngTuyen | null>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterGioiTinh, setFilterGioiTinh] = useState<string>('ALL');
+  const [filterCongTyId, setFilterCongTyId] = useState<string>('ALL');
+  const [filterTrangThai, setFilterTrangThai] = useState<string>('ALL');
 
   const loadInitialData = async () => {
     setLoading(true);
@@ -50,7 +53,7 @@ export default function UngTuyenPage() {
   };
 
   const loadMore = useCallback(async () => {
-    if (loadingMore || !hasMore || searchQuery) return;
+    if (loadingMore || !hasMore) return;
     setLoadingMore(true);
     const lastItem = ungTuyens[ungTuyens.length - 1];
     const result = await ungTuyenRepo.getPaginated(pageSize, lastItem?.updatedAt as unknown as string);
@@ -58,12 +61,12 @@ export default function UngTuyenPage() {
     setUngTuyens(prev => [...prev, ...result.items]);
     setHasMore(result.hasMore);
     setLoadingMore(false);
-  }, [loadingMore, hasMore, searchQuery, ungTuyens]);
+  }, [loadingMore, hasMore, ungTuyens]);
 
   // Infinite Scroll Observer
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore && !loadingMore && !searchQuery) {
+      if (entries[0].isIntersecting && hasMore && !loadingMore) {
         loadMore();
       }
     }, { threshold: 0.1 });
@@ -73,7 +76,7 @@ export default function UngTuyenPage() {
     }
 
     return () => observer.disconnect();
-  }, [loadMore, hasMore, loadingMore, searchQuery]);
+  }, [loadMore, hasMore, loadingMore]);
 
   useEffect(() => {
     loadInitialData();
@@ -135,18 +138,46 @@ export default function UngTuyenPage() {
   }, [ungTuyens, workerMap, companyMap, workers.length]);
 
   const filteredData = useMemo(() => {
+    let data = joinedData;
+    
+    // 1. Search filter
     const lowerSearch = searchQuery.toLowerCase().trim();
-    if (!lowerSearch) return joinedData;
+    if (lowerSearch) {
+      data = data.filter(item => 
+        item.nguoiLaoDong.tenNguoiLaoDong.toLowerCase().includes(lowerSearch) ||
+        (item.nguoiLaoDong.soDienThoai && item.nguoiLaoDong.soDienThoai.includes(lowerSearch)) ||
+        (item.nguoiLaoDong.cccd && item.nguoiLaoDong.cccd.includes(lowerSearch)) ||
+        (item.congTy?.tenCongTy && item.congTy.tenCongTy.toLowerCase().includes(lowerSearch)) ||
+        (item.congTy?.diaChi && item.congTy.diaChi.toLowerCase().includes(lowerSearch)) ||
+        (item.congTy?.khuVuc?.diaChi && item.congTy.khuVuc.diaChi.toLowerCase().includes(lowerSearch))
+      );
+    }
 
-    return joinedData.filter(item => 
-      item.nguoiLaoDong.tenNguoiLaoDong.toLowerCase().includes(lowerSearch) ||
-      (item.nguoiLaoDong.soDienThoai && item.nguoiLaoDong.soDienThoai.includes(lowerSearch)) ||
-      (item.nguoiLaoDong.cccd && item.nguoiLaoDong.cccd.includes(lowerSearch)) ||
-      (item.congTy?.tenCongTy && item.congTy.tenCongTy.toLowerCase().includes(lowerSearch)) ||
-      (item.congTy?.diaChi && item.congTy.diaChi.toLowerCase().includes(lowerSearch)) ||
-      (item.congTy?.khuVuc?.diaChi && item.congTy.khuVuc.diaChi.toLowerCase().includes(lowerSearch))
-    );
-  }, [joinedData, searchQuery]);
+    // 2. Gender filter
+    if (filterGioiTinh !== 'ALL') {
+      data = data.filter(item => item.nguoiLaoDong.gioiTinh === filterGioiTinh);
+    }
+
+    // 3. Company filter
+    if (filterCongTyId !== 'ALL') {
+      data = data.filter(item => item.congTyId === filterCongTyId);
+    }
+
+    // 4. Status filter
+    if (filterTrangThai !== 'ALL') {
+      data = data.filter(item => item.trangThaiTuyen === filterTrangThai);
+    }
+
+    return data;
+  }, [joinedData, searchQuery, filterGioiTinh, filterCongTyId, filterTrangThai]);
+
+  // Auto-fetch if filtered results are too few
+  useEffect(() => {
+    const isFiltered = searchQuery || filterGioiTinh !== 'ALL' || filterCongTyId !== 'ALL' || filterTrangThai !== 'ALL';
+    if (isFiltered && filteredData.length < 5 && hasMore && !loadingMore && !loading) {
+      loadMore();
+    }
+  }, [searchQuery, filterGioiTinh, filterCongTyId, filterTrangThai, filteredData.length, hasMore, loadingMore, loading, loadMore]);
 
   const handleSave = async (values: Omit<UngTuyen, 'id'>, id?: string) => {
     const targetId = id || editingItem?.id;
@@ -299,6 +330,58 @@ export default function UngTuyenPage() {
                 </button>
             </div>
 
+            {/* Filter Bar */}
+            <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-6 flex flex-wrap items-center gap-4">
+               <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Lọc:</span>
+                  <select 
+                    value={filterGioiTinh} 
+                    onChange={(e) => setFilterGioiTinh(e.target.value)}
+                    className="bg-gray-50 border-0 text-gray-700 text-xs font-bold rounded-lg focus:ring-2 focus:ring-blue-500 block p-2 transition-all"
+                  >
+                    <option value="ALL">Giới tính (Tất cả)</option>
+                    <option value={GioiTinh.NAM}>Nam</option>
+                    <option value={GioiTinh.NU}>Nữ</option>
+                  </select>
+               </div>
+
+               <select 
+                  value={filterCongTyId} 
+                  onChange={(e) => setFilterCongTyId(e.target.value)}
+                  className="bg-gray-50 border-0 text-gray-700 text-xs font-bold rounded-lg focus:ring-2 focus:ring-blue-500 block p-2 transition-all max-w-[200px]"
+                >
+                  <option value="ALL">Công ty (Tất cả)</option>
+                  {companies.map(c => (
+                    <option key={c.id} value={c.id}>{c.tenCongTy}</option>
+                  ))}
+                </select>
+
+                <select 
+                  value={filterTrangThai} 
+                  onChange={(e) => setFilterTrangThai(e.target.value)}
+                  className="bg-gray-50 border-0 text-gray-700 text-xs font-bold rounded-lg focus:ring-2 focus:ring-blue-500 block p-2 transition-all"
+                >
+                  <option value="ALL">Trạng thái (Tất cả)</option>
+                  {Object.entries(TrangThaiTuyen).map(([key, value]) => (
+                    <option key={key} value={value}>{getStatusConfig(value).label}</option>
+                  ))}
+                </select>
+
+                {(searchQuery || filterGioiTinh !== 'ALL' || filterCongTyId !== 'ALL' || filterTrangThai !== 'ALL') && (
+                  <button 
+                    onClick={() => {
+                      setSearchQuery('');
+                      setFilterGioiTinh('ALL');
+                      setFilterCongTyId('ALL');
+                      setFilterTrangThai('ALL');
+                    }}
+                    className="text-xs font-bold text-red-500 hover:text-red-600 transition-colors uppercase tracking-wider"
+                  >
+                    Xóa tất cả lọc
+                  </button>
+                )}
+            </div>
+
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 {loading ? (
                     <div className="h-64 flex flex-col items-center justify-center gap-3">
@@ -418,14 +501,18 @@ export default function UngTuyenPage() {
                         </div>
 
                         <div ref={loaderRef} className="py-10 flex justify-center bg-gray-50/30 border-t border-gray-100">
-                            {(loadingMore || (hasMore && !searchQuery)) && (
+                            {(loadingMore || hasMore) && (
                                 <div className="flex items-center gap-3 text-gray-400">
                                     <div className="w-5 h-5 border-2 border-gray-200 border-t-blue-500 rounded-full animate-spin" />
-                                    <span className="text-sm font-bold">Đang tải thêm hồ sơ...</span>
+                                    <span className="text-sm font-bold">
+                                        {(searchQuery || filterGioiTinh !== 'ALL' || filterCongTyId !== 'ALL' || filterTrangThai !== 'ALL') ? 'Đang tìm kiếm thêm hồ sơ...' : 'Đang tải thêm hồ sơ...'}
+                                    </span>
                                 </div>
                             )}
-                            {!hasMore && joinedData.length > 0 && !searchQuery && (
-                                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Đã tải tất cả hồ sơ</span>
+                            {!hasMore && joinedData.length > 0 && (
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest border-t border-gray-50 pt-6 w-full text-center">
+                                    {(searchQuery || filterGioiTinh !== 'ALL' || filterCongTyId !== 'ALL' || filterTrangThai !== 'ALL') ? `Đã tìm xong trong ${ungTuyens.length} hồ sơ` : 'Đã tải tất cả hồ sơ'}
+                                </span>
                             )}
                         </div>
                     </>
