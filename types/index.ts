@@ -79,14 +79,23 @@ export enum TrangThaiTuyen {
   CONG_TY_NGUNG_TUYEN = 'CONG_TY_NGUNG_TUYEN',
 }
 
-export interface NguoiLaoDong_TinTuyenDung {
+export interface GhiChu extends Tag {}
+
+export interface UngTuyen {
+  id: string;
+  nguoiLaoDongId: string;
+  tinTuyenDungId: string;
+  ngayPhongVan: string | null;
+  trangThaiTuyen: TrangThaiTuyen;
+  ghiChu: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// Joined data type for UI
+export interface UngTuyenWithDetails extends Omit<UngTuyen, 'nguoiLaoDongId' | 'tinTuyenDungId'> {
   nguoiLaoDong: NguoiLaoDong;
   tinTuyenDung: TinTuyenDung;
-  ngayPhongVan: Date;
-  trangThaiTuyen: TrangThaiTuyen;
-  ghiChu: GhiChu[];
-  createdAt?: number;
-  updatedAt?: number;
 }
 
 // Lock interface for edit locking
