@@ -1,16 +1,23 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { CongTy, KhuVuc } from '@/types';
 import { CongTyRepository } from '@/repositories/congTy.repository';
 import { KhuVucRepository } from '@/repositories/khuVuc.repository';
+import { QuanLyRepository } from '@/repositories/quanLy.repository';
+import { QuanLy } from '@/types';
 
 const congTySchema = z.object({
   tenCongTy: z.string().min(2, 'Tên công ty phải có ít nhất 2 ký tự'),
   khuVucId: z.string().min(1, 'Vui lòng chọn khu vực'),
+  quanLy: z.array(z.object({
+    id: z.string(),
+    tenQuanLy: z.string().min(1, 'Tên quản lý không được để trống'),
+    soDienThoai: z.string().min(1, 'SĐT không được để trống'),
+  })).default([]),
 });
 
 type CongTyFormValues = z.infer<typeof congTySchema>;
@@ -23,27 +30,46 @@ interface CongTyModalProps {
 
 const congTyRepo = new CongTyRepository();
 const khuVucRepo = new KhuVucRepository();
+const quanLyRepo = new QuanLyRepository();
 
 export default function CongTyModal({ isOpen, onClose, data }: CongTyModalProps) {
   const [khuVucs, setKhuVucs] = useState<KhuVuc[]>([]);
+  const [allQuanLys, setAllQuanLys] = useState<QuanLy[]>([]); // Danh sách tất cả quản lý có sẵn
   const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<CongTyFormValues>({
+  const { register, control, handleSubmit, formState: { errors }, reset } = useForm<CongTyFormValues>({
     resolver: zodResolver(congTySchema),
+    defaultValues: {
+      quanLy: []
+    }
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "quanLy"
   });
 
   useEffect(() => {
     if (isOpen) {
-      khuVucRepo.getAll().then(setKhuVucs);
+      Promise.all([
+        khuVucRepo.getAll(),
+        quanLyRepo.getAll()
+      ]).then(([kvData, qlData]) => {
+        setKhuVucs(kvData);
+        setAllQuanLys(qlData);
+      });
+
       if (data) {
         reset({
           tenCongTy: data.tenCongTy,
           khuVucId: data.khuVuc?.id || '',
+          quanLy: data.quanLy || [],
         });
       } else {
         reset({
           tenCongTy: '',
           khuVucId: '',
+          quanLy: [],
         });
       }
     }
@@ -64,6 +90,7 @@ export default function CongTyModal({ isOpen, onClose, data }: CongTyModalProps)
             id: selectedKhuVuc.id, 
             tenKhuVuc: selectedKhuVuc.tenKhuVuc 
           } as any,
+          quanLy: values.quanLy,
         });
       } else {
         await congTyRepo.create({
@@ -73,6 +100,7 @@ export default function CongTyModal({ isOpen, onClose, data }: CongTyModalProps)
             tenKhuVuc: selectedKhuVuc.tenKhuVuc 
           } as any,
           tinTuyenDung: [],
+          quanLy: values.quanLy,
         });
       }
       onClose();
@@ -118,6 +146,87 @@ export default function CongTyModal({ isOpen, onClose, data }: CongTyModalProps)
               ))}
             </select>
             {errors.khuVucId && <p className="mt-1 text-xs text-red-500">{errors.khuVucId.message}</p>}
+          </div>
+
+          <div className="border-t border-gray-100 pt-4">
+            <div className="flex items-center justify-between mb-3">
+              <label className="block text-sm font-semibold text-gray-700">Danh sách Quản lý</label>
+              <button
+                type="button"
+                onClick={() => append({ id: crypto.randomUUID(), tenQuanLy: '', soDienThoai: '' })}
+                className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors flex items-center gap-1"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Thêm Quản lý
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              {/* Chọn từ danh sách có sẵn */}
+              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <p className="text-xs font-bold text-slate-500 uppercase mb-2">Chọn quản lý có sẵn</p>
+                <div className="max-h-32 overflow-y-auto space-y-1.5 custom-scrollbar">
+                  {allQuanLys.length > 0 ? allQuanLys.map(ql => {
+                    const isSelected = fields.some(f => f.id === ql.id || (f.tenQuanLy === ql.tenQuanLy && f.soDienThoai === ql.soDienThoai));
+                    return (
+                      <label key={ql.id} className="flex items-center gap-2 p-2 hover:bg-white rounded-lg cursor-pointer transition-colors border border-transparent hover:border-slate-100">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              // Thêm vào danh sách nếu chưa có
+                              if (!isSelected) {
+                                append({ id: ql.id, tenQuanLy: ql.tenQuanLy, soDienThoai: ql.soDienThoai });
+                              }
+                            } else {
+                              // Xóa khỏi danh sách
+                              const index = fields.findIndex(f => f.id === ql.id || (f.tenQuanLy === ql.tenQuanLy && f.soDienThoai === ql.soDienThoai));
+                              if (index > -1) remove(index);
+                            }
+                          }}
+                          className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                        />
+                        <div className="flex-1">
+                          <div className="text-xs font-bold text-slate-700">{ql.tenQuanLy}</div>
+                          <div className="text-[10px] text-slate-500">{ql.soDienThoai}</div>
+                        </div>
+                      </label>
+                    );
+                  }) : <p className="text-xs text-slate-400 italic text-center py-2">Chưa có quản lý nào trong hệ thống</p>}
+                </div>
+              </div>
+
+              {/* Danh sách đã chọn (Editable) */}
+              <div className="space-y-3 pt-2">
+                 <p className="text-xs font-bold text-slate-500 uppercase">Danh sách đã chọn ({fields.length})</p>
+                 {fields.map((field, index) => (
+                    <div key={field.id} className="flex gap-2 items-start bg-white p-2 rounded-lg border border-slate-200 shadow-sm group">
+                      <div className="flex-1 space-y-1">
+                        <input
+                          {...register(`quanLy.${index}.tenQuanLy` as const)}
+                          placeholder="Tên Quản lý"
+                          className="w-full px-2 py-1 text-xs font-bold border-none focus:ring-0 p-0 text-slate-700 placeholder:font-normal"
+                        />
+                         <input
+                           {...register(`quanLy.${index}.soDienThoai` as const)}
+                           placeholder="SĐT"
+                           className="w-full px-2 py-0 text-[10px] text-slate-500 border-none focus:ring-0 p-0"
+                         />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => remove(index)}
+                        className="text-slate-300 hover:text-red-500 transition-colors"
+                      >
+                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                      </button>
+                    </div>
+                 ))}
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center justify-end gap-2 md:gap-3 pt-2 border-t border-gray-100 mt-4">
