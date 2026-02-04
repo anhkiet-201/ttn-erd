@@ -53,7 +53,7 @@ export default function TinTuyenDungPage() {
   const data = useMemo(() => {
     return tins.map(tin => ({
       ...tin,
-      congTy: congTys.find(c => c.id === tin.congTyId)
+      congTy: congTys.find(c => c.id === tin.congTy?.id) || tin.congTy
     }));
   }, [tins, congTys]);
 
