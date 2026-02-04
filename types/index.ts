@@ -35,8 +35,7 @@ export interface TinTuyenDung {
   quanLy: QuanLy[];
   hinhThucTuyen: HinhThucTuyen;
   ghiChu: string | null;
-  mapUrl: string | null;
-  diaChi: string | null;
+  ghiChuPV: string | null;
   trangThai: TrangThai;
   createdAt?: number;
   updatedAt?: number;
@@ -48,6 +47,8 @@ export interface KhuVuc {
   congTy: CongTy[];
   createdAt?: number;
   updatedAt?: number;
+  mapUrl: string | null;
+  diaChi: string | null;
 }
 
 export interface CongTy {
@@ -58,6 +59,8 @@ export interface CongTy {
   quanLy: QuanLy[];
   createdAt?: number;
   updatedAt?: number;
+  mapUrl: string | null;
+  diaChi: string | null;
 }
 
 export enum GioiTinh {

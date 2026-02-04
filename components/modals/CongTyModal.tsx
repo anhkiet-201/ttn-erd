@@ -13,6 +13,8 @@ import { QuanLy } from '@/types';
 const congTySchema = z.object({
   tenCongTy: z.string().min(2, 'Tên công ty phải có ít nhất 2 ký tự'),
   khuVucId: z.string().min(1, 'Vui lòng chọn khu vực'),
+  diaChi: z.string().optional().nullable(),
+  mapUrl: z.string().optional().nullable(),
   quanLy: z.array(z.object({
     id: z.string(),
     tenQuanLy: z.string().min(1, 'Tên quản lý không được để trống'),
@@ -63,12 +65,16 @@ export default function CongTyModal({ isOpen, onClose, data }: CongTyModalProps)
         reset({
           tenCongTy: data.tenCongTy,
           khuVucId: data.khuVuc?.id || '',
+          diaChi: data.diaChi || '',
+          mapUrl: data.mapUrl || '',
           quanLy: data.quanLy || [],
         });
       } else {
         reset({
           tenCongTy: '',
           khuVucId: '',
+          diaChi: '',
+          mapUrl: '',
           quanLy: [],
         });
       }
@@ -90,6 +96,8 @@ export default function CongTyModal({ isOpen, onClose, data }: CongTyModalProps)
             id: selectedKhuVuc.id, 
             tenKhuVuc: selectedKhuVuc.tenKhuVuc 
           } as any,
+          diaChi: values.diaChi || null,
+          mapUrl: values.mapUrl || null,
           quanLy: values.quanLy,
         });
       } else {
@@ -100,6 +108,8 @@ export default function CongTyModal({ isOpen, onClose, data }: CongTyModalProps)
             tenKhuVuc: selectedKhuVuc.tenKhuVuc 
           } as any,
           tinTuyenDung: [],
+          diaChi: values.diaChi || null,
+          mapUrl: values.mapUrl || null,
           quanLy: values.quanLy,
         });
       }
@@ -146,6 +156,25 @@ export default function CongTyModal({ isOpen, onClose, data }: CongTyModalProps)
               ))}
             </select>
             {errors.khuVucId && <p className="mt-1 text-xs text-red-500">{errors.khuVucId.message}</p>}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Địa chỉ</label>
+              <input
+                {...register('diaChi')}
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 outline-none"
+                placeholder="Số nhà, tên đường..."
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Link Google Maps</label>
+              <input
+                {...register('mapUrl')}
+                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 outline-none"
+                placeholder="https://goo.gl/maps/..."
+              />
+            </div>
           </div>
 
           <div className="border-t border-gray-100 pt-4">

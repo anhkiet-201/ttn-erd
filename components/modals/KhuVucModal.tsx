@@ -9,6 +9,8 @@ import { KhuVucRepository } from '@/repositories/khuVuc.repository';
 
 const khuVucSchema = z.object({
   tenKhuVuc: z.string().min(2, 'Tên khu vực phải có ít nhất 2 ký tự'),
+  diaChi: z.string().optional().nullable(),
+  mapUrl: z.string().optional().nullable(),
 });
 
 type KhuVucFormValues = z.infer<typeof khuVucSchema>;
@@ -31,9 +33,17 @@ export default function KhuVucModal({ isOpen, onClose, data }: KhuVucModalProps)
   useEffect(() => {
     if (isOpen) {
       if (data) {
-        reset({ tenKhuVuc: data.tenKhuVuc });
+        reset({ 
+          tenKhuVuc: data.tenKhuVuc,
+          diaChi: data.diaChi || '',
+          mapUrl: data.mapUrl || '',
+        });
       } else {
-        reset({ tenKhuVuc: '' });
+        reset({ 
+          tenKhuVuc: '',
+          diaChi: '',
+          mapUrl: '',
+        });
       }
     }
   }, [isOpen, data, reset]);
@@ -49,7 +59,7 @@ export default function KhuVucModal({ isOpen, onClose, data }: KhuVucModalProps)
         await repository.create({
           ...values,
           congTy: [],
-        });
+        } as any);
       }
       onClose();
     } catch (error) {
@@ -80,6 +90,24 @@ export default function KhuVucModal({ isOpen, onClose, data }: KhuVucModalProps)
               placeholder="Ví dụ: Hồ Chí Minh, Bình Dương..."
             />
             {errors.tenKhuVuc && <p className="mt-1 text-xs text-red-500">{errors.tenKhuVuc.message}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Địa chỉ</label>
+            <input
+              {...register('diaChi')}
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 outline-none"
+              placeholder="Nhập địa chỉ của khu vực..."
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Link Google Maps</label>
+            <input
+              {...register('mapUrl')}
+              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 outline-none"
+              placeholder="https://goo.gl/maps/..."
+            />
           </div>
 
           <div className="flex items-center justify-end gap-2 md:gap-3 pt-2 border-t border-gray-100 mt-4">

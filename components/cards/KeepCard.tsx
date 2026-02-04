@@ -160,32 +160,43 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
             );
           })()}
 
-          {(data.diaChi || data.mapUrl) && (
-            <div className="flex items-center gap-2 text-xs text-gray-500 mb-3 group/map">
-              <svg className="w-3.5 h-3.5 flex-shrink-0 text-gray-400 group-hover/map:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              
-              {data.mapUrl ? (
-                <button 
-                  type="button"
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    const success = await copyToClipboard(data.mapUrl || '');
-                    if (success) toast.success('Đã sao chép link bản đồ');
-                    else toast.error('Không thể sao chép link');
-                  }}
-                  className="truncate hover:text-blue-600 hover:underline transition-colors decoration-blue-500/30 underline-offset-2 flex-1 text-left"
-                  title="Sao chép link bản đồ"
-                >
-                  {data.diaChi || 'Sao chép vị trí'}
-                </button>
-              ) : (
-                <span className="truncate flex-1">{data.diaChi}</span>
-              )}
-            </div>
-          )}
+          {(() => {
+            const congTy = data.congTy;
+            const khuVuc = congTy?.khuVuc;
+            
+            // Prioritize company-specific address, fallback to region-wide address
+            const address = congTy?.diaChi || khuVuc?.diaChi;
+            const mapUrl = congTy?.mapUrl || khuVuc?.mapUrl;
+
+            if (!address && !mapUrl) return null;
+
+            return (
+              <div className="flex items-center gap-2 text-xs text-gray-500 mb-3 group/map">
+                <svg className="w-3.5 h-3.5 flex-shrink-0 text-gray-400 group-hover/map:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                
+                {mapUrl ? (
+                  <button 
+                    type="button"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      const success = await copyToClipboard(mapUrl || '');
+                      if (success) toast.success('Đã sao chép link bản đồ');
+                      else toast.error('Không thể sao chép link');
+                    }}
+                    className="truncate hover:text-blue-600 hover:underline transition-colors decoration-blue-500/30 underline-offset-2 flex-1 text-left"
+                    title="Sao chép link bản đồ"
+                  >
+                    {address || 'Sao chép vị trí'}
+                  </button>
+                ) : (
+                  <span className="truncate flex-1">{address}</span>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Tags */}
           <div className="flex flex-wrap gap-1.5 mb-2">
@@ -212,11 +223,59 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-amber-800/60">Ghi chú</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-amber-800/60">Ghi chú nội bộ</span>
                   </div>
+                  <button
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      const success = await copyToClipboard(data.ghiChu || '');
+                      if (success) toast.success('Đã sao chép ghi chú');
+                    }}
+                    className="p-1 text-amber-500 hover:text-amber-700 hover:bg-amber-100 rounded-md transition-colors opacity-0 group-hover/note:opacity-100"
+                    title="Sao chép"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                  </button>
                 </div>
                 <p className="text-[12.5px] text-amber-900/80 leading-relaxed font-medium whitespace-pre-wrap pl-0.5">
                   {data.ghiChu}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Ghi chú Phỏng vấn */}
+          {data.ghiChuPV && (
+            <div className="mt-3 relative group/note-pv">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 to-indigo-50/50 rounded-r-lg rounded-l-sm border-l-2 border-blue-400/70" />
+              <div className="relative p-2.5">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center">
+                      <svg className="w-2.5 h-2.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                      </svg>
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-blue-800/60">Ghi chú Phỏng vấn</span>
+                  </div>
+                  <button
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      const success = await copyToClipboard(data.ghiChuPV || '');
+                      if (success) toast.success('Đã sao chép hướng dẫn');
+                    }}
+                    className="p-1 text-blue-500 hover:text-blue-700 hover:bg-blue-100 rounded-md transition-colors opacity-0 group-hover/note-pv:opacity-100"
+                    title="Sao chép"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                  </button>
+                </div>
+                <p className="text-[12.5px] text-blue-900/80 leading-relaxed font-medium whitespace-pre-wrap pl-0.5">
+                  {data.ghiChuPV}
                 </p>
               </div>
             </div>

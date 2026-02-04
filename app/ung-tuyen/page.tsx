@@ -5,7 +5,8 @@ import Sidebar from '@/components/layout/Sidebar';
 import { UngTuyenRepository } from '@/repositories/ungTuyen.repository';
 import { NguoiLaoDongRepository } from '@/repositories/nguoiLaoDong.repository';
 import { CongTyRepository } from '@/repositories/congTy.repository';
-import { UngTuyen, UngTuyenWithDetails, NguoiLaoDong, TinTuyenDung, TrangThaiTuyen, GioiTinh, CongTy } from '@/types';
+import { KhuVucRepository } from '@/repositories/khuVuc.repository';
+import { UngTuyen, UngTuyenWithDetails, NguoiLaoDong, TinTuyenDung, TrangThaiTuyen, GioiTinh, CongTy, KhuVuc } from '@/types';
 import UngTuyenModal from '@/components/modals/UngTuyenModal';
 import RescheduleModal from '@/components/modals/RescheduleModal';
 import { toast } from 'react-hot-toast';
@@ -17,6 +18,7 @@ import { useUI } from '@/components/providers/UIProvider';
 const ungTuyenRepo = new UngTuyenRepository();
 const workerRepo = new NguoiLaoDongRepository();
 const congTyRepo = new CongTyRepository();
+const khuVucRepo = new KhuVucRepository();
 
 export default function UngTuyenPage() {
   const { user } = useAuthContext();
@@ -24,6 +26,7 @@ export default function UngTuyenPage() {
   const [ungTuyens, setUngTuyens] = useState<UngTuyen[]>([]);
   const [workers, setWorkers] = useState<NguoiLaoDong[]>([]);
   const [companies, setCompanies] = useState<CongTy[]>([]);
+  const [khuVucs, setKhuVucs] = useState<KhuVuc[]>([]); // Added KhuVucs for joining
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<UngTuyen | null>(null);
@@ -42,17 +45,31 @@ export default function UngTuyenPage() {
       setCompanies(data);
       setLoading(false);
     });
+    const unsubKhuVuc = khuVucRepo.subscribeAll(setKhuVucs);
 
     return () => {
       unsubUngTuyen();
       unsubWorker();
       unsubCongTy();
+      unsubKhuVuc();
     };
   }, []);
 
   // 2. Optimization: Loopups with Map O(1)
   const workerMap = useMemo(() => new Map(workers.map(w => [w.id, w])), [workers]);
-  const companyMap = useMemo(() => new Map(companies.map(c => [c.id, c])), [companies]);
+  const khuVucMap = useMemo(() => new Map(khuVucs.map(kv => [kv.id, kv])), [khuVucs]);
+  const companyMap = useMemo(() => {
+    return new Map(companies.map(c => {
+      // Deep join KhuVuc info into company
+      if (c.khuVuc?.id) {
+        const fullKhuVuc = khuVucMap.get(c.khuVuc.id);
+        if (fullKhuVuc) {
+          return [c.id, { ...c, khuVuc: fullKhuVuc }];
+        }
+      }
+      return [c.id, c];
+    }));
+  }, [companies, khuVucMap]);
 
   // 3. Derived State: Joined Data
   const joinedData = useMemo(() => {
@@ -85,7 +102,9 @@ export default function UngTuyenPage() {
       item.nguoiLaoDong.tenNguoiLaoDong.toLowerCase().includes(lowerSearch) ||
       (item.nguoiLaoDong.soDienThoai && item.nguoiLaoDong.soDienThoai.includes(lowerSearch)) ||
       (item.nguoiLaoDong.cccd && item.nguoiLaoDong.cccd.includes(lowerSearch)) ||
-      (item.congTy?.tenCongTy && item.congTy.tenCongTy.toLowerCase().includes(lowerSearch))
+      (item.congTy?.tenCongTy && item.congTy.tenCongTy.toLowerCase().includes(lowerSearch)) ||
+      (item.congTy?.diaChi && item.congTy.diaChi.toLowerCase().includes(lowerSearch)) ||
+      (item.congTy?.khuVuc?.diaChi && item.congTy.khuVuc.diaChi.toLowerCase().includes(lowerSearch))
     );
   }, [joinedData, searchQuery]);
 
@@ -311,9 +330,18 @@ export default function UngTuyenPage() {
                                                 <div className="font-bold text-gray-800 text-sm truncate" title={item.congTy.tenCongTy}>
                                                     {item.congTy.tenCongTy}
                                                 </div>
-                                                {item.congTy.khuVuc && (
-                                                    <div className="text-xs text-gray-500 mt-0.5">{item.congTy.khuVuc.tenKhuVuc}</div>
-                                                )}
+                                                <div className="flex flex-col mt-0.5">
+                                                    {item.congTy.khuVuc && (
+                                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
+                                                            {item.congTy.khuVuc.tenKhuVuc}
+                                                        </span>
+                                                    )}
+                                                    {(item.congTy.diaChi || item.congTy.khuVuc?.diaChi) && (
+                                                        <span className="text-[11px] text-gray-500 truncate max-w-[150px]" title={item.congTy.diaChi || item.congTy.khuVuc?.diaChi}>
+                                                            {item.congTy.diaChi || item.congTy.khuVuc?.diaChi}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex flex-col items-center gap-2">
@@ -325,7 +353,7 @@ export default function UngTuyenPage() {
                                                     ) : (
                                                         <span className="text-xs text-gray-400 italic py-1">- Chưa xếp lịch -</span>
                                                     )}
-                                                    
+
                                                     <div className="flex items-center gap-1">
                                                         <button
                                                         onClick={(e) => { e.stopPropagation(); setRescheduleItem(item as any); setIsRescheduleOpen(true); }}
@@ -405,7 +433,7 @@ export default function UngTuyenPage() {
                                                                         </div>
                                                                         {his.tenCongTy && <span className="text-[10px] font-bold text-gray-400 truncate max-w-[80px]">{his.tenCongTy}</span>}
                                                                     </div>
-                                                                    
+
                                                                     <div className="space-y-1.5 pl-1">
                                                                         {isCompanyChange ? (
                                                                             <div className="flex items-center gap-2">
@@ -418,7 +446,7 @@ export default function UngTuyenPage() {
                                                                                 <span className="text-xs font-bold text-blue-700">Dời lịch</span>
                                                                             </div>
                                                                         )}
-                                                                        
+
                                                                         {his.trangThaiTuyen && (
                                                                             <div className="mt-1">
                                                                                 <span className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-bold uppercase border ${getStatusConfig(his.trangThaiTuyen).color}`}>
@@ -447,7 +475,7 @@ export default function UngTuyenPage() {
                             {filteredData.sort((a,b) => (b.updatedAt || '').localeCompare(a.updatedAt || '')).map((item) => (
                                 <div key={item.id} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm relative overflow-hidden group">
                                      <div className={`absolute top-0 left-0 w-1.5 h-full ${getStatusConfig(item.trangThaiTuyen).color.split(' ')[0]}`} />
-                                     
+
                                      <div className="flex justify-between items-start mb-3 pl-3">
                                         <div>
                                             <h3 className="font-bold text-gray-900 text-lg">{item.nguoiLaoDong.tenNguoiLaoDong}</h3>
@@ -466,7 +494,27 @@ export default function UngTuyenPage() {
                                             <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
                                             <span className="text-sm font-bold text-gray-700 truncate">{item.congTy.tenCongTy}</span>
                                         </div>
-                                        
+
+                                        <div className="flex flex-wrap gap-2 items-center">
+                                            <span className="inline-block px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-bold uppercase tracking-wide">
+                                              {item.congTy.khuVuc?.tenKhuVuc || 'N/A'}
+                                            </span>
+                                            {Array.isArray(item.congTy.quanLy) && item.congTy.quanLy.length > 0 && (
+                                              <span className="inline-block px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[10px] font-bold uppercase tracking-wide">
+                                                {item.congTy.quanLy.length} quản lý
+                                              </span>
+                                            )}
+                                        </div>
+
+                                        {(item.congTy.diaChi || item.congTy.khuVuc?.diaChi) && (
+                                           <div className="text-[11px] text-gray-500 flex items-start gap-1.5">
+                                             <svg className="w-3.5 h-3.5 mt-0.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                             </svg>
+                                             <span className="break-words line-clamp-1">{item.congTy.diaChi || item.congTy.khuVuc?.diaChi}</span>
+                                           </div>
+                                        )}
+
                                         <div className="flex items-center gap-3">
                                              <select
                                                 value={item.trangThaiTuyen}

@@ -23,14 +23,14 @@ const tinTuyenDungSchema = z.object({
   moTa: z.string().min(1, 'Vui lòng nhập nội dung'),
   congTyId: z.string().min(1, 'Vui lòng chọn công ty'),
   quanLyIds: z.array(z.string()).optional().default([]),
-  diaChi: z.string().optional(),
-  mapUrl: z.string().optional(),
+
   trangThai: z.nativeEnum(TrangThai),
   hinhThucTuyen: z.nativeEnum(HinhThucTuyen).default(HinhThucTuyen.THOI_VU),
   yeuCau: z.array(z.any()).optional(),
   phucLoi: z.array(z.any()).optional(),
   phuCap: z.array(z.any()).optional(),
   ghiChu: z.string().optional(),
+  ghiChuPV: z.string().optional(),
 });
 
 type TinTuyenDungFormValues = z.infer<typeof tinTuyenDungSchema>;
@@ -183,7 +183,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
   });
 
   const [showCongTy, setShowCongTy] = useState(false);
-  const [showDiaChi, setShowDiaChi] = useState(false);
+
   const [showTags, setShowTags] = useState(false);
   const [showGhiChu, setShowGhiChu] = useState(false);
 
@@ -196,6 +196,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
       phucLoi: [],
       phuCap: [],
       ghiChu: '',
+      ghiChuPV: '',
       congTyId: '',
       quanLyIds: [],
     }
@@ -246,18 +247,16 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
           quanLyIds: Array.isArray(initialData.quanLy) 
             ? initialData.quanLy.map(q => q.id) 
             : (initialData.quanLy ? [(initialData.quanLy as any).id] : []),
-          diaChi: initialData.diaChi || '',
-          mapUrl: initialData.mapUrl || '',
           trangThai: initialData.trangThai,
           hinhThucTuyen: initialData.hinhThucTuyen || HinhThucTuyen.THOI_VU,
           yeuCau: Array.isArray(initialData.yeuCau) ? initialData.yeuCau : [],
           phucLoi: Array.isArray(initialData.phucLoi) ? initialData.phucLoi : [],
           phuCap: Array.isArray(initialData.phuCap) ? initialData.phuCap : [],
           ghiChu: initialData.ghiChu || '',
+          ghiChuPV: initialData.ghiChuPV || '',
         });
 
         if (initialData.congTy) setShowCongTy(true);
-        if (initialData.diaChi || initialData.mapUrl) setShowDiaChi(true);
         if (initialData.yeuCau?.length || initialData.phucLoi?.length || initialData.phuCap?.length) setShowTags(true);
         if (initialData.ghiChu) setShowGhiChu(true);
       } else {
@@ -267,15 +266,13 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
           moTa: '',
           congTyId: '',
           quanLyIds: [],
-          diaChi: '',
-          mapUrl: '',
           yeuCau: [],
           phucLoi: [],
           phuCap: [],
           ghiChu: '',
+          ghiChuPV: '',
         });
         setShowCongTy(false);
-        setShowDiaChi(false);
         setShowTags(false);
         setShowGhiChu(false);
       }
@@ -305,14 +302,13 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
         moTa: values.moTa,
         congTy: selectedCongTy as any, 
         quanLy: [], // Luôn rỗng vì giờ dùng quản lý của công ty
-        mapUrl: values.mapUrl || null,
-        diaChi: values.diaChi || null,
         trangThai: values.trangThai,
         hinhThucTuyen: values.hinhThucTuyen,
         yeuCau: values.yeuCau || [],
         phucLoi: values.phucLoi || [],
         phuCap: values.phuCap || [],
         ghiChu: values.ghiChu || null,
+        ghiChuPV: values.ghiChuPV || null,
       }; 
 
       if (initialData?.id) {
@@ -379,20 +375,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
             )}
 
 
-            {(showDiaChi || watch('diaChi') || watch('mapUrl')) && (
-              <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
-                <input
-                  {...register('diaChi')}
-                  placeholder="Địa chỉ làm việc..."
-                  className="w-full px-3 py-2 bg-gray-50 rounded-lg text-sm border-none focus:ring-1 focus:ring-gray-200 text-gray-700 outline-none"
-                />
-                <input
-                  {...register('mapUrl')}
-                  placeholder="Link Google Maps..."
-                  className="w-full px-3 py-2 bg-gray-50 rounded-lg text-sm border-none focus:ring-1 focus:ring-gray-200 text-gray-700 outline-none"
-                />
-              </div>
-            )}
+
 
             {(showTags || yeuCauTags.length > 0 || phucLoiTags.length > 0 || phuCapTags.length > 0) && (
               <div className="space-y-3 animate-in fade-in slide-in-from-top-1 duration-200 pt-2 border-t border-gray-100">
@@ -423,27 +406,52 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
               </div>
             )}
 
-            {/* Ghi chú nội bộ */}
-            {(showGhiChu || watch('ghiChu')) && (
-              <div className="animate-in fade-in slide-in-from-top-1 duration-200">
-                <div className="relative w-full px-3 py-3 rounded-xl bg-orange-50/20 border border-orange-100/50 transition-all focus-within:border-orange-200 focus-within:bg-orange-50/40">
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <div className="w-4 h-4 rounded-full bg-orange-100 flex items-center justify-center">
-                      <svg className="w-2.5 h-2.5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
+            {/* Ghi chú nội bộ & Phỏng vấn */}
+            {(showGhiChu || watch('ghiChu') || watch('ghiChuPV')) && (
+              <div className="space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
+                {/* Ghi chú nội bộ */}
+                {(showGhiChu || watch('ghiChu')) && (
+                  <div className="relative w-full px-3 py-3 rounded-xl bg-orange-50/20 border border-orange-100/50 transition-all focus-within:border-orange-200 focus-within:bg-orange-50/40">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <div className="w-4 h-4 rounded-full bg-orange-100 flex items-center justify-center">
+                        <svg className="w-2.5 h-2.5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-orange-700/60 font-sans">
+                        Ghi chú nội bộ
+                      </span>
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-orange-700/60 font-sans">
-                      Ghi chú nội bộ
-                    </span>
+                    <TextareaAutosize
+                      {...register('ghiChu')}
+                      placeholder="Nhập ghi chú quan trọng cho tin này..."
+                      className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder-orange-300 resize-none font-medium leading-relaxed"
+                      minRows={1}
+                    />
                   </div>
-                  <TextareaAutosize
-                    {...register('ghiChu')}
-                    placeholder="Nhập ghi chú quan trọng cho tin này..."
-                    className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder-orange-300 resize-none font-medium leading-relaxed"
-                    minRows={1}
-                  />
-                </div>
+                )}
+
+                {/* Ghi chú Phỏng vấn */}
+                {(showGhiChu || watch('ghiChuPV')) && (
+                  <div className="relative w-full px-3 py-3 rounded-xl bg-blue-50/20 border border-blue-100/50 transition-all focus-within:border-blue-200 focus-within:bg-blue-50/40">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <div className="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center">
+                        <svg className="w-2.5 h-2.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                        </svg>
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-blue-700/60 font-sans">
+                        Ghi chú Phỏng vấn
+                      </span>
+                    </div>
+                    <TextareaAutosize
+                      {...register('ghiChuPV')}
+                      placeholder="Nhập ghi chú phỏng vấn (Lầu mấy, gặp ai...)..."
+                      className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder-blue-300 resize-none font-medium leading-relaxed"
+                      minRows={1}
+                    />
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -463,17 +471,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
             </button>
 
 
-            <button 
-              type="button" 
-              onClick={() => setShowDiaChi(!showDiaChi)}
-              className={`p-2 rounded-full transition-colors ${showDiaChi ? 'bg-gray-100 text-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
-              title="Địa điểm"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </button>
+
 
             <button 
               type="button" 

@@ -76,6 +76,14 @@ export default function TinTuyenDungPage() {
           });
         }
         
+        // Deep join: Map khuVuc to live khuVuc data to get diaChi and mapUrl
+        if (joinedCongTy.khuVuc?.id) {
+          const liveKhuVuc = khuVucs.find(kv => kv.id === joinedCongTy.khuVuc.id);
+          if (liveKhuVuc) {
+            joinedCongTy.khuVuc = liveKhuVuc;
+          }
+        }
+        
         updatedTin.congTy = joinedCongTy;
       }
     }

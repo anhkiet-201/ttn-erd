@@ -142,8 +142,8 @@ export default function CongTyPage() {
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider w-1/3">Tên Công Ty</th>
-                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Khu Vực</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider w-1/4">Tên Công Ty</th>
+                  <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Khu Vực / Địa Chỉ</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Quản Lý</th>
                   <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Thao Tác</th>
                 </tr>
@@ -164,9 +164,29 @@ export default function CongTyPage() {
                         <div className="text-sm font-semibold text-gray-900">{item.tenCongTy}</div>
                       </td>
                       <td className="px-6 py-4 align-top">
-                        <span className="px-2.5 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
-                          {item.khuVuc?.tenKhuVuc || 'N/A'}
-                        </span>
+                        <div className="flex flex-col gap-1.5">
+                          <span className="inline-flex w-fit px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-[10px] font-bold uppercase tracking-wider">
+                            {item.khuVuc?.tenKhuVuc || 'N/A'}
+                          </span>
+                          {(item.diaChi || item.khuVuc?.diaChi) && (
+                            <span className="text-xs text-gray-500 leading-relaxed max-w-[200px]">
+                              {item.diaChi || item.khuVuc?.diaChi}
+                            </span>
+                          )}
+                          {(item.mapUrl || item.khuVuc?.mapUrl) && (
+                            <a 
+                              href={item.mapUrl || item.khuVuc?.mapUrl || '#'} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-[10px] text-blue-600 hover:underline flex items-center gap-1"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              </svg>
+                              Xem bản đồ
+                            </a>
+                          )}
+                        </div>
                       </td>
                       <td className="px-6 py-4 align-top">
                         {Array.isArray(item.quanLy) && item.quanLy.length > 0 ? (
@@ -235,6 +255,15 @@ export default function CongTyPage() {
                           </span>
                         )}
                       </div>
+
+                      {(item.diaChi || item.khuVuc?.diaChi) && (
+                        <div className="mt-2 text-[11px] text-gray-500 flex items-start gap-1.5">
+                          <svg className="w-3.5 h-3.5 mt-0.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          </svg>
+                          <span className="break-words">{item.diaChi || item.khuVuc?.diaChi}</span>
+                        </div>
+                      )}
                       
                       {/* Mobile Manager List */}
                       {Array.isArray(item.quanLy) && item.quanLy.length > 0 && (

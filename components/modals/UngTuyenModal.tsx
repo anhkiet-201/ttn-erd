@@ -254,7 +254,9 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
             >
               <option value="">-- Chọn công ty --</option>
               {companies.map(c => (
-                <option key={c.id} value={c.id}>{c.tenCongTy}</option>
+                <option key={c.id} value={c.id}>
+                  {c.tenCongTy} {c.diaChi || c.khuVuc?.diaChi ? `(${c.diaChi || c.khuVuc?.diaChi})` : ''}
+                </option>
               ))}
             </select>
             {errors.congTyId && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.congTyId.message}</p>}
