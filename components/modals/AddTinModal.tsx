@@ -192,8 +192,8 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       
-      congTyRepo.getAll().then(setCongTys);
-      quanLyRepo.getAll().then(setQuanLys);
+      const unsubCongTys = congTyRepo.subscribeAll(setCongTys);
+      const unsubQuanLys = quanLyRepo.subscribeAll(setQuanLys);
       
       tinRepo.getAll().then(tins => {
         const uniqueYeuCau = new Set<string>();
@@ -212,11 +212,13 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
           phuCap: Array.from(uniquePhuCap)
         });
       });
-    }
 
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+      return () => {
+        unsubCongTys();
+        unsubQuanLys();
+        document.body.style.overflow = 'unset';
+      };
+    }
   }, [isOpen]);
 
   useEffect(() => {
@@ -225,7 +227,9 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
         reset({
           moTa: initialData.moTa,
           congTyId: initialData.congTy?.id || '',
-          quanLyIds: Array.isArray(initialData.quanLy) ? initialData.quanLy.map(q => q.id) : [],
+          quanLyIds: Array.isArray(initialData.quanLy) 
+            ? initialData.quanLy.map(q => q.id) 
+            : (initialData.quanLy ? [(initialData.quanLy as any).id] : []),
           diaChi: initialData.diaChi || '',
           mapUrl: initialData.mapUrl || '',
           trangThai: initialData.trangThai,
