@@ -4,9 +4,10 @@ import React, { useEffect, useState, useRef, KeyboardEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { TinTuyenDung, TrangThai, CongTy } from '@/types';
+import { TinTuyenDung, TrangThai, CongTy, QuanLy } from '@/types';
 import { TinTuyenDungRepository } from '@/repositories/tinTuyenDung.repository';
 import { CongTyRepository } from '@/repositories/congTy.repository';
+import { QuanLyRepository } from '@/repositories/quanLy.repository';
 import { v4 as uuidv4 } from 'uuid';
 import TextareaAutosize from 'react-textarea-autosize';
 
@@ -20,7 +21,8 @@ interface TagObj {
 // Schema Validation
 const tinTuyenDungSchema = z.object({
   moTa: z.string().min(1, 'Vui lòng nhập nội dung'),
-  congTyId: z.string().optional(),
+  congTyId: z.string().min(1, 'Vui lòng chọn công ty'),
+  quanLyId: z.string().min(1, 'Vui lòng chọn quản lý khu vực'),
   diaChi: z.string().optional(),
   mapUrl: z.string().optional(),
   trangThai: z.nativeEnum(TrangThai),
@@ -34,6 +36,7 @@ type TinTuyenDungFormValues = z.infer<typeof tinTuyenDungSchema>;
 
 const tinRepo = new TinTuyenDungRepository();
 const congTyRepo = new CongTyRepository();
+const quanLyRepo = new QuanLyRepository();
 
 // --- Tag Input Component ---
 interface TagInputProps {
@@ -153,6 +156,7 @@ interface AddTinModalProps {
 
 export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinModalProps) {
   const [congTys, setCongTys] = useState<CongTy[]>([]);
+  const [quanLys, setQuanLys] = useState<QuanLy[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   
   const [suggestedTags, setSuggestedTags] = useState({
@@ -162,6 +166,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
   });
 
   const [showCongTy, setShowCongTy] = useState(false);
+  const [showQuanLy, setShowQuanLy] = useState(false);
   const [showDiaChi, setShowDiaChi] = useState(false);
   const [showTags, setShowTags] = useState(false);
   const [showGhiChu, setShowGhiChu] = useState(false);
@@ -174,6 +179,8 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
       phucLoi: [],
       phuCap: [],
       ghiChu: '',
+      congTyId: '',
+      quanLyId: '',
     }
   });
 
@@ -186,6 +193,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
       document.body.style.overflow = 'hidden';
       
       congTyRepo.getAll().then(setCongTys);
+      quanLyRepo.getAll().then(setQuanLys);
       
       tinRepo.getAll().then(tins => {
         const uniqueYeuCau = new Set<string>();
@@ -217,6 +225,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
         reset({
           moTa: initialData.moTa,
           congTyId: initialData.congTy?.id || '',
+          quanLyId: initialData.quanLy?.id || '',
           diaChi: initialData.diaChi || '',
           mapUrl: initialData.mapUrl || '',
           trangThai: initialData.trangThai,
@@ -227,6 +236,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
         });
 
         if (initialData.congTy) setShowCongTy(true);
+        if (initialData.quanLy) setShowQuanLy(true);
         if (initialData.diaChi || initialData.mapUrl) setShowDiaChi(true);
         if (initialData.yeuCau?.length || initialData.phucLoi?.length || initialData.phuCap?.length) setShowTags(true);
         if (initialData.ghiChu) setShowGhiChu(true);
@@ -235,6 +245,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
           trangThai: TrangThai.DANG_TUYEN,
           moTa: '',
           congTyId: '',
+          quanLyId: '',
           diaChi: '',
           mapUrl: '',
           yeuCau: [],
@@ -243,6 +254,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
           ghiChu: '',
         });
         setShowCongTy(false);
+        setShowQuanLy(false);
         setShowDiaChi(false);
         setShowTags(false);
         setShowGhiChu(false);
@@ -259,10 +271,12 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
     setIsSaving(true);
     try {
       const selectedCongTy = congTys.find(c => c.id === values.congTyId);
+      const selectedQuanLy = quanLys.find(q => q.id === values.quanLyId);
       
       const tinData = {
         moTa: values.moTa,
         congTy: selectedCongTy as any, 
+        quanLy: selectedQuanLy || null,
         diaChi: values.diaChi || null,
         mapUrl: values.mapUrl || null,
         trangThai: values.trangThai,
@@ -270,7 +284,6 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
         phucLoi: values.phucLoi || [],
         phuCap: values.phuCap || [],
         ghiChu: values.ghiChu || null,
-        quanLy: initialData?.quanLy || [],
       }; 
 
       if (initialData?.id) {
@@ -321,6 +334,20 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
                   <option value="">-- Chọn công ty --</option>
                   {congTys.map(c => (
                     <option key={c.id} value={c.id}>{c.tenCongTy}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {(showQuanLy || watch('quanLyId')) && (
+              <div className="animate-in fade-in slide-in-from-top-1 duration-200">
+                <select
+                  {...register('quanLyId')}
+                  className="w-full px-3 py-2 bg-gray-50 rounded-lg text-sm border-none focus:ring-1 focus:ring-gray-200 text-gray-700 outline-none"
+                >
+                  <option value="">-- Chọn quản lý khu vực --</option>
+                  {quanLys.map(q => (
+                    <option key={q.id} value={q.id}>{q.tenQuanLy} - {q.soDienThoai}</option>
                   ))}
                 </select>
               </div>
@@ -406,6 +433,17 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </button>
+
+            <button 
+              type="button" 
+              onClick={() => setShowQuanLy(!showQuanLy)}
+              className={`p-2 rounded-full transition-colors ${showQuanLy ? 'bg-gray-100 text-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
+              title="Quản lý khu vực"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
             </button>
             

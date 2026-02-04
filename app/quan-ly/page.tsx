@@ -99,7 +99,7 @@ export default function QuanLyPage() {
         {/* Main Content */}
         <main className="flex-1 ml-0 md:ml-20 lg:ml-72 p-4 md:p-8">
           <div className="flex items-center justify-between mb-8 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-800">Quản Lý Nhân Viên</h2>
+            <h2 className="text-2xl font-bold text-gray-800">Quản Lý</h2>
             <button 
               onClick={handleAdd}
               className="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-blue-50"
