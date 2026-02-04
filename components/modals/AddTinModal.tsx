@@ -27,6 +27,7 @@ const tinTuyenDungSchema = z.object({
   yeuCau: z.array(z.any()).optional(),
   phucLoi: z.array(z.any()).optional(),
   phuCap: z.array(z.any()).optional(),
+  ghiChu: z.string().optional(),
 });
 
 type TinTuyenDungFormValues = z.infer<typeof tinTuyenDungSchema>;
@@ -163,6 +164,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
   const [showCongTy, setShowCongTy] = useState(false);
   const [showDiaChi, setShowDiaChi] = useState(false);
   const [showTags, setShowTags] = useState(false);
+  const [showGhiChu, setShowGhiChu] = useState(false);
 
   const { register, handleSubmit, setValue, watch, reset } = useForm<TinTuyenDungFormValues>({
     resolver: zodResolver(tinTuyenDungSchema),
@@ -171,6 +173,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
       yeuCau: [],
       phucLoi: [],
       phuCap: [],
+      ghiChu: '',
     }
   });
 
@@ -214,11 +217,13 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
           yeuCau: Array.isArray(initialData.yeuCau) ? initialData.yeuCau : [],
           phucLoi: Array.isArray(initialData.phucLoi) ? initialData.phucLoi : [],
           phuCap: Array.isArray(initialData.phuCap) ? initialData.phuCap : [],
+          ghiChu: initialData.ghiChu || '',
         });
 
         if (initialData.congTy) setShowCongTy(true);
         if (initialData.diaChi || initialData.mapUrl) setShowDiaChi(true);
         if (initialData.yeuCau?.length || initialData.phucLoi?.length || initialData.phuCap?.length) setShowTags(true);
+        if (initialData.ghiChu) setShowGhiChu(true);
       } else {
         reset({
           trangThai: TrangThai.DANG_TUYEN,
@@ -229,10 +234,12 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
           yeuCau: [],
           phucLoi: [],
           phuCap: [],
+          ghiChu: '',
         });
         setShowCongTy(false);
         setShowDiaChi(false);
         setShowTags(false);
+        setShowGhiChu(false);
       }
     }
   }, [isOpen, initialData, reset]);
@@ -256,7 +263,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
         yeuCau: values.yeuCau || [],
         phucLoi: values.phucLoi || [],
         phuCap: values.phuCap || [],
-        ghiChu: initialData?.ghiChu || [],
+        ghiChu: values.ghiChu || null,
         quanLy: initialData?.quanLy || [],
       }; 
 
@@ -356,6 +363,30 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
                 />
               </div>
             )}
+
+            {/* Ghi chú nội bộ */}
+            {(showGhiChu || watch('ghiChu')) && (
+              <div className="animate-in fade-in slide-in-from-top-1 duration-200">
+                <div className="relative w-full px-3 py-3 rounded-xl bg-orange-50/20 border border-orange-100/50 transition-all focus-within:border-orange-200 focus-within:bg-orange-50/40">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <div className="w-4 h-4 rounded-full bg-orange-100 flex items-center justify-center">
+                      <svg className="w-2.5 h-2.5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-orange-700/60 font-sans">
+                      Ghi chú nội bộ
+                    </span>
+                  </div>
+                  <TextareaAutosize
+                    {...register('ghiChu')}
+                    placeholder="Nhập ghi chú quan trọng cho tin này..."
+                    className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder-orange-300 resize-none font-medium leading-relaxed"
+                    minRows={1}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -392,6 +423,17 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+              </svg>
+            </button>
+
+            <button 
+              type="button" 
+              onClick={() => setShowGhiChu(!showGhiChu)}
+              className={`p-2 rounded-full transition-colors ${showGhiChu ? 'bg-gray-100 text-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
+              title="Thêm Ghi Chú"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
             </button>
             

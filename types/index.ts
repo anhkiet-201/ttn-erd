@@ -8,7 +8,6 @@ export interface Tag {
 export interface YeuCau extends Tag {}
 export interface PhucLoi extends Tag {}
 export interface PhuCap extends Tag {}
-export interface GhiChu extends Tag {}
 
 export interface QuanLy {
   id: string;
@@ -28,7 +27,7 @@ export interface TinTuyenDung {
   phucLoi: PhucLoi[];
   phuCap: PhuCap[];
   congTy: CongTy;
-  ghiChu: GhiChu[];
+  ghiChu: string | null;
   quanLy: QuanLy[];
   mapUrl: string | null;
   diaChi: string | null;
