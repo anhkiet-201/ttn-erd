@@ -116,11 +116,9 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
           </h3>
 
           {/* Manager Info */}
-          {/* Manager Info: Prioritize job-specific managers, otherwise show company managers */}
+          {/* Manager Info: Always show company managers as per user request */}
           {(() => {
-            const managers = (Array.isArray(data.quanLy) && data.quanLy.length > 0) 
-              ? data.quanLy 
-              : (data.congTy?.quanLy || []);
+            const managers = data.congTy?.quanLy || [];
 
             if (managers.length === 0) return null;
 
