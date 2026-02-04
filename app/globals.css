@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+    font-family: 'Inter', 'Roboto', sans-serif;
+  }
+}
+
+@layer utilities {
+  .transition-fast {
+    transition-duration: 150ms;
+    transition-timing-function: ease-in-out;
+  }
+
+  .transition-base {
+    transition-duration: 250ms;
+    transition-timing-function: ease-in-out;
+  }
+
+  .transition-slow {
+    transition-duration: 350ms;
+    transition-timing-function: ease-in-out;
+  }
+}
+
+/* Google Keep Card Hover Effect */
+.keep-card {
+  @apply transition-all duration-base hover:-translate-y-1 hover:shadow-lg;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50;
+  animation: fadeIn 200ms ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Content */
+.modal-content {
+  @apply bg-white rounded-lg p-6 max-w-2xl w-full mx-4;
+  animation: slideUp 250ms ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Masonry Grid (CSS Grid fallback) */
+.masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+@media (max-width: 640px) {
+  .masonry-grid {
+    grid-template-columns: 1fr;
+  }
+}
