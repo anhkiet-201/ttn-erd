@@ -7,7 +7,8 @@ import { useAuthContext } from '@/components/auth/AuthProvider';
 import { TinTuyenDungRepository } from '@/repositories/tinTuyenDung.repository';
 import { QuanLyRepository } from '@/repositories/quanLy.repository';
 import { CongTyRepository } from '@/repositories/congTy.repository';
-import { TinTuyenDung, QuanLy, CongTy } from '@/types';
+import { KhuVucRepository } from '@/repositories/khuVuc.repository';
+import { TinTuyenDung, QuanLy, CongTy, KhuVuc } from '@/types';
 import AddTinModal from '@/components/modals/AddTinModal';
 import Sidebar from '@/components/layout/Sidebar';
 import { useUI } from '@/components/providers/UIProvider';
@@ -15,6 +16,7 @@ import { useUI } from '@/components/providers/UIProvider';
 const tinRepository = new TinTuyenDungRepository();
 const quanLyRepository = new QuanLyRepository();
 const congTyRepository = new CongTyRepository();
+const khuVucRepository = new KhuVucRepository();
 
 export default function TinTuyenDungPage() {
   const { user } = useAuthContext();
@@ -22,6 +24,8 @@ export default function TinTuyenDungPage() {
   const [tins, setTins] = useState<TinTuyenDung[]>([]);
   const [quanLys, setQuanLys] = useState<QuanLy[]>([]);
   const [congTys, setCongTys] = useState<CongTy[]>([]);
+  const [khuVucs, setKhuVucs] = useState<KhuVuc[]>([]);
+  const [selectedKhuVuc, setSelectedKhuVuc] = useState<string>('all');
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,10 +45,15 @@ export default function TinTuyenDungPage() {
       setCongTys(items);
     });
 
+    const unsubKhuVucs = khuVucRepository.subscribeAll((items) => {
+      setKhuVucs(items);
+    });
+
     return () => {
       unsubTins();
       unsubQuanLys();
       unsubCongTys();
+      unsubKhuVucs();
     };
   }, []);
 
@@ -169,6 +178,35 @@ export default function TinTuyenDungPage() {
             </div>
           </div>
 
+          {/* Region Filter Bar */}
+          <div className="mb-6 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setSelectedKhuVuc('all')}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap shadow-sm border ${
+                  selectedKhuVuc === 'all'
+                    ? 'bg-gray-900 text-white border-gray-900 ring-2 ring-gray-200'
+                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                }`}
+              >
+                Tất cả
+              </button>
+              {khuVucs.map(kv => (
+                <button
+                  key={kv.id}
+                  onClick={() => setSelectedKhuVuc(kv.id)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap shadow-sm border ${
+                    selectedKhuVuc === kv.id
+                      ? 'bg-gray-900 text-white border-gray-900 ring-2 ring-gray-200'
+                      : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                  }`}
+                >
+                  {kv.tenKhuVuc}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="w-12 h-12 border-4 border-gray-100 border-t-yellow-500 rounded-full animate-spin mb-4"></div>
@@ -179,8 +217,12 @@ export default function TinTuyenDungPage() {
               {data
                 .filter(item => {
                   const search = searchQuery.toLowerCase();
-                  return (item.moTa?.toLowerCase().includes(search) || 
-                          item.congTy?.tenCongTy?.toLowerCase().includes(search));
+                  const matchesSearch = item.moTa?.toLowerCase().includes(search) || 
+                          item.congTy?.tenCongTy?.toLowerCase().includes(search);
+                  
+                  const matchesKhuVuc = selectedKhuVuc === 'all' || item.congTy?.khuVuc?.id === selectedKhuVuc;
+
+                  return matchesSearch && matchesKhuVuc;
                 })
                 .map((item) => (
                   <KeepCard 
