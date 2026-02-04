@@ -165,10 +165,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
     phuCap: [] as string[]
   });
 
-  const [filteredQuanLys, setFilteredQuanLys] = useState<QuanLy[]>([]); // Danh sách quản lý theo công ty đã chọn
-
   const [showCongTy, setShowCongTy] = useState(false);
-  const [showQuanLy, setShowQuanLy] = useState(false);
   const [showDiaChi, setShowDiaChi] = useState(false);
   const [showTags, setShowTags] = useState(false);
   const [showGhiChu, setShowGhiChu] = useState(false);
@@ -190,21 +187,6 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
   const yeuCauTags = watch('yeuCau') || [];
   const phucLoiTags = watch('phucLoi') || [];
   const phuCapTags = watch('phuCap') || [];
-  const selectedCongTyId = watch('congTyId');
-
-  // Effect: Khi congTyId thay đổi -> cập nhật danh sách quanLy
-  useEffect(() => {
-    if (!selectedCongTyId) {
-      setFilteredQuanLys([]);
-      return;
-    }
-    const company = congTys.find(c => c.id === selectedCongTyId);
-    if (company && company.quanLy) {
-      setFilteredQuanLys(company.quanLy);
-    } else {
-      setFilteredQuanLys([]);
-    }
-  }, [selectedCongTyId, congTys]);
 
   useEffect(() => {
     if (isOpen) {
@@ -257,7 +239,6 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
         });
 
         if (initialData.congTy) setShowCongTy(true);
-        if (initialData.quanLy) setShowQuanLy(true);
         if (initialData.diaChi || initialData.mapUrl) setShowDiaChi(true);
         if (initialData.yeuCau?.length || initialData.phucLoi?.length || initialData.phuCap?.length) setShowTags(true);
         if (initialData.ghiChu) setShowGhiChu(true);
@@ -275,7 +256,6 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
           ghiChu: '',
         });
         setShowCongTy(false);
-        setShowQuanLy(false);
         setShowDiaChi(false);
         setShowTags(false);
         setShowGhiChu(false);
@@ -301,13 +281,11 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
     setIsSaving(true);
     try {
       const selectedCongTy = congTys.find(c => c.id === values.congTyId);
-      // Lấy data quản lý từ danh sách đã lọc (theo công ty), không phải toàn bộ hệ thống
-      const selectedQuanLys = filteredQuanLys.filter(q => values.quanLyIds.includes(q.id));
       
       const tinData = {
         moTa: values.moTa,
         congTy: selectedCongTy as any, 
-        quanLy: selectedQuanLys,
+        quanLy: [], // Luôn rỗng vì giờ dùng quản lý của công ty
         diaChi: values.diaChi || null,
         mapUrl: values.mapUrl || null,
         trangThai: values.trangThai,
@@ -380,65 +358,6 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
               </div>
             )}
 
-            {(showQuanLy || (watch('quanLyIds') && watch('quanLyIds').length > 0)) && (
-              <div className="animate-in fade-in slide-in-from-top-1 duration-200">
-                <div className="flex items-center gap-1.5 mb-1.5 ml-1">
-                  <div className="w-4 h-4 rounded-full bg-blue-50 flex items-center justify-center">
-                    <svg className="w-2.5 h-2.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                  </div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500/80">Quản lý khu vực (Tùy chọn)</span>
-                </div>
-                <div className={`bg-gray-50/50 rounded-xl p-3 border transition-all ${errors.quanLyIds ? 'border-red-300 bg-red-50/10' : 'border-gray-100 focus-within:border-slate-200'}`}>
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {watch('quanLyIds')?.map(id => {
-                      // Tìm trong filteredQuanLys trước
-                      const q = filteredQuanLys.find(item => item.id === id);
-                      if (!q) return null;
-                      return (
-                        <span key={id} className="inline-flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-100 rounded-lg text-xs font-bold text-gray-700 shadow-sm animate-in zoom-in-95 duration-200">
-                          {q.tenQuanLy}
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const current = watch('quanLyIds') || [];
-                              setValue('quanLyIds', current.filter(itemId => itemId !== id));
-                            }}
-                            className="w-4 h-4 flex items-center justify-center rounded-full hover:bg-red-50 hover:text-red-500 transition-colors"
-                          >
-                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                          </button>
-                        </span>
-                      );
-                    })}
-                  </div>
-                  <select
-                    className="w-full bg-transparent text-sm text-gray-700 outline-none border-t border-gray-100 pt-2"
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (!val) return;
-                      const current = watch('quanLyIds') || [];
-                      if (!current.includes(val)) {
-                        setValue('quanLyIds', [...current, val]);
-                      }
-                      e.target.value = ''; // Reset select
-                    }}
-                  >
-                    <option value="">-- Thêm quản lý khu vực --</option>
-                    {filteredQuanLys
-                      .filter(q => !watch('quanLyIds')?.includes(q.id))
-                      .map(q => (
-                        <option key={q.id} value={q.id}>{q.tenQuanLy} - {q.soDienThoai}</option>
-                      )
-                    )}
-                  </select>
-                </div>
-                {errors.quanLyIds && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.quanLyIds.message}</p>}
-              </div>
-            )}
 
             {(showDiaChi || watch('diaChi') || watch('mapUrl')) && (
               <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
@@ -523,16 +442,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
               </svg>
             </button>
 
-            <button 
-              type="button" 
-              onClick={() => setShowQuanLy(!showQuanLy)}
-              className={`p-2 rounded-full transition-colors ${showQuanLy || (watch('quanLyIds') && watch('quanLyIds').length > 0) ? 'bg-gray-100 text-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
-              title="Quản lý khu vực"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-            </button>
+
             <button 
               type="button" 
               onClick={() => setShowDiaChi(!showDiaChi)}
