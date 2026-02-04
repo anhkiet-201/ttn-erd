@@ -2,14 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { MasonryGrid } from '@/components/layout/MasonryGrid';
-import { KeepCard } from '@/components/cards/KeepCard';
+import KeepCard from '@/components/cards/KeepCard';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { TinTuyenDungRepository } from '@/repositories/tinTuyenDung.repository';
 import { QuanLyRepository } from '@/repositories/quanLy.repository';
 import { CongTyRepository } from '@/repositories/congTy.repository';
 import { TinTuyenDung, QuanLy, CongTy } from '@/types';
 import { AddTinModal } from '@/components/modals/AddTinModal';
-import { Sidebar } from '@/components/layout/Sidebar';
+import Sidebar from '@/components/layout/Sidebar';
 import { useUI } from '@/components/providers/UIProvider';
 
 const tinRepository = new TinTuyenDungRepository();
@@ -176,7 +176,7 @@ export default function TinTuyenDungPage() {
                     key={item.id} 
                     data={item} 
                     onClick={() => handleEditTin(item)}
-                    onDelete={async (id) => {
+                    onDelete={async (id: string) => {
                       try {
                         await tinRepository.delete(id);
                       } catch (error) {
@@ -184,7 +184,7 @@ export default function TinTuyenDungPage() {
                         alert('Xóa tin thất bại!');
                       }
                     }}
-                    onToggleTag={async (id, category, tagId) => {
+                    onToggleTag={async (id: string, category: 'yeuCau' | 'phucLoi' | 'phuCap', tagId: string) => {
                       try {
                         const tin = tins.find(t => t.id === id);
                         if (!tin) return;

@@ -138,7 +138,7 @@ export default function UngTuyenPage() {
                   <div className="flex flex-row md:flex-col justify-end gap-2 pr-2">
                     <button 
                       onClick={() => {
-                        setEditingItem(item);
+                        setEditingItem(item as any);
                         setIsModalOpen(true);
                       }}
                       className="p-3 bg-white border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-400 hover:text-indigo-600 rounded-xl transition-all shadow-sm"

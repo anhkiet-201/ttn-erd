@@ -49,7 +49,7 @@ const menuItems = [
 
 import { useUI } from '@/components/providers/UIProvider';
 
-export function Sidebar() {
+export default function Sidebar() {
   const pathname = usePathname();
   const { isSidebarOpen, closeSidebar } = useUI();
 
