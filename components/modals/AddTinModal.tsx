@@ -171,7 +171,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
   const [showTags, setShowTags] = useState(false);
   const [showGhiChu, setShowGhiChu] = useState(false);
 
-  const { register, handleSubmit, setValue, watch, reset } = useForm<TinTuyenDungFormValues>({
+  const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<TinTuyenDungFormValues>({
     resolver: zodResolver(tinTuyenDungSchema),
     defaultValues: {
       trangThai: TrangThai.DANG_TUYEN,
@@ -272,6 +272,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
       return;
     }
 
+    console.log('Bắt đầu lưu Tin tuyển dụng:', values);
     setIsSaving(true);
     try {
       const selectedCongTy = congTys.find(c => c.id === values.congTyId);
@@ -299,8 +300,8 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
       onSuccess();
       onClose();
     } catch (error) {
-      console.error('Lỗi khi lưu:', error);
-      alert('Đã có lỗi xảy ra.');
+      console.error('Lỗi chi tiết khi lưu:', error);
+      alert('Lỗi lưu dữ liệu: ' + (error as any)?.message || 'Vui lòng kiểm tra lại');
     } finally {
       setIsSaving(false);
     }
@@ -333,22 +334,24 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
               <div className="animate-in fade-in slide-in-from-top-1 duration-200">
                 <select
                   {...register('congTyId')}
-                  className="w-full px-3 py-2 bg-gray-50 rounded-lg text-sm border-none focus:ring-1 focus:ring-gray-200 text-gray-700 outline-none"
+                  className={`w-full px-3 py-2 bg-gray-50 rounded-lg text-sm border focus:ring-1 focus:ring-gray-200 text-gray-700 outline-none ${errors.congTyId ? 'border-red-300' : 'border-transparent'}`}
                 >
                   <option value="">-- Chọn công ty --</option>
                   {congTys.map(c => (
                     <option key={c.id} value={c.id}>{c.tenCongTy}</option>
                   ))}
                 </select>
+                {errors.congTyId && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.congTyId.message}</p>}
               </div>
             )}
 
             {(showQuanLy || (watch('quanLyIds') && watch('quanLyIds').length > 0)) && (
               <div className="animate-in fade-in slide-in-from-top-1 duration-200">
-                <div className="bg-gray-50 rounded-xl p-3 border border-transparent focus-within:border-gray-200 transition-all">
+                <div className={`bg-gray-50 rounded-xl p-3 border transition-all ${errors.quanLyIds ? 'border-red-300' : 'border-transparent focus-within:border-gray-200'}`}>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Quản lý khu vực (Chọn nhiều)</span>
                   </div>
+                  {/* ... managers chips ... */}
                   <div className="flex flex-wrap gap-2 mb-2">
                     {watch('quanLyIds')?.map(id => {
                       const q = quanLys.find(item => item.id === id);
@@ -393,6 +396,7 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
                     )}
                   </select>
                 </div>
+                {errors.quanLyIds && <p className="mt-1 text-[10px] text-red-500 font-bold ml-1">{errors.quanLyIds.message}</p>}
               </div>
             )}
 
@@ -535,13 +539,22 @@ export function AddTinModal({ isOpen, onClose, onSuccess, initialData }: AddTinM
             </select>
           </div>
 
-          <button
-            onClick={handleSubmit(handleSave)}
-            disabled={isSaving}
-            className="px-5 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100 rounded-[4px] transition-colors"
-          >
-            {isSaving ? 'Đang lưu...' : 'Đóng'}
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={onClose}
+              type="button"
+              className="text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              Hủy
+            </button>
+            <button
+              onClick={handleSubmit(handleSave)}
+              disabled={isSaving}
+              className="px-5 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100 rounded-[4px] transition-colors bg-white border border-gray-200 shadow-sm"
+            >
+              {isSaving ? 'Đang lưu...' : 'Lưu & Đóng'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
