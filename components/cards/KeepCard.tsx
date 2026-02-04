@@ -7,6 +7,7 @@ import { UngTuyenRepository } from '@/repositories/ungTuyen.repository';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
+import { copyToClipboard } from '@/lib/utils';
 
 interface KeepCardProps {
   data: TinTuyenDung;
@@ -90,10 +91,11 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
       >
         {/* Copy Content Button */}
         <button 
-          onClick={(e) => {
+          onClick={async (e) => {
             e.stopPropagation();
-            navigator.clipboard.writeText(data.moTa || '');
-            toast.success('Đã sao chép nội dung');
+            const success = await copyToClipboard(data.moTa || '');
+            if (success) toast.success('Đã sao chép nội dung');
+            else toast.error('Không thể sao chép');
           }}
           className="absolute top-2 right-2 p-2.5 md:p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all duration-200 z-10 min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 flex items-center justify-center"
           title="Sao chép nội dung"
@@ -127,10 +129,11 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
                 {managers.map((ql, idx) => (
                   <div 
                     key={ql.id || idx} 
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
-                      navigator.clipboard.writeText(ql.soDienThoai);
-                      toast.success(`Đã sao chép SĐT: ${ql.tenQuanLy}`);
+                      const success = await copyToClipboard(ql.soDienThoai);
+                      if (success) toast.success(`Đã sao chép SĐT: ${ql.tenQuanLy}`);
+                      else toast.error('Không thể sao chép SĐT');
                     }}
                     className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-50/50 border border-blue-100/50 rounded-md hover:bg-blue-50 transition-colors cursor-pointer group/ql active:scale-95 duration-75"
                     title={`Sao chép SĐT: ${ql.soDienThoai}`}
@@ -160,10 +163,11 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
               {data.mapUrl ? (
                 <button 
                   type="button"
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     e.stopPropagation();
-                    navigator.clipboard.writeText(data.mapUrl || '');
-                    toast.success('Đã sao chép link bản đồ');
+                    const success = await copyToClipboard(data.mapUrl || '');
+                    if (success) toast.success('Đã sao chép link bản đồ');
+                    else toast.error('Không thể sao chép link');
                   }}
                   className="truncate hover:text-blue-600 hover:underline transition-colors decoration-blue-500/30 underline-offset-2 flex-1 text-left"
                   title="Sao chép link bản đồ"
