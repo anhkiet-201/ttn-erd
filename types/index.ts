@@ -20,6 +20,11 @@ export enum TrangThai {
   DA_NGUNG = 'DA_NGUNG',
 }
 
+export enum HinhThucTuyen {
+  CHINH_THUC = 'CHINH_THUC',
+  THOI_VU = 'THOI_VU',
+}
+
 export interface TinTuyenDung {
   id: string;
   moTa: string;
@@ -28,6 +33,7 @@ export interface TinTuyenDung {
   phuCap: PhuCap[];
   congTy: CongTy;
   quanLy: QuanLy[];
+  hinhThucTuyen: HinhThucTuyen;
   ghiChu: string | null;
   mapUrl: string | null;
   diaChi: string | null;

@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef, KeyboardEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { TinTuyenDung, TrangThai, CongTy, QuanLy } from '@/types';
+import { TinTuyenDung, TrangThai, CongTy, QuanLy, HinhThucTuyen } from '@/types';
 import { TinTuyenDungRepository } from '@/repositories/tinTuyenDung.repository';
 import { CongTyRepository } from '@/repositories/congTy.repository';
 import { QuanLyRepository } from '@/repositories/quanLy.repository';
@@ -26,6 +26,7 @@ const tinTuyenDungSchema = z.object({
   diaChi: z.string().optional(),
   mapUrl: z.string().optional(),
   trangThai: z.nativeEnum(TrangThai),
+  hinhThucTuyen: z.nativeEnum(HinhThucTuyen).default(HinhThucTuyen.THOI_VU),
   yeuCau: z.array(z.any()).optional(),
   phucLoi: z.array(z.any()).optional(),
   phuCap: z.array(z.any()).optional(),
@@ -37,6 +38,22 @@ type TinTuyenDungFormValues = z.infer<typeof tinTuyenDungSchema>;
 const tinRepo = new TinTuyenDungRepository();
 const congTyRepo = new CongTyRepository();
 const quanLyRepo = new QuanLyRepository();
+
+// ... (TagInput component remains unchanged) ...
+// Note: To avoid re-sending the entire file, I will rely on the `replace_file_content` finding the correct context, 
+// but since I need to update the imports and schema at the top, and the form fields in the middle, and this file is small enough, 
+// I will just supply the updated imports and schema, and then use a separate call or a larger range if needed. 
+// However, the tool allows replacing chunks. Let's do imports and schema first.
+
+// Wait, I should implement the UI part as well. 
+// I'll assume valid ranges for replacement. 
+// Actually, let's just use `replace_file_content` to inject the new field specific logic and UI components.
+
+// This is tricky with `replace_file_content` if I want to update multiple disparate parts (imports + schema + UI). 
+// `multi_replace_file_content` is better for this.
+
+
+
 
 // --- Tag Input Component ---
 interface TagInputProps {
@@ -232,6 +249,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
           diaChi: initialData.diaChi || '',
           mapUrl: initialData.mapUrl || '',
           trangThai: initialData.trangThai,
+          hinhThucTuyen: initialData.hinhThucTuyen || HinhThucTuyen.THOI_VU,
           yeuCau: Array.isArray(initialData.yeuCau) ? initialData.yeuCau : [],
           phucLoi: Array.isArray(initialData.phucLoi) ? initialData.phucLoi : [],
           phuCap: Array.isArray(initialData.phuCap) ? initialData.phuCap : [],
@@ -245,6 +263,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
       } else {
         reset({
           trangThai: TrangThai.DANG_TUYEN,
+          hinhThucTuyen: HinhThucTuyen.THOI_VU,
           moTa: '',
           congTyId: '',
           quanLyIds: [],
@@ -286,9 +305,10 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
         moTa: values.moTa,
         congTy: selectedCongTy as any, 
         quanLy: [], // Luôn rỗng vì giờ dùng quản lý của công ty
-        diaChi: values.diaChi || null,
         mapUrl: values.mapUrl || null,
+        diaChi: values.diaChi || null,
         trangThai: values.trangThai,
+        hinhThucTuyen: values.hinhThucTuyen,
         yeuCau: values.yeuCau || [],
         phucLoi: values.phucLoi || [],
         phuCap: values.phuCap || [],
@@ -481,10 +501,20 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
             
             <select 
               {...register('trangThai')}
-              className="text-xs font-medium text-gray-600 bg-transparent border-none outline-none focus:ring-0 cursor-pointer hover:bg-gray-50 py-1 px-2 rounded"
+              className="text-xs font-bold text-gray-600 bg-transparent border-none outline-none focus:ring-0 cursor-pointer hover:bg-gray-50 py-1 px-2 rounded"
             >
               <option value={TrangThai.DANG_TUYEN}>Đang tuyển</option>
               <option value={TrangThai.DA_NGUNG}>Đã ngừng</option>
+            </select>
+
+            <div className="h-4 w-px bg-gray-300 mx-1"></div>
+
+            <select 
+              {...register('hinhThucTuyen')}
+              className="text-xs font-bold text-blue-600 bg-blue-50/50 border-none outline-none focus:ring-0 cursor-pointer hover:bg-blue-100 py-1 px-2 rounded"
+            >
+              <option value={HinhThucTuyen.CHINH_THUC}>Chính thức</option>
+              <option value={HinhThucTuyen.THOI_VU}>Thời vụ</option>
             </select>
           </div>
 

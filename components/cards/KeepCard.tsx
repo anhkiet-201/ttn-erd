@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { TinTuyenDung, TrangThai, UngTuyen } from '@/types';
+import { TinTuyenDung, TrangThai, UngTuyen, HinhThucTuyen } from '@/types';
 import UngTuyenModal from '../modals/UngTuyenModal';
 import { UngTuyenRepository } from '@/repositories/ungTuyen.repository';
 import { toast } from 'react-hot-toast';
@@ -111,6 +111,13 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
             <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">
               {data.congTy?.tenCongTy || 'Công ty ẩn danh'}
             </p>
+            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${
+              data.hinhThucTuyen === HinhThucTuyen.CHINH_THUC 
+                ? 'bg-blue-50 text-blue-700 border-blue-100'
+                : 'bg-orange-50 text-orange-700 border-orange-100'
+            }`}>
+              {data.hinhThucTuyen === HinhThucTuyen.CHINH_THUC ? 'CHÍNH THỨC' : 'THỜI VỤ'}
+            </span>
           </div>
           
           <h3 className="text-[14px] font-medium text-gray-800 mb-2 leading-relaxed whitespace-pre-wrap break-words">
