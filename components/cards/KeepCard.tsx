@@ -105,7 +105,6 @@ export function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepCardProps
                 onClick={(e) => {
                   e.stopPropagation();
                   navigator.clipboard.writeText(ql.soDienThoai);
-                  // Optional: visual feedback would be nice, but keep it simple for now
                 }}
                 className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-50/50 border border-blue-100/50 rounded-md hover:bg-blue-50 transition-colors cursor-pointer group/ql active:scale-95 duration-75"
                 title={`Sao chép SĐT: ${ql.soDienThoai}`}

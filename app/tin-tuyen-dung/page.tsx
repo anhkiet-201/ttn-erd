@@ -5,29 +5,52 @@ import { MasonryGrid } from '@/components/layout/MasonryGrid';
 import { KeepCard } from '@/components/cards/KeepCard';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { TinTuyenDungRepository } from '@/repositories/tinTuyenDung.repository';
-import { TinTuyenDung } from '@/types';
+import { QuanLyRepository } from '@/repositories/quanLy.repository';
+import { TinTuyenDung, QuanLy } from '@/types';
 import { AddTinModal } from '@/components/modals/AddTinModal';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { useUI } from '@/components/providers/UIProvider';
 
-const repository = new TinTuyenDungRepository();
+const tinRepository = new TinTuyenDungRepository();
+const quanLyRepository = new QuanLyRepository();
 
 export default function TinTuyenDungPage() {
   const { user } = useAuthContext();
   const { toggleSidebar } = useUI();
-  const [data, setData] = useState<TinTuyenDung[]>([]);
+  const [tins, setTins] = useState<TinTuyenDung[]>([]);
+  const [quanLys, setQuanLys] = useState<QuanLy[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTin, setSelectedTin] = useState<TinTuyenDung | null>(null);
 
   useEffect(() => {
-    const unsubscribe = repository.subscribeAll((items) => {
-      setData(items);
+    const unsubTins = tinRepository.subscribeAll((items) => {
+      setTins(items);
       setLoading(false);
     });
-    return () => unsubscribe();
+
+    const unsubQuanLys = quanLyRepository.subscribeAll((items) => {
+      setQuanLys(items);
+    });
+
+    return () => {
+      unsubTins();
+      unsubQuanLys();
+    };
   }, []);
+
+  // Client-side join: map manager IDs to latest manager data
+  const data = tins.map(tin => {
+    if (!Array.isArray(tin.quanLy)) return tin;
+    
+    const latestQuanLy = tin.quanLy.map(q => {
+      const liveData = quanLys.find(live => live.id === q.id);
+      return liveData || q; // Use live data if available, fallback to stored static data
+    });
+
+    return { ...tin, quanLy: latestQuanLy };
+  });
 
   const handleEditTin = (tin: TinTuyenDung) => {
     setSelectedTin(tin);
@@ -135,7 +158,7 @@ export default function TinTuyenDungPage() {
                     onClick={() => handleEditTin(item)}
                     onDelete={async (id) => {
                       try {
-                        await repository.delete(id);
+                        await tinRepository.delete(id);
                       } catch (error) {
                         console.error('Không thể xóa tin:', error);
                         alert('Xóa tin thất bại!');
@@ -143,9 +166,9 @@ export default function TinTuyenDungPage() {
                     }}
                     onToggleTag={async (id, category, tagId) => {
                       try {
-                        const tin = data.find(t => t.id === id);
+                        const tin = tins.find(t => t.id === id);
                         if (!tin) return;
-
+                        
                         const categoryTags = tin[category] as any[];
                         const newTags = categoryTags.map(tag => 
                           tag.id === tagId 
@@ -153,7 +176,7 @@ export default function TinTuyenDungPage() {
                             : tag
                         );
 
-                        await repository.update(id, { [category]: newTags });
+                        await tinRepository.update(id, { [category]: newTags });
                       } catch (error) {
                         console.error('Lỗi cập nhật tag:', error);
                         alert('Cập nhật trạng thái tag thất bại');
