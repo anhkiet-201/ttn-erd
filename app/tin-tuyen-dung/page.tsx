@@ -50,23 +50,34 @@ export default function TinTuyenDungPage() {
 
   // Client-side join: map manager and company IDs to latest data
   const data = tins.map(tin => {
-    // Join Manager data
     let updatedTin = { ...tin };
-    
+
+    // 1. Join Company data & Deep Join Managers inside Company
+    if (tin.congTy?.id) {
+      const liveCongTy = congTys.find(live => live.id === tin.congTy?.id);
+      if (liveCongTy) {
+        // Clone company object to allow modification
+        const joinedCongTy = { ...liveCongTy };
+        
+        // Deep join: Map managers inside company to live managers data
+        if (Array.isArray(joinedCongTy.quanLy)) {
+          joinedCongTy.quanLy = joinedCongTy.quanLy.map(q => {
+            const liveManager = quanLys.find(m => m.id === q.id);
+            return liveManager || q;
+          });
+        }
+        
+        updatedTin.congTy = joinedCongTy;
+      }
+    }
+
+    // 2. Join Manager data directly on Tin (if any - though UI now forces company managers)
     if (Array.isArray(tin.quanLy)) {
       const latestQuanLy = tin.quanLy.map(q => {
         const liveData = quanLys.find(live => live.id === q.id);
         return liveData || q;
       });
       updatedTin.quanLy = latestQuanLy;
-    }
-
-    // Join Company data
-    if (tin.congTy?.id) {
-      const liveCongTy = congTys.find(live => live.id === tin.congTy?.id);
-      if (liveCongTy) {
-        updatedTin.congTy = liveCongTy;
-      }
     }
 
     return updatedTin;
