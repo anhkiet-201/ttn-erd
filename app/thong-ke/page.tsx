@@ -98,10 +98,11 @@ export default function StatisticsPage() {
         <div className="fade-in space-y-8 pb-20">
             <StatsOverviewCards stats={stats.overview} />
 
+            <TopCompaniesBarChart data={stats.topCompaniesData} />
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <StatusTrendChart data={stats.statusTrendData} />
                 <GrowthLineChart data={stats.growthData} />
-                <TopCompaniesBarChart data={stats.topCompaniesData} />
                 <JobStatusPieChart data={stats.jobStatusData} />
                 <GenderDonutChart data={stats.genderData} />
             </div>

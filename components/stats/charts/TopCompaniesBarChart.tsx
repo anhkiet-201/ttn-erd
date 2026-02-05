@@ -11,7 +11,7 @@ interface TopCompaniesBarChartProps {
 
 export const TopCompaniesBarChart: React.FC<TopCompaniesBarChartProps> = ({ data }) => {
   return (
-    <GlassCard className="h-[450px] flex flex-col">
+    <GlassCard className="h-[500px] flex flex-col">
        <div className="flex items-center gap-3 mb-6">
         <div className="w-1.5 h-6 bg-blue-500 rounded-full" />
         <h3 className="text-gray-800 text-lg font-black uppercase tracking-tight">Top Công Ty Được Ứng Tuyển</h3>
