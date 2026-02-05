@@ -5,10 +5,6 @@ export interface Tag {
   isDeactivated?: boolean;
 }
 
-export interface YeuCau extends Tag {}
-export interface PhucLoi extends Tag {}
-export interface PhuCap extends Tag {}
-
 export interface QuanLy {
   id: string;
   tenQuanLy: string;
@@ -28,9 +24,7 @@ export enum HinhThucTuyen {
 export interface TinTuyenDung {
   id: string;
   moTa: string;
-  yeuCau: YeuCau[];
-  phucLoi: PhucLoi[];
-  phuCap: PhuCap[];
+  tags: Tag[];
   congTy: CongTy;
   quanLy: QuanLy[];
   hinhThucTuyen: HinhThucTuyen;

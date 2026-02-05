@@ -26,9 +26,7 @@ const tinTuyenDungSchema = z.object({
 
   trangThai: z.nativeEnum(TrangThai),
   hinhThucTuyen: z.nativeEnum(HinhThucTuyen).default(HinhThucTuyen.THOI_VU),
-  yeuCau: z.array(z.any()).optional(),
-  phucLoi: z.array(z.any()).optional(),
-  phuCap: z.array(z.any()).optional(),
+  tags: z.string().optional(),
   ghiChu: z.string().optional(),
   ghiChuPV: z.string().optional(),
 });
@@ -55,147 +53,8 @@ const quanLyRepo = new QuanLyRepository();
 
 
 
-// --- Tag Input Component ---
-interface TagInputProps {
-  label: string;
-  tags: TagObj[];
-  onChange: (tags: TagObj[]) => void;
-  colorClass: string;
-  placeholder?: string;
-  suggestions?: string[];
-}
+// TagInput component removed
 
-const TagInput = ({ label, tags, onChange, colorClass, placeholder, suggestions = [] }: TagInputProps) => {
-  const [inputVal, setInputVal] = useState('');
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const filteredSuggestions = suggestions
-    .filter(s => s.toLowerCase().includes(inputVal.toLowerCase()) && !tags.some(t => t.noiDung === s))
-    .slice(0, 5);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setShowSuggestions(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    if (showSuggestions) setSelectedIndex(0);
-  }, [showSuggestions, inputVal]);
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault();
-      if (showSuggestions && selectedIndex >= 0 && filteredSuggestions[selectedIndex]) {
-        addTag(filteredSuggestions[selectedIndex]);
-      } else {
-        addTag(inputVal);
-      }
-    } else if (e.key === 'Backspace' && !inputVal && tags.length > 0) {
-      onChange(tags.slice(0, -1));
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setSelectedIndex(prev => (prev < filteredSuggestions.length - 1 ? prev + 1 : prev));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setSelectedIndex(prev => (prev > 0 ? prev - 1 : prev));
-    }
-  };
-
-  const addTag = (val: string) => {
-    const trimmed = val.trim();
-    if (trimmed && !tags.some(t => t.noiDung === trimmed)) {
-      onChange([...tags, { id: uuidv4(), noiDung: trimmed, isDeactivated: false }]);
-      setInputVal('');
-      setShowSuggestions(false);
-    }
-  };
-
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const paste = e.clipboardData.getData('text');
-    const newTags = paste.split(/[\n,]+/).map(t => t.trim()).filter(t => t);
-    
-    if (newTags.length > 0) {
-        const uniqueNewTags = newTags
-            .filter(t => !tags.some(existing => existing.noiDung === t))
-            .map(t => ({ id: uuidv4(), noiDung: t, isDeactivated: false }));
-            
-        onChange([...tags, ...uniqueNewTags]);
-        setInputVal('');
-    }
-  };
-
-  const removeTag = (id: string) => {
-    onChange(tags.filter(tag => tag.id !== id));
-  };
-
-  const styles = {
-    blue: { bg: 'bg-slate-50', text: 'text-slate-700', border: 'border-slate-200', placeholder: 'placeholder-slate-400', tagBg: 'bg-slate-100', tagText: 'text-slate-700' },
-    green: { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-100', placeholder: 'placeholder-emerald-400', tagBg: 'bg-emerald-100', tagText: 'text-emerald-800' },
-    orange: { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-100', placeholder: 'placeholder-rose-400', tagBg: 'bg-rose-100', tagText: 'text-rose-800' },
-  }[colorClass] || { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-100', placeholder: 'placeholder-gray-400', tagBg: 'bg-gray-200', tagText: 'text-gray-800' };
-
-  return (
-    <div ref={containerRef} className={`relative w-full px-3 py-3 rounded-xl ${styles.bg} border ${styles.border} transition-all`}>
-      <span className={`absolute top-2 left-3 text-[10px] font-bold uppercase tracking-wider opacity-70 ${styles.text}`}>
-        {label}
-      </span>
-      <div className="flex flex-wrap gap-2 mt-4 relative">
-        {tags.map((tag) => (
-          <span key={tag.id} className={`inline-flex items-center px-2.5 py-1 rounded-md text-sm font-medium ${styles.tagBg} ${styles.tagText} ${tag.isDeactivated ? 'line-through opacity-50' : ''}`}>
-            {tag.noiDung}
-            <button
-              type="button"
-              onClick={() => removeTag(tag.id)}
-              className="ml-1.5 hover:text-red-500 focus:outline-none"
-            >
-              ×
-            </button>
-          </span>
-        ))}
-        <div className="relative flex-1 min-w-[120px]">
-          <input
-            type="text"
-            value={inputVal}
-            onChange={(e) => {
-              setInputVal(e.target.value);
-              setShowSuggestions(true);
-            }}
-            onFocus={() => setShowSuggestions(true)}
-            onKeyDown={handleKeyDown}
-            onPaste={handlePaste}
-            placeholder={tags.length === 0 ? placeholder : '...'}
-            className={`w-full bg-transparent outline-none text-sm ${styles.text} ${styles.placeholder}`}
-          />
-          
-          {showSuggestions && filteredSuggestions.length > 0 && (
-            <div ref={scrollRef} className="absolute top-full left-0 w-full mt-1 bg-white rounded-lg shadow-xl shadow-blue-500/10 border border-gray-100 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-              {filteredSuggestions.map((s, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => addTag(s)}
-                  onMouseEnter={() => setSelectedIndex(idx)}
-                  className={`w-full text-left px-3 py-2 text-sm transition-colors truncate ${selectedIndex === idx ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-50'}`}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 interface AddTinModalProps {
   isOpen: boolean;
@@ -212,11 +71,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
   const [quanLys, setQuanLys] = useState<QuanLy[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   
-  const [suggestedTags, setSuggestedTags] = useState({
-    yeuCau: [] as string[],
-    phucLoi: [] as string[],
-    phuCap: [] as string[]
-  });
+
 
   const [showCongTy, setShowCongTy] = useState(false);
   const [showTags, setShowTags] = useState(false);
@@ -228,9 +83,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
     shouldUnregister: false, 
     defaultValues: {
       trangThai: TrangThai.DANG_TUYEN,
-      yeuCau: [],
-      phucLoi: [],
-      phuCap: [],
+      tags: '',
       ghiChu: '',
       ghiChuPV: '',
       congTyId: '',
@@ -238,33 +91,13 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
     }
   });
 
-  const yeuCauTags = watch('yeuCau') || [];
-  const phucLoiTags = watch('phucLoi') || [];
-  const phuCapTags = watch('phuCap') || [];
+
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       const unsubCongTys = congTyRepo.subscribeAll(setCongTys);
       
-      tinRepo.getAll().then(tins => {
-        const uniqueYeuCau = new Set<string>();
-        const uniquePhucLoi = new Set<string>();
-        const uniquePhuCap = new Set<string>();
-
-        tins.forEach(tin => {
-          if (Array.isArray(tin.yeuCau)) tin.yeuCau.forEach(t => uniqueYeuCau.add(t.noiDung));
-          if (Array.isArray(tin.phucLoi)) tin.phucLoi.forEach(t => uniquePhucLoi.add(t.noiDung));
-          if (Array.isArray(tin.phuCap)) tin.phuCap.forEach(t => uniquePhuCap.add(t.noiDung));
-        });
-
-        setSuggestedTags({
-          yeuCau: Array.from(uniqueYeuCau),
-          phucLoi: Array.from(uniquePhucLoi),
-          phuCap: Array.from(uniquePhuCap)
-        });
-      });
-
       return () => {
         unsubCongTys();
         document.body.style.overflow = 'unset';
@@ -283,15 +116,13 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
             : (initialData.quanLy ? [(initialData.quanLy as any).id] : []),
           trangThai: initialData.trangThai,
           hinhThucTuyen: initialData.hinhThucTuyen || HinhThucTuyen.THOI_VU,
-          yeuCau: Array.isArray(initialData.yeuCau) ? initialData.yeuCau : [],
-          phucLoi: Array.isArray(initialData.phucLoi) ? initialData.phucLoi : [],
-          phuCap: Array.isArray(initialData.phuCap) ? initialData.phuCap : [],
+          tags: initialData.tags?.map((t: any) => t.noiDung).join('\n') || '',
           ghiChu: initialData.ghiChu || '',
           ghiChuPV: initialData.ghiChuPV || '',
         });
 
         if (initialData.congTy) setShowCongTy(true);
-        if (initialData.yeuCau?.length || initialData.phucLoi?.length || initialData.phuCap?.length) setShowTags(true);
+        if (initialData.tags?.length) setShowTags(true);
         if (initialData.ghiChu || initialData.ghiChuPV) setShowGhiChu(true);
       } else {
         reset({
@@ -300,9 +131,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
           moTa: '',
           congTyId: '',
           quanLyIds: [],
-          yeuCau: [],
-          phucLoi: [],
-          phuCap: [],
+          tags: '',
           ghiChu: '',
           ghiChuPV: '',
         });
@@ -329,9 +158,9 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
         quanLy: [],
         trangThai: values.trangThai,
         hinhThucTuyen: values.hinhThucTuyen,
-        yeuCau: values.yeuCau || [],
-        phucLoi: values.phucLoi || [],
-        phuCap: values.phuCap || [],
+        tags: values.tags 
+          ? values.tags.split('\n').map(t => t.trim()).filter(t => t).map(t => ({ id: uuidv4(), noiDung: t }))
+          : [],
         ghiChu: values.ghiChu || null,
         ghiChuPV: values.ghiChuPV || null,
       }; 
@@ -462,31 +291,14 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
             </div>
           )}
 
-          {(showTags || yeuCauTags.length > 0 || phucLoiTags.length > 0 || phuCapTags.length > 0) && (
-            <div className="grid gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
-               <TagInput 
-                  label="Yêu Cầu Tuyển Dụng" 
-                  tags={yeuCauTags} 
-                  onChange={(tags) => setValue('yeuCau', tags)} 
-                  colorClass="blue"
-                  placeholder="Ví dụ: Nam, sức khỏe tốt..."
-                  suggestions={suggestedTags.yeuCau}
-                />
-                <TagInput 
-                  label="Chế Độ Phúc Lợi" 
-                  tags={phucLoiTags} 
-                  onChange={(tags) => setValue('phucLoi', tags)} 
-                  colorClass="green"
-                  placeholder="Ví dụ: Bao cơm trưa..."
-                  suggestions={suggestedTags.phucLoi}
-                />
-                <TagInput 
-                  label="Các Khoản Phụ Cấp" 
-                  tags={phuCapTags} 
-                  onChange={(tags) => setValue('phuCap', tags)} 
-                  colorClass="orange"
-                  placeholder="Ví dụ: Phụ cấp xăng xe..."
-                  suggestions={suggestedTags.phuCap}
+          {(showTags || watch('tags')) && (
+            <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+               <label className="text-[10px] font-black text-blue-500 uppercase tracking-widest ml-1">Tags (Yêu cầu, Phúc lợi, Phụ cấp...)</label>
+               <TextareaAutosize
+                  {...register('tags')}
+                  placeholder={`Nhập mỗi tag một dòng...\nVí dụ:\nNam, sức khỏe tốt\nBao cơm trưa\nPhụ cấp xăng xe`}
+                  className="w-full bg-blue-50/20 border border-blue-100/50 rounded-2xl p-4 text-sm font-bold text-gray-700 outline-none placeholder-blue-200"
+                  minRows={3}
                 />
             </div>
           )}

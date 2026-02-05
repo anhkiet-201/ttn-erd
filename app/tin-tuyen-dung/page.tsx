@@ -58,11 +58,7 @@ export default function TinTuyenDungPage() {
     return data.filter(item => {
       const search = searchQuery.toLowerCase();
       
-      const tagsContent = [
-        ...(item.yeuCau || []),
-        ...(item.phucLoi || []),
-        ...(item.phuCap || [])
-      ].map(t => t.noiDung).join(' ').toLowerCase();
+      const tagsContent = (item.tags || []).map(t => t.noiDung).join(' ').toLowerCase();
 
       const notesContent = [
         item.ghiChu || '',
@@ -103,19 +99,18 @@ export default function TinTuyenDungPage() {
     }
   };
 
-  const handleToggleTag = async (id: string, category: 'yeuCau' | 'phucLoi' | 'phuCap', tagId: string) => {
+  const handleToggleTag = async (id: string, tagId: string) => {
     try {
       const tin = tins.find(t => t.id === id);
-      if (!tin) return;
+      if (!tin || !tin.tags) return;
       
-      const categoryTags = tin[category] as any[];
-      const newTags = categoryTags.map(tag => 
+      const newTags = tin.tags.map(tag => 
         tag.id === tagId 
         ? { ...tag, isDeactivated: !tag.isDeactivated } 
         : tag
       );
 
-      await tinRepository.update(id, { [category]: newTags });
+      await tinRepository.update(id, { tags: newTags });
     } catch (error) {
       console.error('Lỗi cập nhật tag:', error);
     }

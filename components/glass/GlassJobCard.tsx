@@ -15,7 +15,7 @@ interface GlassJobCardProps {
   data: TinTuyenDung;
   onClick?: (id: string) => void;
   onDelete?: (id: string) => void;
-  onToggleTag?: (id: string, category: 'yeuCau' | 'phucLoi' | 'phuCap', tagId: string) => void;
+  onToggleTag?: (id: string, tagId: string) => void;
 }
 
 const ungTuyenRepo = new UngTuyenRepository();
@@ -50,20 +50,23 @@ export default function GlassJobCard({ data, onClick, onDelete, onToggleTag }: G
     }
   };
 
-  const renderTag = (item: any, category: 'yeuCau' | 'phucLoi' | 'phuCap', baseClasses: string, dotColor: string) => (
+  const renderTag = (item: any) => (
     <div 
       key={item.id} 
       className={`
         inline-flex items-center gap-1.5 px-2 py-1 border rounded-lg text-[10px] font-black uppercase tracking-tight transition-all
-        ${item.isDeactivated ? 'line-through opacity-20 bg-gray-50 text-gray-400 border-gray-100' : baseClasses}
+        ${item.isDeactivated 
+            ? 'line-through opacity-20 bg-gray-50 text-gray-400 border-gray-100' 
+            : 'bg-blue-50 border-blue-100 text-blue-700'
+        }
       `}
     >
-      {!item.isDeactivated && <div className={`w-1 h-1 rounded-full ${dotColor} shadow-sm shadow-current/30`} />}
+      {!item.isDeactivated && <div className={`w-1 h-1 rounded-full bg-blue-500 shadow-sm shadow-current/30`} />}
       <span className="flex-1">{item.noiDung}</span>
       <button
         onClick={(e) => {
           e.stopPropagation();
-          onToggleTag?.(data.id, category, item.id);
+          onToggleTag?.(data.id, item.id);
         }}
         className={`
           flex-shrink-0 p-0.5 rounded transition-colors
@@ -176,9 +179,7 @@ export default function GlassJobCard({ data, onClick, onDelete, onToggleTag }: G
 
             {/* Tags Section */}
             <div className="flex flex-wrap gap-1.5 mb-6">
-                {(data.yeuCau || []).map((item) => renderTag(item, 'yeuCau', 'bg-slate-50 border-slate-200 text-slate-700', 'bg-slate-400'))}
-                {(data.phucLoi || []).map((item) => renderTag(item, 'phucLoi', 'bg-sky-50 border-sky-100 text-sky-700', 'bg-sky-500'))}
-                {(data.phuCap || []).map((item) => renderTag(item, 'phuCap', 'bg-indigo-50 border-indigo-100 text-indigo-700', 'bg-indigo-500'))}
+                {(data.tags || []).map((item) => renderTag(item))}
             </div>
 
             {/* Internal Notes */}
