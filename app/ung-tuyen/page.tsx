@@ -391,7 +391,7 @@ export default function UngTuyenPage() {
         )}
       </GlassFilterBar>
 
-      <GlassCard noPadding className="mb-10">
+      <GlassCard noPadding className="mb-10 hidden lg:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -575,8 +575,8 @@ export default function UngTuyenPage() {
         </div>
       </GlassCard>
 
-      {/* Mobile View */}
-      <div className="xl:hidden space-y-6 pb-20">
+      {/* Mobile/Tablet Card View - Visible up to lg */}
+      <div className="lg:hidden space-y-4 pb-20">
         {loading ? (
           <GlassCard className="text-center py-20">
             <div className="w-8 h-8 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
@@ -589,67 +589,77 @@ export default function UngTuyenPage() {
         ) : (
           filteredData.map((item) => (
             <GlassCard key={item.id} className={getRowHighlightClass(item.ngayPhongVan || null, item.trangThaiTuyen)} noPadding>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-inner ${item.nguoiLaoDong.gioiTinh === GioiTinh.NAM ? 'bg-gradient-to-tr from-blue-600 to-blue-400' : 'bg-gradient-to-tr from-pink-600 to-pink-400'}`}>
+              <div className="p-5">
+                <div className="flex justify-between items-start mb-5">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg ${item.nguoiLaoDong.gioiTinh === GioiTinh.NAM ? 'bg-gradient-to-tr from-blue-600 to-blue-400' : 'bg-gradient-to-tr from-pink-600 to-pink-400'}`}>
                       {item.nguoiLaoDong.tenNguoiLaoDong[0].toUpperCase()}
                     </div>
                     <div>
-                      <h3 className="font-black text-gray-900 text-lg tracking-tight mb-1 uppercase">{item.nguoiLaoDong.tenNguoiLaoDong}</h3>
+                      <h3 className="font-black text-gray-900 text-base tracking-tight mb-0.5 uppercase line-clamp-1">{item.nguoiLaoDong.tenNguoiLaoDong}</h3>
                       <div className="flex items-center gap-2">
-                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-md border ${item.nguoiLaoDong.gioiTinh === GioiTinh.NAM ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-pink-50 text-pink-600 border-pink-100'}`}>
+                        <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-md border ${item.nguoiLaoDong.gioiTinh === GioiTinh.NAM ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-pink-50 text-pink-600 border-pink-100'}`}>
                           {item.nguoiLaoDong.gioiTinh === GioiTinh.NAM ? 'NAM' : 'NỮ'}
                         </span>
-                        <span className="text-xs font-bold text-gray-500 font-mono">{item.nguoiLaoDong.soDienThoai}</span>
+                        <span className="text-[10px] font-bold text-gray-500 font-mono">{item.nguoiLaoDong.soDienThoai}</span>
                       </div>
                     </div>
                   </div>
-                  <div className={`px-4 py-1.5 rounded-full border text-[10px] font-black tracking-widest ${getStatusConfig(item.trangThaiTuyen).label.toUpperCase()} shadow-sm`}>
+                  <div className={`px-2.5 py-1 rounded-lg border text-[9px] font-black tracking-widest ${getStatusConfig(item.trangThaiTuyen).label.toUpperCase()} shadow-sm whitespace-nowrap`}>
                     {getStatusConfig(item.trangThaiTuyen).label.toUpperCase()}
                   </div>
                 </div>
 
-                <div className="space-y-4 mb-6">
-                  <div className="bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
-                    <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Đơn vị tuyển dụng</div>
-                    <div className="font-bold text-gray-700 uppercase">{item.congTy.tenCongTy}</div>
-                    <div className="text-xs text-gray-500 mt-1">{item.congTy.diaChi}</div>
+                <div className="space-y-4 mb-5">
+                  <div className="bg-gray-50/50 p-3 rounded-xl border border-gray-100">
+                    <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Đơn vị tuyển dụng</div>
+                    <div className="font-black text-gray-800 text-sm uppercase line-clamp-1">{item.congTy.tenCongTy}</div>
+                    <div className="text-[10px] text-gray-500 mt-0.5 italic line-clamp-1">{item.congTy.khuVuc?.tenKhuVuc} - {item.congTy.diaChi}</div>
                   </div>
 
-                  <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                    <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Lịch phỏng vấn</div>
-                    {item.ngayPhongVan ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                        <span className="text-sm font-black text-gray-900 font-mono">{format(new Date(item.ngayPhongVan), 'dd/MM/yyyy HH:mm')}</span>
-                      </div>
-                    ) : (
-                      <span className="text-xs font-bold text-gray-400 italic">Chưa có lịch hẹn</span>
+                  <div className="bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">Lịch phỏng vấn</div>
+                        {item.ngayPhongVan ? (
+                        <div className="flex items-center gap-2">
+                            <div className={`w-1.5 h-1.5 rounded-full ${isToday(new Date(item.ngayPhongVan)) ? 'bg-amber-500 animate-pulse' : 'bg-blue-500'}`} />
+                            <span className="text-xs font-black text-gray-900 font-mono">{format(new Date(item.ngayPhongVan), 'dd/MM/yyyy HH:mm')}</span>
+                        </div>
+                        ) : (
+                        <span className="text-[10px] font-bold text-gray-400 italic">Chưa có lịch hẹn</span>
+                        )}
+                    </div>
+                    {item.ngayPhongVan && (
+                        <button 
+                            onClick={() => { setRescheduleItem(item as any); setIsRescheduleOpen(true); }}
+                            className="p-1.5 bg-gray-50 text-blue-600 rounded-lg border border-blue-100 hover:bg-blue-50 transition-colors"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        </button>
                     )}
                   </div>
 
                   {item.ghiChu && (
-                    <div className="bg-amber-50/20 p-4 rounded-3xl border border-amber-100/30">
-                      <div className="text-[10px] font-black text-amber-400 uppercase tracking-widest mb-1">Ghi chú nhanh</div>
-                      <p className="text-xs font-bold text-gray-600 leading-relaxed italic whitespace-pre-wrap">"{item.ghiChu}"</p>
+                    <div className="bg-amber-50/20 p-3 rounded-xl border border-amber-100/30">
+                      <div className="text-[9px] font-black text-amber-400 uppercase tracking-widest mb-1">Ghi chú</div>
+                      <p className="text-[10px] font-bold text-gray-600 leading-relaxed italic whitespace-pre-wrap line-clamp-2">"{item.ghiChu}"</p>
                     </div>
                   )}
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-2.5">
                   <a 
                     href={`tel:${item.nguoiLaoDong.soDienThoai}`}
-                    className="flex-1 inline-flex items-center justify-center gap-2 bg-emerald-600 text-white h-14 rounded-2xl font-black shadow-lg shadow-emerald-200 active:scale-95 transition-all"
+                    className="flex-1 inline-flex items-center justify-center gap-2 bg-emerald-600 text-white h-11 rounded-xl font-black shadow-lg shadow-emerald-200 active:scale-95 transition-all text-[10px]"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                    GỌI ĐIỆN
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                    GỌI
                   </a>
                   <GlassButton 
                     variant="secondary" 
-                    className="h-14 !rounded-2xl flex-1" 
+                    className="h-11 !rounded-xl flex-1 !text-[10px]" 
                     onClick={() => handleEdit(item)}
-                    icon={<svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>}
+                    icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>}
                   >
                     SỬA
                   </GlassButton>

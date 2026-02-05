@@ -26,10 +26,10 @@ export default function GlassLayout({
                 onSearchChange={onSearchChange} 
                 searchPlaceholder={searchPlaceholder} 
             />
-            <div className="flex pt-20">
+            <div className="flex pt-16 md:pt-20">
                 <Sidebar />
-                <main className="flex-1 ml-0 md:ml-20 lg:ml-72 p-6 md:p-10">
-                    <div className={`${maxWidth} mx-auto`}>
+                <main className="flex-1 transition-all duration-300 ease-out ml-0 md:ml-[72px] lg:ml-72 p-4 md:p-10 w-full overflow-x-hidden">
+                    <div className={`${maxWidth} mx-auto fade-in`}>
                         {children}
                     </div>
                 </main>

@@ -92,7 +92,7 @@ export default function CongTyPage() {
         }}
       />
 
-      <GlassCard noPadding className="mb-10 overflow-hidden">
+      <GlassCard noPadding className="mb-10 overflow-hidden hidden lg:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -201,8 +201,8 @@ export default function CongTyPage() {
         </div>
       </GlassCard>
 
-      {/* Mobile View */}
-      <div className="xl:hidden space-y-6 pb-20">
+      {/* Mobile/Tablet Card View - Visible up to lg */}
+      <div className="lg:hidden space-y-4 pb-20">
         {loading ? (
           <GlassCard className="text-center py-20">
             <div className="w-8 h-8 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
@@ -215,16 +215,16 @@ export default function CongTyPage() {
         ) : (
           filteredData.map((item) => (
             <GlassCard key={item.id} noPadding>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center text-white font-black text-xl shadow-inner shadow-blue-800/10">
+              <div className="p-5">
+                <div className="flex justify-between items-start mb-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-800/10">
                       {item.tenCongTy.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <h3 className="font-black text-gray-900 text-lg tracking-tight mb-1 uppercase leading-tight">{item.tenCongTy}</h3>
+                      <h3 className="font-black text-gray-900 text-base tracking-tight mb-0.5 uppercase leading-tight line-clamp-1">{item.tenCongTy}</h3>
                       <div className="flex items-center gap-2">
-                        <span className="inline-block px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg text-[10px] font-black uppercase tracking-wider ring-1 ring-blue-100">
+                        <span className="inline-block px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded-md text-[9px] font-black uppercase tracking-wider ring-1 ring-blue-100">
                           {item.khuVuc?.tenKhuVuc || 'N/A'}
                         </span>
                       </div>
@@ -232,25 +232,25 @@ export default function CongTyPage() {
                   </div>
                   <GlassButton 
                     variant="ghost" 
-                    className="!p-2.5 !rounded-xl !bg-gray-50"
+                    className="!p-2 !rounded-xl !bg-gray-50"
                     onClick={() => handleEdit(item)}
-                    icon={<svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>}
+                    icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>}
                   />
                 </div>
 
-                <div className="space-y-4 mb-6">
+                <div className="space-y-4 mb-5">
                   {(item.diaChi || item.khuVuc?.diaChi) && (
-                    <div className="bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
-                      <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Địa chỉ trụ sở</div>
-                      <div className="text-sm font-bold text-gray-700 leading-relaxed italic">{item.diaChi || item.khuVuc?.diaChi}</div>
+                    <div className="bg-gray-50/50 p-3 rounded-xl border border-gray-100">
+                      <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Địa chỉ trụ sở</div>
+                      <div className="text-xs font-bold text-gray-700 leading-relaxed italic line-clamp-2">{item.diaChi || item.khuVuc?.diaChi}</div>
                       {(item.mapUrl || item.khuVuc?.mapUrl) && (
                         <a 
                           href={item.mapUrl || item.khuVuc?.mapUrl || '#'} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="text-[10px] text-blue-600 font-black hover:underline flex items-center gap-1 mt-3"
+                          className="text-[9px] text-blue-600 font-black hover:underline flex items-center gap-1 mt-2.5"
                         >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A2 2 0 013 15.485V5.515a2 2 0 011.553-1.944L9 2l6 3 5.447-2.724A2 2 0 0123 4.118v11.882a2 2 0 01-1.553 1.944L15 22l-6-3z" /></svg>
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A2 2 0 013 15.485V5.515a2 2 0 011.553-1.944L9 2l6 3 5.447-2.724A2 2 0 0123 4.118v11.882a2 2 0 01-1.553 1.944L15 22l-6-3z" /></svg>
                           MỞ BẢN ĐỒ
                         </a>
                       )}
@@ -259,21 +259,21 @@ export default function CongTyPage() {
 
                   {Array.isArray(item.quanLy) && item.quanLy.length > 0 && (
                     <div className="space-y-2">
-                       <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-4">Đội ngũ Quản lý ({item.quanLy.length})</div>
+                       <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest pl-1">Đội ngũ Quản lý {item.quanLy.length > 0 && `(${item.quanLy.length})`}</div>
                        <div className="grid grid-cols-1 gap-2">
                           {item.quanLy.map((ql, idx) => (
-                            <div key={idx} className="bg-white p-3 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-black text-[10px]">
+                            <div key={idx} className="bg-white p-2.5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                              <div className="flex items-center gap-2.5">
+                                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-black text-[9px]">
                                   {ql.tenQuanLy.charAt(0).toUpperCase()}
                                 </div>
                                 <div className="flex flex-col">
-                                  <span className="text-xs font-black text-gray-800 uppercase tracking-tight">{ql.tenQuanLy}</span>
-                                  <span className="text-[10px] text-blue-600 font-bold font-mono">{ql.soDienThoai}</span>
+                                  <span className="text-[10px] font-black text-gray-800 uppercase tracking-tight">{ql.tenQuanLy}</span>
+                                  <span className="text-[9px] text-blue-600 font-bold font-mono">{ql.soDienThoai}</span>
                                 </div>
                               </div>
-                              <a href={`tel:${ql.soDienThoai}`} className="p-2 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100 transition-colors">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                              <a href={`tel:${ql.soDienThoai}`} className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors">
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                               </a>
                             </div>
                           ))}
@@ -285,7 +285,7 @@ export default function CongTyPage() {
                 <div className="flex gap-2">
                   <GlassButton 
                     variant="danger" 
-                    className="flex-1 !h-12 !rounded-xl !bg-rose-50 !text-rose-600 !border-rose-100" 
+                    className="flex-1 !h-11 !rounded-xl !bg-rose-50 !text-rose-600 !border-rose-100 !text-[10px]" 
                     onClick={() => handleDelete(item.id)}
                   >
                     XÓA ĐƠN VỊ

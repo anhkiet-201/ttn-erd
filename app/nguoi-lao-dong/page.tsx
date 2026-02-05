@@ -161,7 +161,7 @@ export default function NguoiLaoDongPage() {
         }}
       />
 
-      <GlassCard noPadding className="mb-10 overflow-hidden">
+      <GlassCard noPadding className="mb-10 overflow-hidden hidden lg:block">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -269,8 +269,8 @@ export default function NguoiLaoDongPage() {
         </div>
       </GlassCard>
 
-      {/* Mobile View */}
-      <div className="xl:hidden space-y-6 pb-20">
+      {/* Mobile/Tablet Card View - Visible up to lg (large screens) where table takes over */}
+      <div className="lg:hidden space-y-4 pb-20">
         {loading ? (
           <GlassCard className="text-center py-20">
             <div className="w-8 h-8 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
@@ -283,16 +283,16 @@ export default function NguoiLaoDongPage() {
         ) : (
           filteredData.map((item) => (
             <GlassCard key={item.id} noPadding>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-inner ${item.gioiTinh === GioiTinh.NAM ? 'bg-gradient-to-tr from-blue-600 to-blue-400' : 'bg-gradient-to-tr from-pink-600 to-pink-400'}`}>
+              <div className="p-5">
+                <div className="flex justify-between items-start mb-5">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg ${item.gioiTinh === GioiTinh.NAM ? 'bg-gradient-to-tr from-blue-600 to-blue-400 shadow-blue-100' : 'bg-gradient-to-tr from-pink-600 to-pink-400 shadow-pink-100'}`}>
                       {item.tenNguoiLaoDong.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <h3 className="font-black text-gray-900 text-lg tracking-tight mb-1 uppercase leading-tight">{item.tenNguoiLaoDong}</h3>
+                      <h3 className="font-black text-gray-900 text-base tracking-tight mb-0.5 uppercase leading-tight line-clamp-1">{item.tenNguoiLaoDong}</h3>
                       <div className="flex items-center gap-2">
-                         <span className={`px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-wider ${item.gioiTinh === GioiTinh.NAM ? 'bg-blue-50 text-blue-600 ring-1 ring-blue-100' : 'bg-pink-50 text-pink-600 ring-1 ring-pink-100'}`}>
+                         <span className={`px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider ${item.gioiTinh === GioiTinh.NAM ? 'bg-blue-50 text-blue-600 ring-1 ring-blue-100' : 'bg-pink-50 text-pink-600 ring-1 ring-pink-100'}`}>
                              {item.gioiTinh === GioiTinh.NAM ? 'NAM' : 'NỮ'}
                          </span>
                          <span className="text-[10px] font-bold text-gray-400 font-mono">NS: {item.namSinh}</span>
@@ -301,39 +301,37 @@ export default function NguoiLaoDongPage() {
                   </div>
                   <GlassButton 
                     variant="ghost" 
-                    className="!p-2.5 !rounded-xl !bg-gray-50/50"
+                    className="!p-2 !rounded-xl !bg-gray-50/50"
                     onClick={() => handleEdit(item)}
-                    icon={<svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>}
+                    icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>}
                   />
                 </div>
 
-                <div className="space-y-4 mb-6">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-gray-50/30 p-4 rounded-2xl border border-gray-100/50">
-                      <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Số điện thoại</div>
-                      <div className="text-sm font-black text-gray-700 font-mono">{item.soDienThoai || 'TRỐNG'}</div>
-                    </div>
-                    <div className="bg-gray-50/30 p-4 rounded-2xl border border-gray-100/50">
-                      <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Căn cước / ID</div>
-                      <div className="text-sm font-black text-gray-500 font-mono truncate">{item.cccd || 'CHƯA CÓ'}</div>
-                    </div>
+                <div className="grid grid-cols-2 gap-3 mb-5">
+                  <div className="bg-gray-50/50 p-3 rounded-xl border border-gray-100/50">
+                    <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Số điện thoại</div>
+                    <div className="text-xs font-black text-gray-700 font-mono">{item.soDienThoai || 'TRỐNG'}</div>
+                  </div>
+                  <div className="bg-gray-50/50 p-3 rounded-xl border border-gray-100/50">
+                    <div className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">CCCD / ID</div>
+                    <div className="text-xs font-black text-gray-500 font-mono truncate">{item.cccd || 'CHƯA CÓ'}</div>
                   </div>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-2.5">
                   <a 
                     href={`tel:${item.soDienThoai}`}
-                    className="flex-1 inline-flex items-center justify-center gap-2 bg-emerald-600 text-white h-12 rounded-2xl font-black shadow-lg shadow-emerald-200 active:scale-95 transition-all text-xs"
+                    className="flex-1 inline-flex items-center justify-center gap-2 bg-emerald-600 text-white h-11 rounded-xl font-black shadow-lg shadow-emerald-200 active:scale-95 transition-all text-xs"
                   >
-                    <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                    GỌI NGAY
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                    GỌI
                   </a>
                   <GlassButton 
                     variant="danger" 
-                    className="flex-1 !h-12 !rounded-2xl !bg-rose-50 !text-rose-600 !border-rose-100 !text-xs" 
+                    className="flex-1 !h-11 !rounded-xl !bg-rose-50 !text-rose-600 !border-rose-100 !text-[10px]" 
                     onClick={() => handleDelete(item.id)}
                   >
-                    XÓA HỒ SƠ
+                    XÓA
                   </GlassButton>
                 </div>
               </div>

@@ -75,28 +75,25 @@ export default function Sidebar() {
   return (
     <>
       {/* Overlay cho mobile */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 lg:hidden transition-all duration-300"
-          onClick={closeSidebar}
-        />
-      )}
+      <div 
+        className={`fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 lg:hidden transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
+        onClick={closeSidebar}
+      />
 
       <aside className={`
-        fixed left-0 top-16 bottom-0 z-40
+        fixed left-0 top-0 bottom-0 z-40 pt-20
         bg-white/70 backdrop-blur-xl border-r border-white/40
-        transition-all duration-500 ease-in-out
-        ${isSidebarOpen ? 'w-72 shadow-[20px_0_50px_rgba(30,41,59,0.05)]' : 'w-20 md:w-20 lg:w-72'}
+        transition-all duration-300 ease-out
+        ${isSidebarOpen ? 'w-72 shadow-[20px_0_50px_rgba(30,41,59,0.05)] transform-none' : 'w-[72px] -translate-x-full md:translate-x-0 lg:w-72'}
         overflow-y-auto custom-scrollbar
-        md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
-        <div className="flex flex-col py-6 px-4 space-y-8">
+        <div className="flex flex-col py-2 px-3 space-y-6">
           {menuSections.map((section, sectionIdx) => (
-            <div key={sectionIdx} className="space-y-3">
+            <div key={sectionIdx} className="space-y-2">
               <h3 className={`
                 px-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]
-                transition-opacity duration-300
-                ${!isSidebarOpen ? 'lg:opacity-100 opacity-0 md:opacity-0 pointer-events-none' : 'opacity-100'}
+                transition-all duration-300
+                ${!isSidebarOpen ? 'lg:opacity-100 opacity-0 md:opacity-0 h-0 md:h-0 lg:h-auto overflow-hidden' : 'opacity-100 h-auto'}
               `}>
                 {section.title}
               </h3>
@@ -110,15 +107,15 @@ export default function Sidebar() {
                       href={item.path}
                       onClick={closeSidebar}
                       className={`
-                        group relative flex items-center h-12 px-4 rounded-2xl transition-all duration-300
+                        group relative flex items-center h-11 px-3.5 rounded-xl transition-all duration-200
                         ${isActive 
                           ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' 
-                          : 'text-slate-500 hover:bg-white hover:shadow-md hover:text-blue-600 active:scale-95'
+                          : 'text-slate-500 hover:bg-white hover:shadow-sm hover:text-blue-600 active:scale-95'
                         }
                       `}
                     >
                       <div className={`
-                        flex-shrink-0 w-6 h-6 flex items-center justify-center
+                        flex-shrink-0 w-5 h-5 flex items-center justify-center
                         transition-transform duration-300 group-hover:scale-110
                       `}>
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,18 +124,20 @@ export default function Sidebar() {
                       </div>
                       
                       <span className={`
-                        ml-4 text-sm font-bold truncate transition-all duration-300
-                        ${isSidebarOpen ? 'opacity-100 translate-x-0' : 'lg:opacity-100 opacity-0 -translate-x-4 lg:translate-x-0 md:opacity-0'}
+                        ml-3.5 text-sm font-bold truncate transition-all duration-300
+                        ${isSidebarOpen ? 'opacity-100 w-auto translate-x-0' : 'lg:opacity-100 lg:w-auto opacity-0 w-0 -translate-x-4 lg:translate-x-0 md:opacity-0 overflow-hidden'}
                       `}>
                         {item.label}
                       </span>
 
                       {/* Tooltip for collapsed state */}
-                      {!isSidebarOpen && (
-                        <div className="absolute left-full ml-4 px-3 py-2 bg-slate-900 text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all pointer-events-none z-50 whitespace-nowrap hidden md:block lg:hidden">
-                          {item.label}
-                        </div>
-                      )}
+                      <div className={`
+                        absolute left-full ml-4 px-3 py-2 bg-slate-900 text-white text-xs font-bold rounded-lg 
+                        opacity-0 -translate-x-2 transition-all pointer-events-none z-50 whitespace-nowrap 
+                        ${!isSidebarOpen ? 'group-hover:opacity-100 group-hover:translate-x-0 md:block lg:hidden' : 'hidden'}
+                      `}>
+                        {item.label}
+                      </div>
                     </Link>
                   );
                 })}
