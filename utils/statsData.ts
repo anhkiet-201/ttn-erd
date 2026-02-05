@@ -28,10 +28,6 @@ export interface GenderStat {
   color: string;
 }
 
-// Interface moved to getTopCompanies implementation block or defining it here matching the new implementation
-// Deleting this block as I'm updating the function block entirely which includes the interface logic or just update the interface here.
-// Actually, it's cleaner to update the interface in place.
-
 export interface CompanyStat {
   name: string;
   total: number;
@@ -46,6 +42,15 @@ export interface GrowthStat {
   date: string;
   ungTuyen: number;
   nguoiLaoDong: number;
+}
+
+export interface AppEvent {
+  id: string;
+  nguoiLaoDongId: string;
+  congTyId: string;
+  tenCongTy?: string;
+  date: Date;
+  trangThaiTuyen: TrangThaiTuyen;
 }
 
 const ungTuyenRepo = new UngTuyenRepository();
@@ -70,50 +75,67 @@ const toDate = (val: any): Date | null => {
     return new Date(val);
 };
 
-export const filterDataByDate = (
-  ungTuyenList: UngTuyen[],
+export const flattenAppEvents = (ungTuyenList: UngTuyen[]): AppEvent[] => {
+    const events: AppEvent[] = [];
+    
+    ungTuyenList.forEach(app => {
+        // Current state
+        const currentDate = toDate(app.updatedAt || app.createdAt);
+        if (currentDate) {
+            events.push({
+                id: app.id,
+                nguoiLaoDongId: app.nguoiLaoDongId,
+                congTyId: app.congTyId,
+                date: currentDate,
+                trangThaiTuyen: app.trangThaiTuyen
+            });
+        }
+        
+        // History events
+        if (app.lichSuPhongVan) {
+            app.lichSuPhongVan.forEach((h, index) => {
+                const hDate = toDate(h.ngayCapNhat);
+                if (hDate) {
+                    events.push({
+                        id: `${app.id}_h${index}`,
+                        nguoiLaoDongId: app.nguoiLaoDongId,
+                        congTyId: app.congTyId,
+                        tenCongTy: h.tenCongTy,
+                        date: hDate,
+                        trangThaiTuyen: h.trangThaiTuyen
+                    });
+                }
+            });
+        }
+    });
+    
+    return events;
+};
+
+export const filterEventsByDate = (
+  events: AppEvent[],
   range: DateRange
 ) => {
   const start = startOfDay(range.startDate);
   const end = endOfDay(range.endDate);
 
-  return ungTuyenList.filter((item) => {
-    const createdDate = toDate(item.createdAt);
-    if (!createdDate) return false;
-    return isWithinInterval(createdDate, { start, end });
+  return events.filter((event) => {
+    return isWithinInterval(event.date, { start, end });
   });
 };
 
 export const getOverviewStats = (
-  ungTuyenList: UngTuyen[],
-  nguoiLaoDongList: NguoiLaoDong[],
-  congTyList: CongTy[]
+  filteredEvents: AppEvent[],
+  allCompanies: CongTy[],
 ): StatsOverview => {
-    // For Candidates and Companies, since they don't always have a clear 'date' associated with the 'application' context in the same way,
-    // we might just return the filtered counts if we filtered them, OR the total counts.
-    // However, usually "Growth" implies we filter them by their creation date.
-    // The previous plan said "Active in range", so we should probably filter them too.
-    // But typically Overview cards show the current state of the filtered dataset.
-    
-    // NOTE: Application list passed here is ALREADY filtered by date.
-    // But Workers and Companies lists are NOT. 
-    // We should probably filter workers/companies by their createdAt if we want "New Workers in Period".
-    // Or just show Total Workers.
-    // Let's assume standard dashboard behavior:
-    // 1. "Total Applications" = count of filtered applications.
-    // 2. "Candidates" = count of UNIQUE candidates in those applications OR total candidates created in that period.
-    // Let's go with "Candidates involved in applications" for relevance, OR "New Candidates".
-    // "Tỷ lệ tăng trưởng người lao động mới" (Growth rate of new workers) was requested.
-    // So let's calculate "New Workers" in this period.
-    
-    // Calculating success rate:
-    const successCount = ungTuyenList.filter(item => item.trangThaiTuyen === TrangThaiTuyen.DANG_NHAN_VIEC).length;
-    const rate = ungTuyenList.length > 0 ? (successCount / ungTuyenList.length) * 100 : 0;
+    const activeWorkerIds = new Set(filteredEvents.map(e => e.nguoiLaoDongId));
+    const successCount = filteredEvents.filter(item => item.trangThaiTuyen === TrangThaiTuyen.DANG_NHAN_VIEC).length;
+    const rate = filteredEvents.length > 0 ? (successCount / filteredEvents.length) * 100 : 0;
 
   return {
-    totalUngTuyen: ungTuyenList.length,
-    totalNguoiLaoDong: nguoiLaoDongList.length, // Placeholder, needs explicit filtering if we want "New"
-    totalCongTy: congTyList.length, // Placeholder
+    totalUngTuyen: filteredEvents.length,
+    totalNguoiLaoDong: activeWorkerIds.size,
+    totalCongTy: allCompanies.length, 
     recruitmentRate: parseFloat(rate.toFixed(2)),
   };
 };
@@ -132,21 +154,21 @@ export const filterWorkersAndCompaniesByDate = (
     });
 }
 
-export const getJobStatusStats = (ungTuyenList: UngTuyen[]): JobStatusStat[] => {
+export const getJobStatusStats = (events: AppEvent[]): JobStatusStat[] => {
   const statusCounts: Record<string, number> = {};
   
-  ungTuyenList.forEach((item) => {
+  events.forEach((item) => {
     const status = item.trangThaiTuyen;
     statusCounts[status] = (statusCounts[status] || 0) + 1;
   });
 
   const mapColor = (status: string) => {
       switch(status) {
-          case TrangThaiTuyen.DANG_NHAN_VIEC: return '#6366f1'; // Indigo-500
-          case TrangThaiTuyen.TU_CHOI: return '#f43f5e'; // Rose-500
-          case TrangThaiTuyen.CHO_PHONG_VAN: return '#3b82f6'; // Blue-500
-          case TrangThaiTuyen.DA_NGHI_VIEC: return '#94a3b8'; // Slate-400
-          default: return '#cbd5e1'; // Slate-300
+          case TrangThaiTuyen.DANG_NHAN_VIEC: return '#6366f1'; 
+          case TrangThaiTuyen.TU_CHOI: return '#f43f5e'; 
+          case TrangThaiTuyen.CHO_PHONG_VAN: return '#3b82f6'; 
+          case TrangThaiTuyen.DA_NGHI_VIEC: return '#94a3b8'; 
+          default: return '#cbd5e1'; 
       }
   }
 
@@ -158,7 +180,6 @@ export const getJobStatusStats = (ungTuyenList: UngTuyen[]): JobStatusStat[] => 
 };
 
 const formatStatusName = (status: string) => {
-    // Map enum values to readable Vietnamese
      switch(status) {
           case TrangThaiTuyen.DANG_NHAN_VIEC: return 'Đang nhận việc';
           case TrangThaiTuyen.TU_CHOI: return 'Từ chối';
@@ -173,10 +194,9 @@ const formatStatusName = (status: string) => {
 }
 
 export const getGenderStats = (
-  ungTuyenList: UngTuyen[], 
+  events: AppEvent[], 
   nguoiLaoDongList: NguoiLaoDong[]
 ): GenderStat[] => {
-    // Create a lookup map for worker gender
     const workerGenderMap = nguoiLaoDongList.reduce((acc, curr) => {
         acc[curr.id] = curr.gioiTinh;
         return acc;
@@ -185,7 +205,7 @@ export const getGenderStats = (
     let nam = 0;
     let nu = 0;
 
-    ungTuyenList.forEach(app => {
+    events.forEach(app => {
         const gender = workerGenderMap[app.nguoiLaoDongId];
         if (gender === 'NAM' || gender === 'Nam') nam++;
         else if (gender === 'NU' || gender === 'Nu' || gender === 'Nữ') nu++;
@@ -197,17 +217,8 @@ export const getGenderStats = (
     ];
 };
 
-export interface CompanyStat {
-  name: string;
-  total: number;
-  dangNhanViec: number;
-  tuChoi: number;
-  choPhongVan: number;
-  khac: number;
-}
-
 export const getTopCompanies = (
-  ungTuyenList: UngTuyen[],
+  events: AppEvent[],
   congTyList: CongTy[]
 ): CompanyStat[] => {
     const companiesMap = congTyList.reduce((acc, curr) => {
@@ -217,8 +228,8 @@ export const getTopCompanies = (
 
     const stats: Record<string, CompanyStat> = {};
 
-    ungTuyenList.forEach(app => {
-        const name = companiesMap[app.congTyId] || 'Unknown';
+    events.forEach(app => {
+        const name = app.tenCongTy || companiesMap[app.congTyId] || 'Unknown';
         if (!stats[name]) {
             stats[name] = { 
                 name, 
@@ -254,19 +265,16 @@ export const getTopCompanies = (
 
     return Object.values(stats)
         .sort((a, b) => b.total - a.total)
-        .slice(0, 10); // Top 10
+        .slice(0, 10); 
 };
 
 export const getGrowthStats = (
-    ungTuyenList: UngTuyen[],
-    nguoiLaoDongList: NguoiLaoDong[],
+    events: AppEvent[],
+    allWorkerList: NguoiLaoDong[],
     range: DateRange
 ): GrowthStat[] => {
-    // Group by Day or Month depending on range size. 
-    // For default 1 month, Day is good.
     const statsMap: Record<string, { ungTuyen: number, nguoiLaoDong: number }> = {};
     
-    // Initialize map for all days in range to ensure continuous line
     let current = startOfDay(range.startDate);
     const end = endOfDay(range.endDate);
     
@@ -276,20 +284,17 @@ export const getGrowthStats = (
         current = new Date(current.setDate(current.getDate() + 1));
     }
 
-    // Count Applications
     const appStart = startOfDay(range.startDate);
     const appEnd = endOfDay(range.endDate);
 
-    ungTuyenList.forEach(app => {
-        const date = toDate(app.createdAt);
-        if (date && isWithinInterval(date, { start: appStart, end: appEnd })) {
-             const key = format(date, 'dd/MM');
+    events.forEach(event => {
+        if (isWithinInterval(event.date, { start: appStart, end: appEnd })) {
+             const key = format(event.date, 'dd/MM');
              if (statsMap[key]) statsMap[key].ungTuyen++;
         }
     });
 
-    // Count New Workers
-    nguoiLaoDongList.forEach(worker => {
+    allWorkerList.forEach(worker => {
         const date = toDate(worker.createdAt);
          if (date && isWithinInterval(date, { start: appStart, end: appEnd })) {
              const key = format(date, 'dd/MM');
@@ -313,7 +318,7 @@ export interface StatusTrendStat {
 }
 
 export const getStatusTrendStats = (
-    ungTuyenList: UngTuyen[],
+    events: AppEvent[],
     range: DateRange
 ): StatusTrendStat[] => {
     const statsMap: Record<string, StatusTrendStat> = {};
@@ -334,18 +339,17 @@ export const getStatusTrendStats = (
         current = new Date(current.setDate(current.getDate() + 1));
     }
 
-    ungTuyenList.forEach(app => {
-        const date = toDate(app.createdAt);
-        if (date && isWithinInterval(date, { 
+    events.forEach(event => {
+        if (isWithinInterval(event.date, { 
             start: startOfDay(range.startDate), 
             end: endOfDay(range.endDate) 
         })) {
-             const key = format(date, 'dd/MM');
+             const key = format(event.date, 'dd/MM');
              if (statsMap[key]) {
-                 if (app.trangThaiTuyen === TrangThaiTuyen.DANG_NHAN_VIEC) statsMap[key].dangNhanViec++;
-                 else if (app.trangThaiTuyen === TrangThaiTuyen.TU_CHOI) statsMap[key].tuChoi++;
-                 else if (app.trangThaiTuyen === TrangThaiTuyen.CHO_PHONG_VAN) statsMap[key].choPhongVan++;
-                 else if (app.trangThaiTuyen === TrangThaiTuyen.DA_NGHI_VIEC) statsMap[key].daNghiViec++;
+                 if (event.trangThaiTuyen === TrangThaiTuyen.DANG_NHAN_VIEC) statsMap[key].dangNhanViec++;
+                 else if (event.trangThaiTuyen === TrangThaiTuyen.TU_CHOI) statsMap[key].tuChoi++;
+                 else if (event.trangThaiTuyen === TrangThaiTuyen.CHO_PHONG_VAN) statsMap[key].choPhongVan++;
+                 else if (event.trangThaiTuyen === TrangThaiTuyen.DA_NGHI_VIEC) statsMap[key].daNghiViec++;
                  else statsMap[key].khac++;
              }
         }
@@ -353,4 +357,3 @@ export const getStatusTrendStats = (
 
     return Object.values(statsMap);
 };
-

@@ -1,11 +1,12 @@
-'use client';
+ 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { subDays, startOfDay, endOfDay, startOfMonth } from 'date-fns';
 import { 
     DateRange, 
     fetchStatsData, 
-    filterDataByDate, 
+    flattenAppEvents,
+    filterEventsByDate, 
     getOverviewStats, 
     getJobStatusStats, 
     getGenderStats, 
@@ -56,16 +57,15 @@ export default function StatisticsPage() {
   const stats = useMemo(() => {
     const { ungTuyenList, nguoiLaoDongList, congTyList } = data;
 
-    const filteredApps = filterDataByDate(ungTuyenList, dateRange);
-    const filteredWorkers = filterWorkersAndCompaniesByDate(nguoiLaoDongList, dateRange) as NguoiLaoDong[];
-    const filteredCompanies = filterWorkersAndCompaniesByDate(congTyList, dateRange) as CongTy[];
-
-    const overview = getOverviewStats(filteredApps, filteredWorkers, filteredCompanies);
-    const jobStatusData = getJobStatusStats(filteredApps);
-    const genderData = getGenderStats(filteredApps, nguoiLaoDongList);
-    const topCompaniesData = getTopCompanies(filteredApps, congTyList);
-    const growthData = getGrowthStats(ungTuyenList, nguoiLaoDongList, dateRange);
-    const statusTrendData = getStatusTrendStats(ungTuyenList, dateRange);
+    const events = flattenAppEvents(ungTuyenList);
+    const filteredEvents = filterEventsByDate(events, dateRange);
+    
+    const overview = getOverviewStats(filteredEvents, congTyList);
+    const jobStatusData = getJobStatusStats(filteredEvents);
+    const genderData = getGenderStats(filteredEvents, nguoiLaoDongList);
+    const topCompaniesData = getTopCompanies(filteredEvents, congTyList);
+    const growthData = getGrowthStats(filteredEvents, nguoiLaoDongList, dateRange);
+    const statusTrendData = getStatusTrendStats(filteredEvents, dateRange);
 
     return {
       overview,
