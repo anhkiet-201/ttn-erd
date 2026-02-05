@@ -255,17 +255,6 @@ export default function NguoiLaoDongPage() {
             </tbody>
           </table>
           
-          <div ref={loaderRef} className="py-10 flex justify-center bg-gray-50/10 border-t border-gray-100/50">
-            {(loadingMore || (hasMore && !searchTerm)) && (
-                <div className="flex items-center gap-3 text-gray-400">
-                <div className="w-5 h-5 border-2 border-gray-200 border-t-blue-500 rounded-full animate-spin" />
-                <span className="text-sm font-black uppercase tracking-widest">Đang tải hồ sơ tiếp theo...</span>
-                </div>
-            )}
-            {!hasMore && filteredData.length > 0 && !searchTerm && (
-                <span className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">Đã hiển thị toàn bộ người lao động</span>
-            )}
-            </div>
         </div>
       </GlassCard>
 
@@ -337,6 +326,18 @@ export default function NguoiLaoDongPage() {
               </div>
             </GlassCard>
           ))
+        )}
+      </div>
+
+      <div ref={loaderRef} className="py-10 flex justify-center bg-transparent mt-4">
+        {(loadingMore || (hasMore && !searchTerm)) && (
+          <div className="flex items-center gap-3 text-gray-400">
+            <div className="w-5 h-5 border-2 border-gray-200 border-t-blue-500 rounded-full animate-spin" />
+            <span className="text-sm font-black uppercase tracking-widest">Đang tải hồ sơ tiếp theo...</span>
+          </div>
+        )}
+        {!hasMore && filteredData.length > 0 && !searchTerm && (
+          <span className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">Đã hiển thị toàn bộ người lao động</span>
         )}
       </div>
 
