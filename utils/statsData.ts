@@ -62,18 +62,25 @@ export const fetchStatsData = async () => {
   return { ungTuyenList, nguoiLaoDongList, congTyList };
 };
 
+const toDate = (val: any): Date | null => {
+    if (!val) return null;
+    if (val instanceof Date) return val;
+    if (typeof val === 'number') return new Date(val);
+    if (typeof val === 'string') return parseISO(val);
+    return new Date(val);
+};
+
 export const filterDataByDate = (
   ungTuyenList: UngTuyen[],
   range: DateRange
 ) => {
+  const start = startOfDay(range.startDate);
+  const end = endOfDay(range.endDate);
+
   return ungTuyenList.filter((item) => {
-    if (!item.createdAt) return false;
-    // Handle both ISO strings and timestamps if necessary, but type says string (ISO)
-    const createdDate = typeof item.createdAt === 'string' ? parseISO(item.createdAt) : new Date(item.createdAt);
-    return isWithinInterval(createdDate, {
-      start: startOfDay(range.startDate),
-      end: endOfDay(range.endDate),
-    });
+    const createdDate = toDate(item.createdAt);
+    if (!createdDate) return false;
+    return isWithinInterval(createdDate, { start, end });
   });
 };
 
@@ -115,15 +122,13 @@ export const filterWorkersAndCompaniesByDate = (
     list: (NguoiLaoDong | CongTy)[],
     range: DateRange
 ) => {
+    const start = startOfDay(range.startDate);
+    const end = endOfDay(range.endDate);
+
     return list.filter(item => {
-        if (!item.createdAt) return false;
-        const createdDate = typeof item.createdAt === 'number' 
-            ? new Date(item.createdAt) 
-            : parseISO(item.createdAt as string);
-        return isWithinInterval(createdDate, {
-            start: startOfDay(range.startDate),
-            end: endOfDay(range.endDate),
-        });
+        const createdDate = toDate(item.createdAt);
+        if (!createdDate) return false;
+        return isWithinInterval(createdDate, { start, end });
     });
 }
 
@@ -272,10 +277,12 @@ export const getGrowthStats = (
     }
 
     // Count Applications
+    const appStart = startOfDay(range.startDate);
+    const appEnd = endOfDay(range.endDate);
+
     ungTuyenList.forEach(app => {
-        if (!app.createdAt) return;
-        const date = typeof app.createdAt === 'string' ? parseISO(app.createdAt) : new Date(app.createdAt);
-        if (isWithinInterval(date, { start: range.startDate, end: range.endDate })) {
+        const date = toDate(app.createdAt);
+        if (date && isWithinInterval(date, { start: appStart, end: appEnd })) {
              const key = format(date, 'dd/MM');
              if (statsMap[key]) statsMap[key].ungTuyen++;
         }
@@ -283,9 +290,8 @@ export const getGrowthStats = (
 
     // Count New Workers
     nguoiLaoDongList.forEach(worker => {
-        if (!worker.createdAt) return;
-        const date = typeof worker.createdAt === 'number' ? new Date(worker.createdAt) : parseISO(worker.createdAt as string);
-         if (isWithinInterval(date, { start: range.startDate, end: range.endDate })) {
+        const date = toDate(worker.createdAt);
+         if (date && isWithinInterval(date, { start: appStart, end: appEnd })) {
              const key = format(date, 'dd/MM');
              if (statsMap[key]) statsMap[key].nguoiLaoDong++;
         }
@@ -329,9 +335,8 @@ export const getStatusTrendStats = (
     }
 
     ungTuyenList.forEach(app => {
-        if (!app.createdAt) return;
-        const date = typeof app.createdAt === 'string' ? parseISO(app.createdAt) : new Date(app.createdAt);
-        if (isWithinInterval(date, { 
+        const date = toDate(app.createdAt);
+        if (date && isWithinInterval(date, { 
             start: startOfDay(range.startDate), 
             end: endOfDay(range.endDate) 
         })) {

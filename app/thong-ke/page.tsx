@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
-import { subDays } from 'date-fns';
+import { subDays, startOfDay, endOfDay } from 'date-fns';
 import { 
     DateRange, 
     fetchStatsData, 
@@ -34,8 +34,8 @@ export default function StatisticsPage() {
   }>({ ungTuyenList: [], nguoiLaoDongList: [], congTyList: [] });
 
   const [dateRange, setDateRange] = useState<DateRange>({
-    startDate: subDays(new Date(), 30),
-    endDate: new Date(),
+    startDate: startOfDay(subDays(new Date(), 30)),
+    endDate: endOfDay(new Date()),
   });
 
   useEffect(() => {

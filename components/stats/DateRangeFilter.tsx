@@ -1,6 +1,6 @@
 import React from 'react';
 import { DateRange } from '@/utils/statsData';
-import { format } from 'date-fns';
+import { format, startOfDay, endOfDay } from 'date-fns';
 import GlassCard from '../glass/GlassCard';
 
 interface DateRangeFilterProps {
@@ -15,10 +15,11 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
   const handleStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newStart = e.target.valueAsDate;
     if (newStart) {
-        if (newStart > dateRange.endDate) {
-             onChange({ startDate: newStart, endDate: newStart }); 
+        const normalizedStart = startOfDay(newStart);
+        if (normalizedStart > dateRange.endDate) {
+             onChange({ startDate: normalizedStart, endDate: normalizedStart }); 
         } else {
-             onChange({ ...dateRange, startDate: newStart });
+             onChange({ ...dateRange, startDate: normalizedStart });
         }
     }
   };
@@ -26,10 +27,11 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
   const handleEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
      const newEnd = e.target.valueAsDate;
      if (newEnd) {
-         if (newEnd < dateRange.startDate) {
-             onChange({ startDate: newEnd, endDate: newEnd });
+         const normalizedEnd = endOfDay(newEnd);
+         if (normalizedEnd < dateRange.startDate) {
+             onChange({ startDate: normalizedEnd, endDate: normalizedEnd });
          } else {
-             onChange({ ...dateRange, endDate: newEnd });
+             onChange({ ...dateRange, endDate: normalizedEnd });
          }
      }
   };
