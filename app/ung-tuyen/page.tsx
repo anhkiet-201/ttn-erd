@@ -166,7 +166,7 @@ export default function UngTuyenPage() {
         congTy: company || { tenCongTy: 'N/A' } as any,
       };
     });
-  }, [ungTuyens, workerMap, companyMap, workers.length]);
+  }, [ungTuyens, workerMap, companyMap]);
 
   const filteredData = useMemo(() => {
     let data = joinedData;

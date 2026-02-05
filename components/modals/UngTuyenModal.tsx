@@ -34,7 +34,9 @@ const ungTuyenSchema = z.object({
   congTyId: z.string().min(1, 'Vui lòng chọn công ty'),
   // Worker fields
   tenNguoiLaoDong: z.string().min(1, 'Họ tên không được để trống'),
-  soDienThoai: z.string().min(10, 'SĐT không hợp lệ').nullable(),
+  soDienThoai: z.string().nullable().optional().refine(val => !val || val.length >= 10, {
+    message: "SĐT phải có ít nhất 10 số"
+  }),
   namSinh: z.number().min(1900).max(new Date().getFullYear()),
   gioiTinh: z.nativeEnum(GioiTinh),
   // Recruitment fields
@@ -141,23 +143,19 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
       const workerByCCCD = workers.find(w => w.cccd === values.cccd);
       const targetWorker = existingWorker || workerByCCCD;
 
+      const workerData = {
+        tenNguoiLaoDong: values.tenNguoiLaoDong.toUpperCase(),
+        soDienThoai: values.soDienThoai || null,
+        namSinh: values.namSinh,
+        gioiTinh: values.gioiTinh,
+        cccd: values.cccd,
+      };
+
       if (targetWorker) {
-        await workerRepo.update(targetWorker.id, {
-          tenNguoiLaoDong: values.tenNguoiLaoDong,
-          soDienThoai: values.soDienThoai,
-          namSinh: values.namSinh,
-          gioiTinh: values.gioiTinh,
-          cccd: values.cccd,
-        } as any);
+        await workerRepo.update(targetWorker.id, workerData as any);
         workerId = targetWorker.id;
       } else {
-        workerId = await workerRepo.create({
-          tenNguoiLaoDong: values.tenNguoiLaoDong,
-          soDienThoai: values.soDienThoai,
-          namSinh: values.namSinh,
-          gioiTinh: values.gioiTinh,
-          cccd: values.cccd,
-        } as any);
+        workerId = await workerRepo.create(workerData as any);
       }
 
       let existingApp: UngTuyen | undefined;
@@ -265,17 +263,23 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
               {existingWorker && <p className="mt-1 text-[10px] text-emerald-600 font-black ml-1 uppercase">✓ Đã tìm thấy hồ sơ hệ thống</p>}
             </div>
             
-            <input
-              {...register('tenNguoiLaoDong')}
-              placeholder="Họ và tên"
-              className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-blue-100 uppercase"
-            />
+            <div>
+              <input
+                {...register('tenNguoiLaoDong')}
+                placeholder="Họ và tên"
+                className={`w-full px-4 py-3 bg-white border rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-blue-100 uppercase ${errors.tenNguoiLaoDong ? 'border-red-300' : 'border-gray-100'}`}
+              />
+              {errors.tenNguoiLaoDong && <p className="mt-1 text-[10px] text-red-500 font-black ml-1 uppercase">{errors.tenNguoiLaoDong.message}</p>}
+            </div>
             
-            <input
-              {...register('soDienThoai')}
-              placeholder="Số điện thoại"
-              className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl text-sm font-bold font-mono outline-none focus:ring-2 focus:ring-blue-100"
-            />
+            <div>
+              <input
+                {...register('soDienThoai')}
+                placeholder="Số điện thoại"
+                className={`w-full px-4 py-3 bg-white border rounded-xl text-sm font-bold font-mono outline-none focus:ring-2 focus:ring-blue-100 ${errors.soDienThoai ? 'border-red-300' : 'border-gray-100'}`}
+              />
+              {errors.soDienThoai && <p className="mt-1 text-[10px] text-red-500 font-black ml-1 uppercase">{errors.soDienThoai.message}</p>}
+            </div>
             
             <div className="grid grid-cols-2 gap-3">
               <input
