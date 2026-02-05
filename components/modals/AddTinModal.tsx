@@ -68,7 +68,9 @@ interface TagInputProps {
 const TagInput = ({ label, tags, onChange, colorClass, placeholder, suggestions = [] }: TagInputProps) => {
   const [inputVal, setInputVal] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const filteredSuggestions = suggestions
     .filter(s => s.toLowerCase().includes(inputVal.toLowerCase()) && !tags.some(t => t.noiDung === s))
@@ -84,12 +86,26 @@ const TagInput = ({ label, tags, onChange, colorClass, placeholder, suggestions 
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (showSuggestions) setSelectedIndex(0);
+  }, [showSuggestions, inputVal]);
+
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
-      addTag(inputVal);
+      if (showSuggestions && selectedIndex >= 0 && filteredSuggestions[selectedIndex]) {
+        addTag(filteredSuggestions[selectedIndex]);
+      } else {
+        addTag(inputVal);
+      }
     } else if (e.key === 'Backspace' && !inputVal && tags.length > 0) {
       onChange(tags.slice(0, -1));
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex(prev => (prev < filteredSuggestions.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex(prev => (prev > 0 ? prev - 1 : prev));
     }
   };
 
@@ -99,6 +115,21 @@ const TagInput = ({ label, tags, onChange, colorClass, placeholder, suggestions 
       onChange([...tags, { id: uuidv4(), noiDung: trimmed, isDeactivated: false }]);
       setInputVal('');
       setShowSuggestions(false);
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const paste = e.clipboardData.getData('text');
+    const newTags = paste.split(/[\n,]+/).map(t => t.trim()).filter(t => t);
+    
+    if (newTags.length > 0) {
+        const uniqueNewTags = newTags
+            .filter(t => !tags.some(existing => existing.noiDung === t))
+            .map(t => ({ id: uuidv4(), noiDung: t, isDeactivated: false }));
+            
+        onChange([...tags, ...uniqueNewTags]);
+        setInputVal('');
     }
   };
 
@@ -140,18 +171,20 @@ const TagInput = ({ label, tags, onChange, colorClass, placeholder, suggestions 
             }}
             onFocus={() => setShowSuggestions(true)}
             onKeyDown={handleKeyDown}
+            onPaste={handlePaste}
             placeholder={tags.length === 0 ? placeholder : '...'}
             className={`w-full bg-transparent outline-none text-sm ${styles.text} ${styles.placeholder}`}
           />
           
-          {showSuggestions && inputVal && filteredSuggestions.length > 0 && (
-            <div className="absolute top-full left-0 w-full mt-1 bg-white rounded-lg shadow-lg border border-gray-100 z-50 overflow-hidden">
+          {showSuggestions && filteredSuggestions.length > 0 && (
+            <div ref={scrollRef} className="absolute top-full left-0 w-full mt-1 bg-white rounded-lg shadow-xl shadow-blue-500/10 border border-gray-100 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
               {filteredSuggestions.map((s, idx) => (
                 <button
                   key={idx}
                   type="button"
                   onClick={() => addTag(s)}
-                  className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors truncate"
+                  onMouseEnter={() => setSelectedIndex(idx)}
+                  className={`w-full text-left px-3 py-2 text-sm transition-colors truncate ${selectedIndex === idx ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-50'}`}
                 >
                   {s}
                 </button>
