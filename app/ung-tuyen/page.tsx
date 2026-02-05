@@ -566,17 +566,6 @@ export default function UngTuyenPage() {
           </table>
         </div>
 
-        <div ref={loaderRef} className="py-10 flex justify-center bg-gray-50/10 border-t border-gray-100/50">
-          {(loadingMore || (hasMore && !searchQuery)) && (
-            <div className="flex items-center gap-3 text-gray-400">
-              <div className="w-5 h-5 border-2 border-gray-200 border-t-blue-500 rounded-full animate-spin" />
-              <span className="text-sm font-black uppercase tracking-widest">Đang tải thêm...</span>
-            </div>
-          )}
-          {!hasMore && filteredData.length > 0 && !searchQuery && (
-            <span className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">Đã tải tất cả hồ sơ quản lý</span>
-          )}
-        </div>
       </GlassCard>
 
       {/* Mobile/Tablet Card View - Visible up to lg */}
@@ -671,6 +660,18 @@ export default function UngTuyenPage() {
               </div>
             </GlassCard>
           ))
+        )}
+      </div>
+      
+      <div ref={loaderRef} className="py-10 flex justify-center bg-transparent mt-4">
+        {(loadingMore || (hasMore && !searchQuery)) && (
+          <div className="flex items-center gap-3 text-gray-400">
+            <div className="w-5 h-5 border-2 border-gray-200 border-t-blue-500 rounded-full animate-spin" />
+            <span className="text-sm font-black uppercase tracking-widest">Đang tải thêm...</span>
+          </div>
+        )}
+        {!hasMore && filteredData.length > 0 && !searchQuery && (
+          <span className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em]">Đã tải tất cả hồ sơ quản lý</span>
         )}
       </div>
 
