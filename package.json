@@ -2,9 +2,13 @@
   "name": "ttn-erd",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "22"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "pages:build": "npx @cloudflare/next-on-pages",
     "start": "next start",
     "lint": "next lint"
   },
@@ -17,7 +21,7 @@
     "firebase": "^10.14.1",
     "firebase-admin": "^12.7.0",
     "framer-motion": "^11.14.4",
-    "next": "15.1.6",
+    "next": "^16.1.6",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-hook-form": "^7.54.2",

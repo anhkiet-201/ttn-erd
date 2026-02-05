@@ -1,0 +1,8 @@
+name = "ttn-erd"
+compatibility_date = "2024-11-01"
+compatibility_flags = [ "nodejs_compat" ]
+main = ".vercel/output/static/_worker.js"
+assets = { directory = ".vercel/output/static" }
+
+[vars]
+NEXT_PUBLIC_FIREBASE_PROJECT_ID = "your-project-id"

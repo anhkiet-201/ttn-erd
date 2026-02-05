@@ -1,0 +1,30 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "locks": {
+      "$lockId": {
+        ".write": "auth != null && (
+          !data.exists() ||
+          data.child('userId').val() === auth.uid ||
+          now > data.child('expiresAt').val()
+        )"
+      }
+    },
+    "nguoiLaoDong": {
+      ".indexOn": ["updatedAt", "soDienThoai", "cccd", "tenNguoiLaoDong"]
+    },
+    "ungTuyen": {
+      ".indexOn": ["updatedAt", "nguoiLaoDongId", "congTyId", "trangThaiTuyen", "ngayPhongVan"]
+    },
+    "tinTuyenDung": {
+      ".indexOn": ["updatedAt", "createdAt", "trangThai", "congTy/id"]
+    },
+    "congTy": {
+      ".indexOn": ["updatedAt", "khuVuc/id", "tenCongTy"]
+    },
+    "quanLy": {
+      ".indexOn": ["soDienThoai", "tenQuanLy"]
+    }
+  }
+}

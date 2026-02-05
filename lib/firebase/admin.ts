@@ -10,7 +10,9 @@ if (!admin.apps.length) {
   const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
 
   if (!projectId || !clientEmail || !privateKey) {
-    console.error('Missing Firebase Admin environment variables');
+    if (process.env.NODE_ENV === 'production' && !process.env.CI) {
+      console.error('Missing Firebase Admin environment variables');
+    }
   } else {
     try {
       admin.initializeApp({
@@ -21,7 +23,6 @@ if (!admin.apps.length) {
         }),
         databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
       });
-      console.log('Firebase Admin initialized successfully');
     } catch (error) {
       console.error('Firebase admin initialization error:', error);
     }
