@@ -63,25 +63,25 @@ export default function CongTyModal({ isOpen, onClose, data }: CongTyModalProps)
       ]).then(([kvData, qlData]) => {
         setKhuVucs(kvData);
         setAllQuanLys(qlData);
-      });
 
-      if (data) {
-        reset({
-          tenCongTy: data.tenCongTy,
-          khuVucId: data.khuVuc?.id || '',
-          diaChi: data.diaChi || '',
-          mapUrl: data.mapUrl || '',
-          quanLy: data.quanLy || [],
-        });
-      } else {
-        reset({
-          tenCongTy: '',
-          khuVucId: '',
-          diaChi: '',
-          mapUrl: '',
-          quanLy: [],
-        });
-      }
+        if (data) {
+          reset({
+            tenCongTy: data.tenCongTy,
+            khuVucId: data.khuVuc?.id || '',
+            diaChi: data.diaChi || '',
+            mapUrl: data.mapUrl || '',
+            quanLy: data.quanLy || [],
+          });
+        } else {
+          reset({
+            tenCongTy: '',
+            khuVucId: '',
+            diaChi: '',
+            mapUrl: '',
+            quanLy: [],
+          });
+        }
+      });
     }
   }, [isOpen, data, reset]);
 
