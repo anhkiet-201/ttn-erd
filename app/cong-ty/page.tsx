@@ -144,15 +144,15 @@ export default function CongTyPage() {
                         <span className="inline-flex w-fit px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg text-[10px] font-black uppercase tracking-wider ring-1 ring-blue-100">
                           {item.khuVuc?.tenKhuVuc || 'N/A'}
                         </span>
-                        {(item.diaChi || item.khuVuc?.diaChi) && (
+                        {(item.diaChi) && (
                           <div className="flex items-start gap-1.5 text-gray-500">
                             <svg className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                            <span className="text-[11px] leading-relaxed font-semibold max-w-[240px] line-clamp-2 italic">{item.diaChi || item.khuVuc?.diaChi}</span>
+                            <span className="text-[11px] leading-relaxed font-semibold max-w-[240px] line-clamp-2 italic">{item.diaChi}</span>
                           </div>
                         )}
-                        {(item.mapUrl || item.khuVuc?.mapUrl) && (
+                        {(item.mapUrl) && (
                           <a 
-                            href={item.mapUrl || item.khuVuc?.mapUrl || '#'} 
+                            href={item.mapUrl || '#'} 
                             target="_blank" 
                             rel="noopener noreferrer"
                             className="text-[10px] text-blue-600 font-black hover:underline flex items-center gap-1 mt-1 group-hover:translate-x-1 transition-transform"
