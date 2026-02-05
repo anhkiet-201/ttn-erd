@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
-import Sidebar from '@/components/layout/Sidebar';
+import { useState, useEffect, useMemo } from 'react';
 import { MasonryGrid } from '@/components/layout/MasonryGrid';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { TinTuyenDungRepository } from '@/repositories/tinTuyenDung.repository';
@@ -22,8 +21,6 @@ const congTyRepository = new CongTyRepository();
 const khuVucRepository = new KhuVucRepository();
 
 export default function TinTuyenDungPage() {
-  const { user } = useAuthContext();
-  const { toggleSidebar } = useUI();
   const [tins, setTins] = useState<TinTuyenDung[]>([]);
   const [quanLys, setQuanLys] = useState<QuanLy[]>([]);
   const [congTys, setCongTys] = useState<CongTy[]>([]);
@@ -60,8 +57,22 @@ export default function TinTuyenDungPage() {
   const filteredData = useMemo(() => {
     return data.filter(item => {
       const search = searchQuery.toLowerCase();
+      
+      const tagsContent = [
+        ...(item.yeuCau || []),
+        ...(item.phucLoi || []),
+        ...(item.phuCap || [])
+      ].map(t => t.noiDung).join(' ').toLowerCase();
+
+      const notesContent = [
+        item.ghiChu || '',
+        item.ghiChuPV || ''
+      ].join(' ').toLowerCase();
+
       const matchesSearch = item.moTa?.toLowerCase().includes(search) || 
-                            item.congTy?.tenCongTy?.toLowerCase().includes(search);
+                            item.congTy?.tenCongTy?.toLowerCase().includes(search) ||
+                            tagsContent.includes(search) ||
+                            notesContent.includes(search);
       
       const matchesKhuVuc = selectedKhuVuc === 'all' || item.congTy?.khuVuc?.id === selectedKhuVuc;
 
