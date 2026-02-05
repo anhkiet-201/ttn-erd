@@ -133,7 +133,6 @@ export default function UngTuyenPage() {
     };
   }, []);
 
-  const workerMap = useMemo(() => new Map(workers.map(w => [w.id, w])), [workers]);
   const khuVucMap = useMemo(() => new Map(khuVucs.map(kv => [kv.id, kv])), [khuVucs]);
   const companyMap = useMemo(() => {
     return new Map(companies.map(c => {
@@ -149,24 +148,22 @@ export default function UngTuyenPage() {
 
   const joinedData = useMemo(() => {
     return ungTuyens.map(ut => {
-      const worker = workerMap.get(ut.nguoiLaoDongId);
+      const worker = workers.find(w => w.id === ut.nguoiLaoDongId);
       const company = companyMap.get(ut.congTyId);
       
-      const fallbackWorker = { 
-        tenNguoiLaoDong: workers.length > 0 ? 'Đang cập nhật...' : '-', 
-        soDienThoai: '', 
-        namSinh: 0, 
-        gioiTinh: GioiTinh.NAM, 
-        cccd: '' 
-      } as any;
-
       return {
         ...ut,
-        nguoiLaoDong: worker || fallbackWorker,
+        nguoiLaoDong: worker || { 
+          tenNguoiLaoDong: workers.length > 0 ? 'Đang cập nhật...' : '-', 
+          soDienThoai: '', 
+          namSinh: 0, 
+          gioiTinh: GioiTinh.NAM, 
+          cccd: '' 
+        } as any,
         congTy: company || { tenCongTy: 'N/A' } as any,
       };
     });
-  }, [ungTuyens, workerMap, companyMap]);
+  }, [ungTuyens, workers, companyMap]);
 
   const filteredData = useMemo(() => {
     let data = joinedData;
@@ -215,15 +212,22 @@ export default function UngTuyenPage() {
     try {
       if (targetId) {
         await ungTuyenRepo.update(targetId, values);
-        setIsModalOpen(false);
-        setEditingItem(null);
         toast.success(id ? 'Đã thay thế ứng tuyển cũ' : 'Cập nhật thành công');
       } else {
         await ungTuyenRepo.create(values);
-        setIsModalOpen(false);
         toast.success('Gán ứng tuyển thành công');
-        loadInitialData();
       }
+      
+      // Force refresh data to ensure UI sync
+      const [newUngTuyens, newWorkers] = await Promise.all([
+        ungTuyenRepo.getPaginated(ungTuyens.length > pageSize ? ungTuyens.length : pageSize),
+        workerRepo.getAll()
+      ]);
+      setUngTuyens(newUngTuyens.items);
+      setWorkers(newWorkers);
+      
+      setIsModalOpen(false);
+      setEditingItem(null);
     } catch (error) {
       console.error('Lỗi khi lưu:', error);
       toast.error('Có lỗi xảy ra');

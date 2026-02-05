@@ -112,7 +112,7 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
         unsubCompanies();
       };
     }
-  }, [isOpen, initialData, reset, workers.length]);
+  }, [isOpen, initialData, reset, workers]);
 
   const handleCCCDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
