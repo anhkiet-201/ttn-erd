@@ -66,6 +66,7 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
   const [workers, setWorkers] = useState<NguoiLaoDong[]>([]);
   const [companies, setCompanies] = useState<CongTy[]>([]);
   const [existingWorker, setExistingWorker] = useState<NguoiLaoDong | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   
   const { register, handleSubmit, reset, watch, setValue, formState: { errors, isSubmitting } } = useForm<UngTuyenFormValues>({
     resolver: zodResolver(ungTuyenSchema),
@@ -82,14 +83,30 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
     },
   });
 
-  // Subscribe to workers and companies
+  // Track modal opening to reset initialization state
+  useEffect(() => {
+    if (isOpen) {
+      setIsInitialized(false);
+    }
+  }, [isOpen, initialData?.id]);
+
+  // Subscribe to metadata
   useEffect(() => {
     if (isOpen) {
       const unsubWorkers = workerRepo.subscribeAll(setWorkers);
       const unsubCompanies = congTyRepo.subscribeAll(setCompanies);
-      
-      // Load initial data if editing
+      return () => {
+        unsubWorkers();
+        unsubCompanies();
+      };
+    }
+  }, [isOpen]);
+
+  // Handle form initialization
+  useEffect(() => {
+    if (isOpen && !isInitialized) {
       if (initialData) {
+        // Edit mode: Wait until worker data is available in the list
         const worker = workers.find(w => w.id === initialData.nguoiLaoDongId);
         if (worker) {
           setExistingWorker(worker);
@@ -104,15 +121,26 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
             trangThaiTuyen: initialData.trangThaiTuyen,
             ghiChu: initialData.ghiChu,
           });
+          setIsInitialized(true);
         }
+      } else {
+        // Create mode: Reset to defaults immediately
+        setExistingWorker(null);
+        reset({
+          cccd: '',
+          tenNguoiLaoDong: '',
+          soDienThoai: '',
+          namSinh: new Date().getFullYear() - 20,
+          gioiTinh: GioiTinh.NAM,
+          congTyId: fixedTinTuyenDung?.congTy?.id || '',
+          ngayPhongVan: null,
+          trangThaiTuyen: TrangThaiTuyen.CHO_PHONG_VAN,
+          ghiChu: '',
+        });
+        setIsInitialized(true);
       }
-      
-      return () => {
-        unsubWorkers();
-        unsubCompanies();
-      };
     }
-  }, [isOpen, initialData, reset, workers]);
+  }, [isOpen, isInitialized, initialData, workers, reset, fixedTinTuyenDung]);
 
   const handleCCCDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
