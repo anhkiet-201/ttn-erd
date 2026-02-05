@@ -1,0 +1,2431 @@
+{
+  "companies": {
+    "-Okd5QwKpjjVlHaFMPFQ": {
+      "createdAt": 1770216079150,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "Minh Nam",
+      "updatedAt": 1770216079150
+    },
+    "-Okd5R2qH0rsWaSwC0Eq": {
+      "createdAt": 1770216079630,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "Aussco",
+      "updatedAt": 1770216079630
+    },
+    "-Okd5R8weuQdTPFIM_eK": {
+      "createdAt": 1770216080020,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "Midea MP4",
+      "updatedAt": 1770216080020
+    },
+    "-Okd5RaXybYVMoTWBUiD": {
+      "createdAt": 1770216081850,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "Mại Duệ",
+      "updatedAt": 1770216081850
+    },
+    "-Okd5Rf0jWIZML-eQp9a": {
+      "createdAt": 1770216082137,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "Click",
+      "updatedAt": 1770216082137
+    },
+    "-Okd5SEQpWQPHepiDOSZ": {
+      "createdAt": 1770216084467,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "Rebisco",
+      "updatedAt": 1770216084467
+    },
+    "-Okd5SNQlt8RLTHqBNyg": {
+      "createdAt": 1770216085043,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "Sanaky",
+      "updatedAt": 1770216085043
+    },
+    "-Okd5SU2c80oC-RbHGDJ": {
+      "createdAt": 1770216085467,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "Yuen Fung",
+      "updatedAt": 1770216085467
+    },
+    "-Okd5SX8Tyx_CKk-ajdi": {
+      "createdAt": 1770216085665,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "Zylux",
+      "updatedAt": 1770216085665
+    },
+    "-Okd5ScviphfjWviq73H": {
+      "createdAt": 1770216086099,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "Feiliks Media",
+      "updatedAt": 1770216086099
+    },
+    "-Okd5T4sg_aAfjuOEArE": {
+      "createdAt": 1770216087952,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "Chervon MP4",
+      "updatedAt": 1770216087952
+    },
+    "-Okd5TLdPC_NuUmbIbTK": {
+      "createdAt": 1770216089025,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "GSD Đồng An",
+      "updatedAt": 1770216089025
+    },
+    "-Okd5VnhOpG8F8K-o2rX": {
+      "createdAt": 1770216099077,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "TCL",
+      "updatedAt": 1770216099077
+    },
+    "-Okd5VuZpyGoF2xdn6-f": {
+      "createdAt": 1770216099516,
+      "khuVucId": "kv_unknown",
+      "tenCongTy": "JINXIN",
+      "updatedAt": 1770216099516
+    }
+  },
+  "congTy": {
+    "-OkbydE-t50BSkR60o0p": {
+      "createdAt": 1770197259201,
+      "diaChi": "Đường NA2, Thới Hoà, Bến Cát, Bình Dương, Việt Nam",
+      "khuVuc": {
+        "id": "-OkasW94_NTy8zJTd6d4",
+        "tenKhuVuc": "Mỹ Phước 4"
+      },
+      "mapUrl": "https://maps.app.goo.gl/d8iFR6bmuM3oppyx7?g_st=iz",
+      "quanLy": [
+        {
+          "id": "-Okbxhpd3EjLk8RM4T9f",
+          "soDienThoai": "0333928625",
+          "tenQuanLy": "HR Cẩm Ly"
+        }
+      ],
+      "tenCongTy": "Midea MP4",
+      "updatedAt": 1770263122476
+    },
+    "-Okbyhzd50YGidErRoh2": {
+      "createdAt": 1770197278698,
+      "diaChi": "1A VSIP II-A Đường số 28, Khu Công Nghiệp Việt Nam-Singapore II-A , Phường Vĩnh Tân, Thành phố Hồ Chí Minh, Bình Dương, Việt Nam",
+      "khuVuc": {
+        "id": "-OkbyOgcMBmlwe5Lff4-",
+        "tenKhuVuc": "Vsip 2A"
+      },
+      "mapUrl": "https://maps.app.goo.gl/SMcpeZVRG1Kp8tHh6?g_st=ic",
+      "quanLy": [
+        {
+          "id": "-Okbxl-mzY4F_oQ54kPb",
+          "soDienThoai": "0392051335",
+          "tenQuanLy": "HR Thìn"
+        }
+      ],
+      "tenCongTy": "Aussco",
+      "updatedAt": 1770264080513
+    },
+    "-OkbypHNXFgPxQ5nyr4f": {
+      "createdAt": 1770197308569,
+      "diaChi": "Đường 14, KCN Vsip 2A, Vĩnh Tân, Tân Uyên, Bình Dương, Việt Nam",
+      "khuVuc": {
+        "id": "-OkbyOgcMBmlwe5Lff4-",
+        "tenKhuVuc": "Vsip 2A"
+      },
+      "mapUrl": "https://maps.app.goo.gl/e8Gq53m3b8VCB2zc6",
+      "quanLy": [
+        {
+          "id": "-OkbxnUnN6sUCXeNyNQH",
+          "soDienThoai": "0965567829",
+          "tenQuanLy": "HR Lâm"
+        }
+      ],
+      "tenCongTy": "Minh Nam",
+      "updatedAt": 1770266192982
+    },
+    "-OkbyujcnFfvjwzTibtH": {
+      "createdAt": 1770197330921,
+      "diaChi": "DE5, P, Bến Cát, Bình Dương, Việt Nam",
+      "khuVuc": {
+        "id": "-OkbyMMd8l1c2fkCLj7e",
+        "tenKhuVuc": "Mỹ Phước 3"
+      },
+      "mapUrl": "https://maps.app.goo.gl/4JJJMFAERoc64Yn79",
+      "quanLy": [
+        {
+          "id": "-OkbxqBPd5MxgJqfESNf",
+          "soDienThoai": "0941606529",
+          "tenQuanLy": "HR Yến"
+        }
+      ],
+      "tenCongTy": "Click",
+      "updatedAt": 1770263912851
+    },
+    "-Okbz15N5uI3YugRrZfv": {
+      "createdAt": 1770197361049,
+      "khuVuc": {
+        "id": "-OkbyOgcMBmlwe5Lff4-",
+        "tenKhuVuc": "Vsip 2A"
+      },
+      "quanLy": [
+        {
+          "id": "-OkbxsiOtKxmlzBe33oJ",
+          "soDienThoai": "0335252384",
+          "tenQuanLy": "HR Thảo"
+        }
+      ],
+      "tenCongTy": "Mại Duệ",
+      "updatedAt": 1770197361049
+    },
+    "-Okbz4SEIfIYHep0avSz": {
+      "createdAt": 1770197374800,
+      "diaChi": "Đường 32, KCN Vsip 2A, Vĩnh Tân, Tân Uyên, Bình Dương, Việt Nam",
+      "khuVuc": {
+        "id": "-OkbyOgcMBmlwe5Lff4-",
+        "tenKhuVuc": "Vsip 2A"
+      },
+      "mapUrl": "https://maps.app.goo.gl/5Nzv2JXF49eu8g4PA",
+      "quanLy": [
+        {
+          "id": "-Okbxw0-AL0HCW8l5vcs",
+          "soDienThoai": "0559081727",
+          "tenQuanLy": "HR Bi"
+        }
+      ],
+      "tenCongTy": "Rebisco",
+      "updatedAt": 1770266346076
+    },
+    "-OkbzDDA-uGDZ1Dds0yd": {
+      "createdAt": 1770197410700,
+      "khuVuc": {
+        "id": "-OkbyJvOa5lBb0ZfkV6c",
+        "tenKhuVuc": "Mỹ Phước 1"
+      },
+      "quanLy": [
+        {
+          "id": "-OkbxzAFyiUtqts4zGUO",
+          "soDienThoai": "0374287743",
+          "tenQuanLy": "HR Hòa"
+        }
+      ],
+      "tenCongTy": "Feiliks Media",
+      "updatedAt": 1770197410700
+    },
+    "-OkbzHZbkvqp6UCayEc1": {
+      "createdAt": 1770197428520,
+      "khuVuc": {
+        "id": "-OkbyMMd8l1c2fkCLj7e",
+        "tenKhuVuc": "Mỹ Phước 3"
+      },
+      "quanLy": [
+        {
+          "id": "-Okby1dYp6p_2OnDjW34",
+          "soDienThoai": "0972872549",
+          "tenQuanLy": "HR Tiên"
+        }
+      ],
+      "tenCongTy": "Sanaky",
+      "updatedAt": 1770197428520
+    },
+    "-OkbzPorA8Q3N55eVR1M": {
+      "createdAt": 1770197462328,
+      "khuVuc": {
+        "id": "-OkbyOgcMBmlwe5Lff4-",
+        "tenKhuVuc": "Vsip 2A"
+      },
+      "quanLy": [
+        {
+          "id": "-OkbxqBPd5MxgJqfESNf",
+          "soDienThoai": "0941606529",
+          "tenQuanLy": "HR Yến"
+        }
+      ],
+      "tenCongTy": "Zylux",
+      "updatedAt": 1770197462328
+    },
+    "-OkbzUJbBAn9lbQmhmn_": {
+      "createdAt": 1770197480745,
+      "khuVuc": {
+        "id": "-OkasW94_NTy8zJTd6d4",
+        "tenKhuVuc": "Mỹ Phước 4"
+      },
+      "quanLy": [
+        {
+          "id": "-OkbyCo0pcKZe8ObBEPN",
+          "soDienThoai": "0000000000",
+          "tenQuanLy": "HR Ngọc"
+        }
+      ],
+      "tenCongTy": "Chervon MP4",
+      "updatedAt": 1770197480745
+    },
+    "-OkbzYncCaDKsfkvWGpP": {
+      "createdAt": 1770197499114,
+      "khuVuc": {
+        "id": "-OkbyQkGdIdmi_o942nK",
+        "tenKhuVuc": "Đồng An 2"
+      },
+      "mapUrl": "https://maps.app.goo.gl/XdweovuLVs9vj2LX9",
+      "quanLy": [
+        {
+          "id": "-Okby8OZg1ZUzSafWQhE",
+          "soDienThoai": "0969708083",
+          "tenQuanLy": "HR Mai"
+        }
+      ],
+      "tenCongTy": "GSD",
+      "updatedAt": 1770264051882
+    },
+    "-OkbzazcuSQirOEUX8hS": {
+      "createdAt": 1770197512169,
+      "khuVuc": {
+        "id": "-OkbyOgcMBmlwe5Lff4-",
+        "tenKhuVuc": "Vsip 2A"
+      },
+      "quanLy": [
+        {
+          "id": "-Okbxw0-AL0HCW8l5vcs",
+          "soDienThoai": "0559081727",
+          "tenQuanLy": "HR Bi"
+        }
+      ],
+      "tenCongTy": "TCL",
+      "updatedAt": 1770197512169
+    },
+    "-OkbzgbDOF4HeJSwhoNC": {
+      "createdAt": 1770197535183,
+      "khuVuc": {
+        "id": "-OkbyOgcMBmlwe5Lff4-",
+        "tenKhuVuc": "Vsip 2A"
+      },
+      "quanLy": [
+        {
+          "id": "-Okbxw0-AL0HCW8l5vcs",
+          "soDienThoai": "0559081727",
+          "tenQuanLy": "HR Bi"
+        }
+      ],
+      "tenCongTy": "JINXIN",
+      "updatedAt": 1770197535183
+    },
+    "-Okd3j_mp3y2HaLOVWz_": {
+      "createdAt": 1770215635328,
+      "khuVuc": {
+        "id": "-OkbyL4snfxVfVyd1cK4",
+        "tenKhuVuc": "Mỹ Phước 2"
+      },
+      "quanLy": [
+        {
+          "id": "-Okby1dYp6p_2OnDjW34",
+          "soDienThoai": "0972872549",
+          "tenQuanLy": "HR Tiên"
+        }
+      ],
+      "tenCongTy": "Yuen Fung",
+      "updatedAt": 1770215681175
+    },
+    "-Okg5Xfy6bBLWkMvLDJ1": {
+      "createdAt": 1770266438363,
+      "diaChi": "Đường 31, KCN Vsip 2A, Vĩnh Tân, Tân Uyên, Bình Dương, Việt Nam",
+      "khuVuc": {
+        "id": "-OkbyOgcMBmlwe5Lff4-",
+        "tenKhuVuc": "Vsip 2A"
+      },
+      "quanLy": [
+        {
+          "id": "-Okbxw0-AL0HCW8l5vcs",
+          "soDienThoai": "0559081727",
+          "tenQuanLy": "HR Bi"
+        }
+      ],
+      "tenCongTy": "NISON",
+      "updatedAt": 1770266438363
+    }
+  },
+  "khuVuc": {
+    "-OkasW94_NTy8zJTd6d4": {
+      "createdAt": 1770178876049,
+      "tenKhuVuc": "Mỹ Phước 4",
+      "updatedAt": 1770178876049
+    },
+    "-OkbyJvOa5lBb0ZfkV6c": {
+      "createdAt": 1770197176026,
+      "tenKhuVuc": "Mỹ Phước 1",
+      "updatedAt": 1770197176026
+    },
+    "-OkbyL4snfxVfVyd1cK4": {
+      "createdAt": 1770197180793,
+      "tenKhuVuc": "Mỹ Phước 2",
+      "updatedAt": 1770197180793
+    },
+    "-OkbyMMd8l1c2fkCLj7e": {
+      "createdAt": 1770197186026,
+      "tenKhuVuc": "Mỹ Phước 3",
+      "updatedAt": 1770197186026
+    },
+    "-OkbyOgcMBmlwe5Lff4-": {
+      "createdAt": 1770197195561,
+      "tenKhuVuc": "Vsip 2A",
+      "updatedAt": 1770197195561
+    },
+    "-OkbyQkGdIdmi_o942nK": {
+      "createdAt": 1770197203986,
+      "tenKhuVuc": "Đồng An 2",
+      "updatedAt": 1770197203986
+    }
+  },
+  "nguoiLaoDong": {
+    "-Okd7HidcRTg0RvztWUL": {
+      "cccd": "XXX206010191",
+      "createdAt": "2026-02-04T14:49:25.689Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2006,
+      "soDienThoai": "0334387811",
+      "tenNguoiLaoDong": "Đoàn Dự",
+      "updatedAt": "2026-02-04T14:49:25.690Z"
+    },
+    "-Okd7HrA1V_IReXvpwy-": {
+      "cccd": "08909801898",
+      "createdAt": "2026-02-04T14:49:26.235Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1998,
+      "soDienThoai": "0346958580",
+      "tenNguoiLaoDong": "Dương Văn Luận",
+      "updatedAt": "2026-02-04T14:49:26.236Z"
+    },
+    "-Okd7I8n1X4zyt43HJZO": {
+      "cccd": "079302040795",
+      "createdAt": "2026-02-04T14:49:27.427Z",
+      "gioiTinh": "NU",
+      "namSinh": 2002,
+      "soDienThoai": "0334067275",
+      "tenNguoiLaoDong": "Đặng Lý Thanh Trúc",
+      "updatedAt": "2026-02-04T14:49:27.427Z"
+    },
+    "-Okd7IBHUwkYnkdPS5TM": {
+      "cccd": "091097011932",
+      "createdAt": "2026-02-04T14:49:27.586Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1997,
+      "soDienThoai": "0777039363",
+      "tenNguoiLaoDong": "Lực Hoàng Sinh",
+      "updatedAt": "2026-02-04T14:49:27.586Z"
+    },
+    "-Okd7IDeYYtxJKm8c40b": {
+      "cccd": "092208007991",
+      "createdAt": "2026-02-04T14:49:27.738Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2008,
+      "soDienThoai": "0846027527",
+      "tenNguoiLaoDong": "Nguyễn Thái Dương",
+      "updatedAt": "2026-02-04T14:49:27.738Z"
+    },
+    "-Okd7IGA6pRFUu_AOlFG": {
+      "cccd": "066306014169",
+      "createdAt": "2026-02-04T14:49:27.899Z",
+      "gioiTinh": "NU",
+      "namSinh": 2006,
+      "soDienThoai": "846027527",
+      "tenNguoiLaoDong": "Vi Thị Ngọc Trâm",
+      "updatedAt": "2026-02-04T14:49:27.900Z"
+    },
+    "-Okd7IIaxnW74CCwo7py": {
+      "cccd": "052097012664",
+      "createdAt": "2026-02-04T14:49:28.054Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1997,
+      "tenNguoiLaoDong": "Ngô Minh Trung",
+      "updatedAt": "2026-02-04T14:49:28.054Z"
+    },
+    "-Okd7IL6I3S8AjKGVKGU": {
+      "cccd": "030193000330",
+      "createdAt": "2026-02-04T14:49:28.215Z",
+      "gioiTinh": "NU",
+      "namSinh": 1993,
+      "soDienThoai": "0385269801",
+      "tenNguoiLaoDong": "Đỗ Thị Sang",
+      "updatedAt": "2026-02-04T14:49:28.215Z"
+    },
+    "-Okd7INal7XhtN56sd-O": {
+      "cccd": "094304004601",
+      "createdAt": "2026-02-04T14:49:28.374Z",
+      "gioiTinh": "NU",
+      "namSinh": 2004,
+      "soDienThoai": "0987447354",
+      "tenNguoiLaoDong": "Võ Thị Mỹ Phụng",
+      "updatedAt": "2026-02-04T14:49:28.374Z"
+    },
+    "-Okd7IQ4UyqpEqbUlvV5": {
+      "cccd": "074203000795",
+      "createdAt": "2026-02-04T14:49:28.533Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2003,
+      "soDienThoai": "0987447355",
+      "tenNguoiLaoDong": "Lâm Chí Dĩnh",
+      "updatedAt": "2026-02-04T14:49:28.533Z"
+    },
+    "-Okd7IVA9L615fkSPdii": {
+      "cccd": "086205005373",
+      "createdAt": "2026-02-04T14:49:28.859Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2005,
+      "soDienThoai": "0967820051",
+      "tenNguoiLaoDong": "Lê Minh Tâm",
+      "updatedAt": "2026-02-04T14:49:28.860Z"
+    },
+    "-Okd7IXg4UIQfO_KzW3-": {
+      "cccd": "079304027865",
+      "createdAt": "2026-02-04T14:49:29.020Z",
+      "gioiTinh": "NU",
+      "namSinh": 2004,
+      "tenNguoiLaoDong": "Hoàng Mỹ Liên",
+      "updatedAt": "2026-02-04T14:49:29.020Z"
+    },
+    "-Okd7IaKCk3PO1NTlZng": {
+      "cccd": "096196002849",
+      "createdAt": "2026-02-04T14:49:29.253Z",
+      "gioiTinh": "NU",
+      "namSinh": 1996,
+      "soDienThoai": "0941245807",
+      "tenNguoiLaoDong": "Trần Ngọc Thúy Hằng",
+      "updatedAt": "2026-02-04T14:49:29.253Z"
+    },
+    "-Okd7Id70b_sfBX5NxZm": {
+      "cccd": "093204006389",
+      "createdAt": "2026-02-04T14:49:29.432Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2004,
+      "tenNguoiLaoDong": "Nguyễn Anh Nhựt",
+      "updatedAt": "2026-02-04T14:49:29.432Z"
+    },
+    "-Okd7Ik_iOw4HeYpfZzX": {
+      "cccd": "093303301993",
+      "createdAt": "2026-02-04T14:49:29.909Z",
+      "gioiTinh": "NU",
+      "namSinh": 2003,
+      "tenNguoiLaoDong": "Huỳnh Thị Bảo Trân",
+      "updatedAt": "2026-02-04T14:49:29.909Z"
+    },
+    "-Okd7Inig2dA524_59XT": {
+      "cccd": "093206001634",
+      "createdAt": "2026-02-04T14:49:30.110Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2006,
+      "tenNguoiLaoDong": "Huỳnh Gia Bảo",
+      "updatedAt": "2026-02-04T14:49:30.110Z"
+    },
+    "-Okd7Iqg92yMqT2NQ5tr": {
+      "cccd": "096205009249",
+      "createdAt": "2026-02-04T14:49:30.300Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2005,
+      "soDienThoai": "0879496445",
+      "tenNguoiLaoDong": "Đặng Khánh Vĩ",
+      "updatedAt": "2026-02-04T14:49:30.300Z"
+    },
+    "-Okd7It6w1vDsv_ES5iC": {
+      "cccd": "091300007201",
+      "createdAt": "2026-02-04T14:49:30.455Z",
+      "gioiTinh": "NU",
+      "namSinh": 2000,
+      "soDienThoai": "0382910376",
+      "tenNguoiLaoDong": "Trần Thị Bé Thảo",
+      "updatedAt": "2026-02-04T14:49:30.455Z"
+    },
+    "-Okd7Ivi1242d8EcvuIM": {
+      "cccd": "091199009095",
+      "createdAt": "2026-02-04T14:49:30.622Z",
+      "gioiTinh": "NU",
+      "namSinh": 1999,
+      "soDienThoai": "0382910377",
+      "tenNguoiLaoDong": "Thị Mộng Kiều",
+      "updatedAt": "2026-02-04T14:49:30.622Z"
+    },
+    "-Okd7IyATOP0PsPahg8F": {
+      "cccd": "087195014858",
+      "createdAt": "2026-02-04T14:49:30.779Z",
+      "gioiTinh": "NU",
+      "namSinh": 1995,
+      "soDienThoai": "0964862207",
+      "tenNguoiLaoDong": "Trần Thị Thúy Hằng",
+      "updatedAt": "2026-02-04T14:49:30.779Z"
+    },
+    "-Okd7J-xweM3WBgttxVk": {
+      "cccd": "068300002820",
+      "createdAt": "2026-02-04T14:49:30.957Z",
+      "gioiTinh": "NU",
+      "namSinh": 2000,
+      "soDienThoai": "0869018495",
+      "tenNguoiLaoDong": "Tô Thị Hậu",
+      "updatedAt": "2026-02-04T14:49:30.957Z"
+    },
+    "-Okd7J7l2ZSaW27BDYnX": {
+      "cccd": "096198011143",
+      "createdAt": "2026-02-04T14:49:31.458Z",
+      "gioiTinh": "NU",
+      "namSinh": 1998,
+      "soDienThoai": "0946044755",
+      "tenNguoiLaoDong": "Nguyễn Thị Anh Thư",
+      "updatedAt": "2026-02-04T14:49:31.458Z"
+    },
+    "-Okd7JFVLflXxCzemMTs": {
+      "cccd": "089195007796",
+      "createdAt": "2026-02-04T14:49:31.952Z",
+      "gioiTinh": "NU",
+      "namSinh": 1995,
+      "soDienThoai": "0704705861",
+      "tenNguoiLaoDong": "Dương Thị Chúc Linh",
+      "updatedAt": "2026-02-04T14:49:31.953Z"
+    },
+    "-Okd7JJWgkq6hk39irGc": {
+      "cccd": "077205006096",
+      "createdAt": "2026-02-04T14:49:32.209Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2005,
+      "soDienThoai": "0399276469",
+      "tenNguoiLaoDong": "Đỗ Tuấn Kiệt",
+      "updatedAt": "2026-02-04T14:49:32.209Z"
+    },
+    "-Okd7JNeDf5pHp2jb1iq": {
+      "cccd": "087200014155",
+      "createdAt": "2026-02-04T14:49:32.474Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2000,
+      "soDienThoai": "0899655450",
+      "tenNguoiLaoDong": "Đỗ Vũ Luân",
+      "updatedAt": "2026-02-04T14:49:32.474Z"
+    },
+    "-Okd7JSbxR5Jfbw9FSHl": {
+      "cccd": "074201006648",
+      "createdAt": "2026-02-04T14:49:32.791Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2001,
+      "soDienThoai": "0326337543",
+      "tenNguoiLaoDong": "Lý Anh Kiệt",
+      "updatedAt": "2026-02-04T14:49:32.791Z"
+    },
+    "-Okd7JW67rHQJ_Z0I8R4": {
+      "cccd": "074302005851",
+      "createdAt": "2026-02-04T14:49:33.016Z",
+      "gioiTinh": "NU",
+      "namSinh": 2002,
+      "soDienThoai": "0877279187",
+      "tenNguoiLaoDong": "Nguyễn Ngô Thanh Trúc",
+      "updatedAt": "2026-02-04T14:49:33.016Z"
+    },
+    "-Okd7JYkij4Ox8r6Oeyi": {
+      "cccd": "094300012969",
+      "createdAt": "2026-02-04T14:49:33.184Z",
+      "gioiTinh": "NU",
+      "namSinh": 2000,
+      "soDienThoai": "0388004948",
+      "tenNguoiLaoDong": "Đốc Thị Ngọc Trang",
+      "updatedAt": "2026-02-04T14:49:33.184Z"
+    },
+    "-Okd7JaKUAApwUoWeDXr": {
+      "cccd": "083304003631",
+      "createdAt": "2026-02-04T14:49:33.349Z",
+      "gioiTinh": "NU",
+      "namSinh": 2004,
+      "soDienThoai": "0352419873",
+      "tenNguoiLaoDong": "Trần Thanh Vàng",
+      "updatedAt": "2026-02-04T14:49:33.349Z"
+    },
+    "-Okd7JrLHIjuSyHGDG4O": {
+      "cccd": "074203009093",
+      "createdAt": "2026-02-04T14:49:34.438Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2003,
+      "soDienThoai": "0345733823",
+      "tenNguoiLaoDong": "Nguyễn Linh Minh Tuấn",
+      "updatedAt": "2026-02-04T14:49:34.438Z"
+    },
+    "-Okd7K-tsR8Usg0SEaMv": {
+      "cccd": "091197007040",
+      "createdAt": "2026-02-04T14:49:35.049Z",
+      "gioiTinh": "NU",
+      "namSinh": 1997,
+      "soDienThoai": "0785971009",
+      "tenNguoiLaoDong": "Thị Si Na",
+      "updatedAt": "2026-02-04T14:49:35.049Z"
+    },
+    "-Okd7KEaHu74OCxuu8K3": {
+      "cccd": "096205008221",
+      "createdAt": "2026-02-04T14:49:35.990Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2005,
+      "soDienThoai": "0364810917",
+      "tenNguoiLaoDong": "Võ Văn Huy",
+      "updatedAt": "2026-02-04T14:49:35.990Z"
+    },
+    "-Okd7KINa_LwYr2a8JzM": {
+      "cccd": "096307000842",
+      "createdAt": "2026-02-04T14:49:36.232Z",
+      "gioiTinh": "NU",
+      "namSinh": 2007,
+      "soDienThoai": "0842483247",
+      "tenNguoiLaoDong": "Lê Thị Thanh Thư",
+      "updatedAt": "2026-02-04T14:49:36.232Z"
+    },
+    "-Okd7KLuiQSrntPyRfWv": {
+      "cccd": "066091015576",
+      "createdAt": "2026-02-04T14:49:36.458Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1991,
+      "tenNguoiLaoDong": "Lý Văn Sinh",
+      "updatedAt": "2026-02-04T14:49:36.458Z"
+    },
+    "-Okd7KOTarnX1g5FsRfK": {
+      "cccd": "089307008668",
+      "createdAt": "2026-02-04T14:49:36.622Z",
+      "gioiTinh": "NU",
+      "namSinh": 2007,
+      "tenNguoiLaoDong": "Nguyễn Thị Ngoan",
+      "updatedAt": "2026-02-04T14:49:36.622Z"
+    },
+    "-Okd7KRC22fj43kKOeai": {
+      "cccd": "087301006064",
+      "createdAt": "2026-02-04T14:49:36.797Z",
+      "gioiTinh": "NU",
+      "namSinh": 2001,
+      "soDienThoai": "0334889354",
+      "tenNguoiLaoDong": "Phạm Thị Thanh Ngân",
+      "updatedAt": "2026-02-04T14:49:36.798Z"
+    },
+    "-Okd7KTkf4WwgH4XVcFo": {
+      "cccd": "087302010513",
+      "createdAt": "2026-02-04T14:49:36.960Z",
+      "gioiTinh": "NU",
+      "namSinh": 2002,
+      "soDienThoai": "0868228341",
+      "tenNguoiLaoDong": "Nguyễn Thị Như Ý",
+      "updatedAt": "2026-02-05T01:56:24.082Z"
+    },
+    "-Okd7KX66Gs8iUkrpIl2": {
+      "cccd": "095305000360",
+      "createdAt": "2026-02-04T14:49:37.175Z",
+      "gioiTinh": "NU",
+      "namSinh": 2005,
+      "tenNguoiLaoDong": "Thị Mi",
+      "updatedAt": "2026-02-04T14:49:37.175Z"
+    },
+    "-Okd7K_7JOgA6OYVF_oh": {
+      "cccd": "096305008015",
+      "createdAt": "2026-02-04T14:49:37.368Z",
+      "gioiTinh": "NU",
+      "namSinh": 2005,
+      "soDienThoai": "0378276470",
+      "tenNguoiLaoDong": "Cao Thị Hồng Phướng",
+      "updatedAt": "2026-02-04T14:49:37.368Z"
+    },
+    "-Okd7KbhK8ViT42m_TIy": {
+      "cccd": "025304008565",
+      "createdAt": "2026-02-04T14:49:37.533Z",
+      "gioiTinh": "NU",
+      "namSinh": 2004,
+      "soDienThoai": "0979978043",
+      "tenNguoiLaoDong": "Nguyễn Thị Minh Châm",
+      "updatedAt": "2026-02-04T14:49:37.533Z"
+    },
+    "-Okd7KePtc1oRC-TCzAf": {
+      "cccd": "075303008330",
+      "createdAt": "2026-02-04T14:49:37.706Z",
+      "gioiTinh": "NU",
+      "namSinh": 2003,
+      "soDienThoai": "0398879455",
+      "tenNguoiLaoDong": "Điểu Thị Thái An",
+      "updatedAt": "2026-02-04T14:49:37.706Z"
+    },
+    "-Okd7Khu7l2togmc3WRG": {
+      "cccd": "082303014385",
+      "createdAt": "2026-02-04T14:49:37.930Z",
+      "gioiTinh": "NU",
+      "namSinh": 2003,
+      "soDienThoai": "0908674157",
+      "tenNguoiLaoDong": "Nguyễn Thị Thuý Kiều",
+      "updatedAt": "2026-02-04T14:49:37.930Z"
+    },
+    "-Okd7KkXp8I-HNFU0IFi": {
+      "cccd": "066199008673",
+      "createdAt": "2026-02-04T14:49:38.098Z",
+      "gioiTinh": "NU",
+      "namSinh": 1999,
+      "tenNguoiLaoDong": "Lê Gia Linh",
+      "updatedAt": "2026-02-04T14:49:38.098Z"
+    },
+    "-Okd7KnLp4c4RFQqHE7e": {
+      "cccd": "075202009341",
+      "createdAt": "2026-02-04T14:49:38.278Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2002,
+      "soDienThoai": "0862839163",
+      "tenNguoiLaoDong": "Lê Hoàng Nam",
+      "updatedAt": "2026-02-04T14:49:38.278Z"
+    },
+    "-Okd7KpvgATiZBvahkFb": {
+      "cccd": "094206014001",
+      "createdAt": "2026-02-04T14:49:38.443Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2006,
+      "soDienThoai": "0346295603",
+      "tenNguoiLaoDong": "Kim Nhơn",
+      "updatedAt": "2026-02-04T14:49:38.443Z"
+    },
+    "-Okd7KsZYY9BVoM_TvQT": {
+      "cccd": "066092013961",
+      "createdAt": "2026-02-04T14:49:38.612Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1992,
+      "soDienThoai": "0377802547",
+      "tenNguoiLaoDong": "Nguyễn Đức Trung",
+      "updatedAt": "2026-02-04T14:49:38.612Z"
+    },
+    "-Okd7KvGdAcrzLDcWwby": {
+      "cccd": "052098013510",
+      "createdAt": "2026-02-04T14:49:38.785Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1998,
+      "soDienThoai": "0961147578",
+      "tenNguoiLaoDong": "Nguyễn Văn Tài",
+      "updatedAt": "2026-02-04T14:49:38.785Z"
+    },
+    "-Okd7KzhMKaQZK0ZoLyE": {
+      "cccd": "089091005534",
+      "createdAt": "2026-02-04T14:49:39.069Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1991,
+      "tenNguoiLaoDong": "Hồ Văn Linh",
+      "updatedAt": "2026-02-04T14:49:39.069Z"
+    },
+    "-Okd7L2b9tknej79TLRd": {
+      "cccd": "019193006074",
+      "createdAt": "2026-02-04T14:49:39.319Z",
+      "gioiTinh": "NU",
+      "namSinh": 1993,
+      "tenNguoiLaoDong": "Đặng Thị Tuyên",
+      "updatedAt": "2026-02-04T14:49:39.319Z"
+    },
+    "-Okd7L8Hz7nYw1vT2RTp": {
+      "cccd": "024090010271",
+      "createdAt": "2026-02-04T14:49:39.682Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1990,
+      "tenNguoiLaoDong": "Chu Văn Tuyên",
+      "updatedAt": "2026-02-04T14:49:39.682Z"
+    },
+    "-Okd7LB1Xnxo3sac5lpw": {
+      "cccd": "096090019953",
+      "createdAt": "2026-02-04T14:49:39.858Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1990,
+      "tenNguoiLaoDong": "Nguyễn Văn Triều",
+      "updatedAt": "2026-02-04T14:49:39.858Z"
+    },
+    "-Okd7LDfglkS6NNHirgE": {
+      "cccd": "038202029120",
+      "createdAt": "2026-02-04T14:49:40.027Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2002,
+      "soDienThoai": "0899785136",
+      "tenNguoiLaoDong": "Lang Văn Lợi",
+      "updatedAt": "2026-02-04T14:49:40.027Z"
+    },
+    "-Okd7LGFeNSMjK_6iR_d": {
+      "cccd": "096202009778",
+      "createdAt": "2026-02-04T14:49:40.192Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2002,
+      "tenNguoiLaoDong": "Phạm Thanh Hiền",
+      "updatedAt": "2026-02-04T14:49:40.192Z"
+    },
+    "-Okd7LIsKvfOHWVOL_PX": {
+      "cccd": "091084005354",
+      "createdAt": "2026-02-04T14:49:40.360Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1984,
+      "tenNguoiLaoDong": "Nguyễn Công Ty",
+      "updatedAt": "2026-02-04T14:49:40.360Z"
+    },
+    "-Okd7LLYFjAoLInAeccd": {
+      "cccd": "037178014358",
+      "createdAt": "2026-02-04T14:49:40.531Z",
+      "gioiTinh": "NU",
+      "namSinh": 1978,
+      "tenNguoiLaoDong": "Trần Thu Nga",
+      "updatedAt": "2026-02-04T14:49:40.531Z"
+    },
+    "-Okd7LOHrDKtq21s6tP-": {
+      "cccd": "095096008425",
+      "createdAt": "2026-02-04T14:49:40.706Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1996,
+      "soDienThoai": "0984778132",
+      "tenNguoiLaoDong": "Lê Văn Chung",
+      "updatedAt": "2026-02-04T14:49:40.706Z"
+    },
+    "-Okd7LUQ8yJgPUO_p_Tg": {
+      "cccd": "087300011948",
+      "createdAt": "2026-02-04T14:49:41.099Z",
+      "gioiTinh": "NU",
+      "namSinh": 2000,
+      "soDienThoai": "0559507627",
+      "tenNguoiLaoDong": "Trần Thị Phương Thảo",
+      "updatedAt": "2026-02-04T14:49:41.099Z"
+    },
+    "-Okd7LX7YOn1xxWqNLqA": {
+      "cccd": "091308015113",
+      "createdAt": "2026-02-04T14:49:41.272Z",
+      "gioiTinh": "NU",
+      "namSinh": 2008,
+      "tenNguoiLaoDong": "Trần Thị Quỳnh Như",
+      "updatedAt": "2026-02-04T14:49:41.273Z"
+    },
+    "-Okd7La3Sy5xzqfEIiEg": {
+      "cccd": "091096018698",
+      "createdAt": "2026-02-04T14:49:41.524Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1996,
+      "soDienThoai": "0974309701",
+      "tenNguoiLaoDong": "Trần Xuân Em",
+      "updatedAt": "2026-02-04T14:49:41.524Z"
+    },
+    "-Okd7LctBZbaTrV-kVWO": {
+      "cccd": "091340417799",
+      "createdAt": "2026-02-04T14:49:41.705Z",
+      "gioiTinh": "NU",
+      "namSinh": 2040,
+      "soDienThoai": "0962170646",
+      "tenNguoiLaoDong": "Nguyễn Khả Tố",
+      "updatedAt": "2026-02-04T14:49:41.705Z"
+    },
+    "-Okd7LfYrAjbCoL_XNvF": {
+      "cccd": "067091001969",
+      "createdAt": "2026-02-04T14:49:41.875Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1991,
+      "soDienThoai": "0867286637",
+      "tenNguoiLaoDong": "Phùng Tòn Chua",
+      "updatedAt": "2026-02-04T14:49:41.875Z"
+    },
+    "-Okd7LiG1Wh_ARon6szy": {
+      "cccd": "089207011581",
+      "createdAt": "2026-02-04T14:49:42.049Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2007,
+      "soDienThoai": "0963675642",
+      "tenNguoiLaoDong": "Nguyễn Văn Đức Lợi",
+      "updatedAt": "2026-02-04T14:49:42.049Z"
+    },
+    "-Okd7Lku2tb-m2lxV0ZF": {
+      "cccd": "074306008955",
+      "createdAt": "2026-02-04T14:49:42.218Z",
+      "gioiTinh": "NU",
+      "namSinh": 2006,
+      "tenNguoiLaoDong": "Nguyễn Võ Kim Hiền",
+      "updatedAt": "2026-02-04T14:49:42.218Z"
+    },
+    "-Okd7LnZ_HMZKYP6JEiT": {
+      "cccd": "095197006463",
+      "createdAt": "2026-02-04T14:49:42.388Z",
+      "gioiTinh": "NU",
+      "namSinh": 1997,
+      "soDienThoai": "0775008087",
+      "tenNguoiLaoDong": "Dương Kiều Nhi",
+      "updatedAt": "2026-02-04T14:49:42.388Z"
+    },
+    "-Okd7LqKANUcummykl0_": {
+      "cccd": "083096000766",
+      "createdAt": "2026-02-04T14:49:42.565Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1996,
+      "tenNguoiLaoDong": "Nguyễn Sơn Thương",
+      "updatedAt": "2026-02-04T14:49:42.565Z"
+    },
+    "-Okd7Lsyf_y_SlgwvnLt": {
+      "cccd": "066097011271",
+      "createdAt": "2026-02-04T14:49:42.734Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1997,
+      "soDienThoai": "0363808753",
+      "tenNguoiLaoDong": "Hà Duy Tâm",
+      "updatedAt": "2026-02-04T14:49:42.734Z"
+    },
+    "-Okd7LvlCblMWuUXEPCa": {
+      "cccd": "060303006842",
+      "createdAt": "2026-02-04T14:49:42.913Z",
+      "gioiTinh": "NU",
+      "namSinh": 2003,
+      "soDienThoai": "0356587993",
+      "tenNguoiLaoDong": "Lê Thị Hồng Anh",
+      "updatedAt": "2026-02-04T14:49:42.913Z"
+    },
+    "-Okd7LyRqpBGoTdmlORF": {
+      "cccd": "091307017185",
+      "createdAt": "2026-02-04T14:49:43.084Z",
+      "gioiTinh": "NU",
+      "namSinh": 2007,
+      "tenNguoiLaoDong": "Nguyễn Huỳnh Anh",
+      "updatedAt": "2026-02-04T14:49:43.084Z"
+    },
+    "-Okd7M0SMwb5m4qn-xFX": {
+      "cccd": "091203010423",
+      "createdAt": "2026-02-04T14:49:43.277Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2003,
+      "soDienThoai": "0384569643",
+      "tenNguoiLaoDong": "Nguyễn Duy Nhật",
+      "updatedAt": "2026-02-04T14:49:43.277Z"
+    },
+    "-Okd7M6dwIdrEysJwTRh": {
+      "cccd": "096092006763",
+      "createdAt": "2026-02-04T14:49:43.673Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1992,
+      "soDienThoai": "0336934059",
+      "tenNguoiLaoDong": "Lê Văn Út",
+      "updatedAt": "2026-02-04T14:49:43.673Z"
+    },
+    "-Okd7M9_Ky-YfO9CIhFU": {
+      "cccd": "087098003292",
+      "createdAt": "2026-02-04T14:49:43.861Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1998,
+      "soDienThoai": "0878062471",
+      "tenNguoiLaoDong": "Đào Văn Tiền",
+      "updatedAt": "2026-02-04T14:49:43.861Z"
+    },
+    "-Okd7MCJjMU3AeXf0Y14": {
+      "cccd": "064099004903",
+      "createdAt": "2026-02-04T14:49:44.036Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1999,
+      "soDienThoai": "0562199988",
+      "tenNguoiLaoDong": "Ngô Hoàng Khả Tú",
+      "updatedAt": "2026-02-04T14:49:44.036Z"
+    },
+    "-Okd7MF1804NjVqz2ZI5": {
+      "cccd": "064095010172",
+      "createdAt": "2026-02-04T14:49:44.210Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1995,
+      "soDienThoai": "0962844239",
+      "tenNguoiLaoDong": "Ngô Hoàng Khả Tuấn",
+      "updatedAt": "2026-02-04T14:49:44.210Z"
+    },
+    "-Okd7MHumwJyp7y8XYqu": {
+      "cccd": "095306005423",
+      "createdAt": "2026-02-04T14:49:44.394Z",
+      "gioiTinh": "NU",
+      "namSinh": 2006,
+      "soDienThoai": "0812354010",
+      "tenNguoiLaoDong": "Mai Hồng Duy",
+      "updatedAt": "2026-02-04T14:49:44.394Z"
+    },
+    "-Okd7ML2fGJjp54xiYUd": {
+      "cccd": "075200022218",
+      "createdAt": "2026-02-04T14:49:44.596Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2000,
+      "soDienThoai": "0373577844",
+      "tenNguoiLaoDong": "Nguyễn Phi Long",
+      "updatedAt": "2026-02-04T14:49:44.596Z"
+    },
+    "-Okd7MNwG9Qfk3HG6Nc9": {
+      "cccd": "096094001683",
+      "createdAt": "2026-02-04T14:49:44.780Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1994,
+      "soDienThoai": "0825339115",
+      "tenNguoiLaoDong": "Lê Hữu Luân",
+      "updatedAt": "2026-02-04T14:49:44.780Z"
+    },
+    "-Okd7MSc3kUR2Z8eFGsL": {
+      "cccd": "096305001836",
+      "createdAt": "2026-02-04T14:49:45.080Z",
+      "gioiTinh": "NU",
+      "namSinh": 2005,
+      "soDienThoai": "0825339115",
+      "tenNguoiLaoDong": "Lê Huỳnh Ni",
+      "updatedAt": "2026-02-04T14:49:45.080Z"
+    },
+    "-Okd7MWv_ZhOxBVRlzat": {
+      "cccd": "096097010508",
+      "createdAt": "2026-02-04T14:49:45.355Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1997,
+      "soDienThoai": "0357998278",
+      "tenNguoiLaoDong": "Nguyễn Thanh Tâm",
+      "updatedAt": "2026-02-04T14:49:45.355Z"
+    },
+    "-Okd7MiCncAK8ad_D7Zf": {
+      "cccd": "046194013265",
+      "createdAt": "2026-02-04T14:49:46.141Z",
+      "gioiTinh": "NU",
+      "namSinh": 1994,
+      "soDienThoai": "0357998278",
+      "tenNguoiLaoDong": "Hồ Thị Xuyên",
+      "updatedAt": "2026-02-04T14:49:46.141Z"
+    },
+    "-Okd7Mkz68R66rp3tTZF": {
+      "cccd": "089099011760",
+      "createdAt": "2026-02-04T14:49:46.319Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1999,
+      "soDienThoai": "0349798318",
+      "tenNguoiLaoDong": "Lương Quang Nhã",
+      "updatedAt": "2026-02-04T14:49:46.319Z"
+    },
+    "-Okd7Ms9N-jpa2fyfpYv": {
+      "cccd": "062093008562",
+      "createdAt": "2026-02-04T14:49:46.778Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1993,
+      "soDienThoai": "0343639393",
+      "tenNguoiLaoDong": "A Thế",
+      "updatedAt": "2026-02-04T14:49:46.778Z"
+    },
+    "-Okd7N769t3b95GY2ww8": {
+      "cccd": "096099004199",
+      "createdAt": "2026-02-04T14:49:47.799Z",
+      "gioiTinh": "NAM",
+      "namSinh": 1999,
+      "tenNguoiLaoDong": "Nguyễn Chí Huỳnh",
+      "updatedAt": "2026-02-04T14:49:47.799Z"
+    },
+    "-Okd7NTfMECFcwd3Ik83": {
+      "cccd": "095302000345",
+      "createdAt": "2026-02-04T14:49:49.243Z",
+      "gioiTinh": "NU",
+      "namSinh": 2002,
+      "tenNguoiLaoDong": "Lâm Thị Ngọc Hà",
+      "updatedAt": "2026-02-04T14:49:49.243Z"
+    },
+    "-Okd7NY-nWhsHZhsfNA7": {
+      "cccd": "091185021787",
+      "createdAt": "2026-02-04T14:49:49.520Z",
+      "gioiTinh": "NU",
+      "namSinh": 1985,
+      "tenNguoiLaoDong": "Nguyễn Thị Anh",
+      "updatedAt": "2026-02-04T14:49:49.520Z"
+    },
+    "-Okd7NeahRJL4wK2goj0": {
+      "cccd": "064207002110",
+      "createdAt": "2026-02-04T14:49:50.006Z",
+      "gioiTinh": "NAM",
+      "namSinh": 2007,
+      "soDienThoai": "0962215165",
+      "tenNguoiLaoDong": "Lầu Văn Hùng",
+      "updatedAt": "2026-02-04T14:49:50.006Z"
+    },
+    "-OkfZtG2na0umkWkFgmc": {
+      "cccd": "096306004537",
+      "gioiTinh": "NỮ",
+      "namSinh": 2006,
+      "soDienThoai": "0978597605",
+      "tenNguoiLaoDong": "Trần Ngọc Uyên",
+      "updatedAt": "2026-02-05T09:13:37.987297"
+    },
+    "-Okf_xqwcUtUemPB56HE": {
+      "cccd": "074305003476",
+      "gioiTinh": "NỮ",
+      "namSinh": 2005,
+      "soDienThoai": "0978597605",
+      "tenNguoiLaoDong": "Bùi Thị Tú Trinh",
+      "updatedAt": "2026-02-05T09:18:18.940452"
+    },
+    "-Okfmn6LqcUta44n_wMK": {
+      "cccd": "096200001808",
+      "gioiTinh": "NAM",
+      "namSinh": 2000,
+      "soDienThoai": "00000000",
+      "tenNguoiLaoDong": "Nguyễn Minh Dương",
+      "updatedAt": "2026-02-05T10:14:22.806490"
+    }
+  },
+  "quanLy": {
+    "-Okbxhpd3EjLk8RM4T9f": {
+      "createdAt": 1770197015914,
+      "soDienThoai": "0333928625",
+      "tenQuanLy": "HR Cẩm Ly",
+      "updatedAt": 1770197015914
+    },
+    "-Okbxl-mzY4F_oQ54kPb": {
+      "createdAt": 1770197028915,
+      "soDienThoai": "0392051335",
+      "tenQuanLy": "HR Thìn",
+      "updatedAt": 1770197028915
+    },
+    "-OkbxnUnN6sUCXeNyNQH": {
+      "createdAt": 1770197039092,
+      "soDienThoai": "0965567829",
+      "tenQuanLy": "HR Lâm",
+      "updatedAt": 1770197039092
+    },
+    "-OkbxqBPd5MxgJqfESNf": {
+      "createdAt": 1770197050139,
+      "soDienThoai": "0941606529",
+      "tenQuanLy": "HR Yến",
+      "updatedAt": 1770197050139
+    },
+    "-OkbxsiOtKxmlzBe33oJ": {
+      "createdAt": 1770197060506,
+      "soDienThoai": "0335252384",
+      "tenQuanLy": "HR Thảo",
+      "updatedAt": 1770197060506
+    },
+    "-Okbxw0-AL0HCW8l5vcs": {
+      "createdAt": 1770197073985,
+      "soDienThoai": "0559081727",
+      "tenQuanLy": "HR Bi",
+      "updatedAt": 1770197073985
+    },
+    "-OkbxzAFyiUtqts4zGUO": {
+      "createdAt": 1770197086929,
+      "soDienThoai": "0374287743",
+      "tenQuanLy": "HR Hòa",
+      "updatedAt": 1770197086929
+    },
+    "-Okby1dYp6p_2OnDjW34": {
+      "createdAt": 1770197101156,
+      "soDienThoai": "0972872549",
+      "tenQuanLy": "HR Tiên",
+      "updatedAt": 1770197101156
+    },
+    "-Okby8OZg1ZUzSafWQhE": {
+      "createdAt": 1770197128805,
+      "soDienThoai": "0969708083",
+      "tenQuanLy": "HR Mai",
+      "updatedAt": 1770197128805
+    },
+    "-OkbyCo0pcKZe8ObBEPN": {
+      "createdAt": 1770197146882,
+      "soDienThoai": "0000000000",
+      "tenQuanLy": "HR Ngọc",
+      "updatedAt": 1770197146882
+    }
+  },
+  "tinTuyenDung": {
+    "-OkbzqSUV0SUE3kCdIwK": {
+      "congTy": {
+        "createdAt": 1770197278698,
+        "diaChi": "1A VSIP II-A Đường số 28, Khu Công Nghiệp Việt Nam-Singapore II-A , Phường Vĩnh Tân, Thành phố Hồ Chí Minh, Bình Dương, Việt Nam",
+        "id": "-Okbyhzd50YGidErRoh2",
+        "khuVuc": {
+          "id": "-OkbyOgcMBmlwe5Lff4-",
+          "tenKhuVuc": "Vsip 2A"
+        },
+        "mapUrl": "https://maps.app.goo.gl/SMcpeZVRG1Kp8tHh6?g_st=ic",
+        "quanLy": [
+          {
+            "id": "-Okbxl-mzY4F_oQ54kPb",
+            "soDienThoai": "0392051335",
+            "tenQuanLy": "HR Thìn"
+          }
+        ],
+        "tenCongTy": "Aussco",
+        "updatedAt": 1770264080513
+      },
+      "createdAt": "2026-02-04T09:32:55.520Z",
+      "hinhThucTuyen": "THOI_VU",
+      "moTa": "\"LƯƠNG TUẦN\nCông ty Aussco đ28 visip2a - cần tuyển các vị trí: \nQc 2\nĐóng gói ( làm ngồi )\nSửa hàng ( làm ngồi )\nỦi (Nam)\nKho\nLương ngày 250k/8h, đêm 300k/8h\nTăng ca 35k 1 tiếng\nNgày cn 45k/h, 60k/h\nCơm tự túc (được trả lại 25k/ phần)\nThời gian\n- Ca ngày:  7H30 - 16H30 (tăng ca 3 -4 tiếng)\n- Ca đêm: 19H30 - 7H30\nLàm ca ngày trước (2 tuần xoay ca 1 lần)\n- Chốt công cuối tuần. trả lương t4 hàng tuần\nCÓ LÀM XUYÊN TẾT\nLàm tết từ ngày 14/2-19/2 dương lịch.\nTối thiểu làm trước ngày bắt đầu làm tết 10 ngày hoặc 1 tuần ạ\nLương tết 80k/h\"",
+      "tags": [
+        {
+          "id": "d73740c0-5b7e-4f4c-b798-640e3c70ee34",
+          "noiDung": "Làm ca ngày trước, sau đó 2 tuần bắt buộc xoay ca 1 lần"
+        },
+        {
+          "id": "895d8053-4563-425d-931d-9437dde26139",
+          "noiDung": "Được ra ngoài ăn cơm"
+        },
+        {
+          "id": "c9896322-1c0f-4f25-b0a2-5a4181ab6f34",
+          "noiDung": "Không nhận tomboy"
+        },
+        {
+          "id": "2c9977fe-3d84-46f5-88ad-0db7943c6762",
+          "noiDung": "Chấp nhận cccd photo"
+        },
+        {
+          "id": "090665a3-8b2c-419d-b198-08a121451429",
+          "noiDung": "Được mang dép"
+        }
+      ],
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T04:29:00.569Z"
+    },
+    "-OkbzwNkMDvg85G5Uc-J": {
+      "congTy": {
+        "createdAt": 1770197462328,
+        "id": "-OkbzPorA8Q3N55eVR1M",
+        "khuVuc": {
+          "id": "-OkbyOgcMBmlwe5Lff4-",
+          "tenKhuVuc": "Vsip 2A"
+        },
+        "quanLy": [
+          {
+            "id": "-OkbxqBPd5MxgJqfESNf",
+            "soDienThoai": "0941606529",
+            "tenQuanLy": "HR Yến"
+          }
+        ],
+        "tenCongTy": "Zylux",
+        "updatedAt": 1770197462328
+      },
+      "createdAt": "2026-02-04T09:33:19.793Z",
+      "ghiChu": "Chỉ nhận HCTC,\nLàm từ 7h30 - 20h30, 21h30",
+      "hinhThucTuyen": "THOI_VU",
+      "moTa": "LƯƠNG TUẦN TẠI CÔNG TY ZYLUX (thanh toán lương trước tết)\nVị trí: Công nhân sản xuất thiết bị điện tử\nĐịa điểm: Đường 28, KCN Visip 2A mở rộng\n📌 MÔ TẢ CÔNG VIỆC:\n- Chuyên sản xuất lắp ráp thiết bị điện tử.\n- làm việc trong môi trường máy lạnh.\n  📌 YÊU CẦU:\n- Chỉ cần CMND/CCCD và tham gia phỏng vấn.\n- Mang giày bảo hộ khi phỏng vấn.\n CHẾ ĐỘ LƯƠNG & PHÚC LỢI:\n- Lương ca ngày (8h): 250.000đ/ngày. \n- Tăng ca: 37.000đ/giờ.\n- Tăng ca Chủ Nhật: 47.000đ/giờ\n· Bao ăn trưa , tự túc cơm chiều (hỗ trợ 25k nếu có tăng ca)\n· Nhận lương hàng tuần.\nChỉ làm ca ngày tăng ca (Làm từ 7h30 - 20h30, 21h30 tùy tình hình sx)",
+      "tags": [
+        {
+          "id": "dd9f1457-b8a5-48e6-9d44-c7ed0e97d835",
+          "noiDung": "Không nhận cccd photo - Phải có CCCD gốc hoặc Vneid"
+        },
+        {
+          "id": "d39f1786-801d-4819-86ab-6afd4270215c",
+          "noiDung": "Bao cơm trưa, cơm chiều tự túc"
+        },
+        {
+          "id": "45c38dc2-d374-4e78-8e88-cded9b25c9e8",
+          "noiDung": "Làm từ 7h30 - 20h30, 21h30"
+        },
+        {
+          "id": "088528bd-517b-4b41-93a1-a4b5ed5da1ea",
+          "noiDung": "Nhận ca ngày tăng ca, kh nhận đêm - HCTC"
+        }
+      ],
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T04:32:06.640Z"
+    },
+    "-Okc-0M6wmVc9bWutcr_": {
+      "congTy": {
+        "createdAt": 1770197308569,
+        "id": "-OkbypHNXFgPxQ5nyr4f",
+        "khuVuc": {
+          "id": "-OkbyOgcMBmlwe5Lff4-",
+          "tenKhuVuc": "Vsip 2A"
+        },
+        "quanLy": [
+          {
+            "id": "-OkbxnUnN6sUCXeNyNQH",
+            "soDienThoai": "0965567829",
+            "tenQuanLy": "HR Lâm"
+          }
+        ],
+        "tenCongTy": "Minh Nam",
+        "updatedAt": 1770197308569
+      },
+      "createdAt": "2026-02-04T09:33:40.168Z",
+      "hinhThucTuyen": "THOI_VU",
+      "moTa": "Công ty Minh Nam đường 14 (LƯƠNG TUẦN)\n* LĐPT:\n- Ngày 240k/8h – Tăng ca 35k/h, chủ nhật 45k/h\n- Đêm 290k/8h- Tăng ca 35k/h, chủ nhật 60k/h\n* Hàn, dập: 285k/8h- tăng ca 43k/h, chủ nhật 50k/h, đêm 330k/8h, tc 43k/h, cn 60k/h\n* Thợ hàn 400k/8h, tc 43k/h, cn 55k/h\n Lưu ý: Không mặc quần rách, mang giày bít mũi bít gót\nCHẾ ĐỘ CHI TRẢ LƯƠNG\n- Chốt công cuối tuần\n- Nhận lương thứ 4 hàng tuần\nThời gian:\nCa ngày 7h30-  21,22h tối ( trưa nghỉ 1 tiếng chiều 30p, tính tc từ 5h chiều)",
+      "tags": [
+        {
+          "id": "5bb06825-1e02-45f2-b766-fc00c72d30a8",
+          "noiDung": "Nhận ca ngày - HCTC"
+        },
+        {
+          "id": "b3147479-8caf-4120-b4e1-cf6c60159627",
+          "noiDung": "Nhận ca đêm"
+        },
+        {
+          "id": "68408a58-1548-4afd-88d6-b3b22bd1e188",
+          "noiDung": "Bao cơm ca ngày - Không bao cơm ca đêm (Hỗ trợ 25K/Phần)"
+        },
+        {
+          "id": "83b8c767-7b77-41a2-9f92-def4e0220e95",
+          "noiDung": "ca đêm 20h-7h30 sáng - Nếu TC thì + tiền 2 suất cơm, Không TC thì + tiền 1 suất cơm (25K)"
+        },
+        {
+          "id": "a9857d57-0b14-4015-83b0-6012c4a9d5b2",
+          "noiDung": "Làm ngồi"
+        }
+      ],
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T04:35:15.527Z"
+    },
+    "-Okc-5kW5fqC5f_Mrn2N": {
+      "congTy": {
+        "createdAt": 1770197374800,
+        "id": "-Okbz4SEIfIYHep0avSz",
+        "khuVuc": {
+          "id": "-OkbyOgcMBmlwe5Lff4-",
+          "tenKhuVuc": "Vsip 2A"
+        },
+        "quanLy": [
+          {
+            "id": "-Okbxw0-AL0HCW8l5vcs",
+            "soDienThoai": "0559081727",
+            "tenQuanLy": "HR Bi"
+          }
+        ],
+        "tenCongTy": "Rebisco",
+        "updatedAt": 1770197374800
+      },
+      "createdAt": "2026-02-04T09:34:02.274Z",
+      "hinhThucTuyen": "THOI_VU",
+      "moTa": "➡️ NHẬN LƯƠNG TUẦN\nTuyển nam/nữ\nLàm công ty bánh kẹo Rebisco đường 32 vsip2a \nCHẾ ĐỘ LƯƠNG\n* CA NGÀY 12h (6h - 18h)\n- Lương cứng: 380.000 VNĐ/ca\n* CA ĐÊM 12h (18h - 6h)\n- Lương cứng: 440.000 VNĐ/ca\n- 1 phần cơm 25k\n- Chủ Nhật ngày: 53.000 VNĐ/giờ\n- Chủ Nhật đêm: 65.000 VNĐ/giờ\nCÔNG VIỆC: Nướng bánh, trộn bánh, đóng gói\nYÊU CẦU:Từ 17t, có CCCD, nhận việc NGAY!\nCơm tự túc (được trả lại 25k/phần)\nLàm ca ngày trước rồi mới xoay ca (2 tuần 1 lần)\n",
+      "tags": [
+        {
+          "id": "d7c8cb46-4843-41ae-8015-5413a66ac432",
+          "noiDung": "Làm ca ngày trước rồi mới xoay ca (2 tuần 1 lần)"
+        },
+        {
+          "id": "e4a6f853-c3bc-4cc0-903d-31e2d5f7dd03",
+          "noiDung": "nghỉ trưa 30p"
+        },
+        {
+          "id": "4e716202-1542-4977-9240-0244d65f61f1",
+          "noiDung": "Không đeo nữ trang, cắt móng tay ngắn, Phải mang giày"
+        }
+      ],
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T04:37:47.188Z"
+    },
+    "-Okc-BXxYXGOJWQ27683": {
+      "congTy": {
+        "createdAt": 1770197361049,
+        "id": "-Okbz15N5uI3YugRrZfv",
+        "khuVuc": {
+          "id": "-OkbyOgcMBmlwe5Lff4-",
+          "tenKhuVuc": "Vsip 2A"
+        },
+        "quanLy": [
+          {
+            "id": "-OkbxsiOtKxmlzBe33oJ",
+            "soDienThoai": "0335252384",
+            "tenQuanLy": "HR Thảo"
+          }
+        ],
+        "tenCongTy": "Mại Duệ",
+        "updatedAt": 1770197361049
+      },
+      "createdAt": "2026-02-04T09:34:25.982Z",
+      "moTa": "CTY ĐIỆN TỬ MẠI DUỆ (ỨNG LƯƠNG TUẦN)\n\n📍 Địa chỉ: Đường 21, VSIP 2A\n💼 Công việc: Điện tử – làm nhàn, dễ làm\nLàm ngồi, được mang dép, môi trường mát mẻ\n💰 Mức lương:\n• Ca ngày 8 tiếng: 250.000đ\n• Ca đêm 8 tiếng: 300.000đ\n• Tăng ca: 35.000đ/giờ\n• Làm Chủ Nhật: 45.000đ/giờ\n\n📌 Yêu cầu:\n• Mang giày\n• Mang theo CCCD gốc khi đi nhận việc\n\nThời gian làm: 8H - 20H (CN kh bắt buộc)",
+      "trangThai": "DA_NGUNG",
+      "updatedAt": "2026-02-04T09:34:25.982Z"
+    },
+    "-Okc-F1qQnAvGt1m3t9s": {
+      "congTy": {
+        "createdAt": 1770197535183,
+        "id": "-OkbzgbDOF4HeJSwhoNC",
+        "khuVuc": {
+          "id": "-OkbyOgcMBmlwe5Lff4-",
+          "tenKhuVuc": "Vsip 2A"
+        },
+        "quanLy": [
+          {
+            "id": "-Okbxw0-AL0HCW8l5vcs",
+            "soDienThoai": "0559081727",
+            "tenQuanLy": "HR Bi"
+          }
+        ],
+        "tenCongTy": "JINXIN",
+        "updatedAt": 1770197535183
+      },
+      "createdAt": "2026-02-04T09:34:40.311Z",
+      "hinhThucTuyen": "THOI_VU",
+      "moTa": "ỨNG LƯƠNG TUẦN \nCÔNG TY JINXIN ép nhựa giày dép \n\n- Lương ca ngày 8h 250k, tăng ca 37k/h\n- Lương ca đêm 8h 300k ,tăng ca 37k/h\n- Ngày chủ nhật 50k/h, tăng ca đêm chủ nhật 60k/h\nThời gian làm việc: đi 2 ca 12 tiếng từ 7h30 đến 19h30 và xoay ca \n- Ca ngày có cơm , ca đêm tự túc hoàn 22k/1 phần vào lương\n👉Địa chỉ: Đường 30 vsip2a, Vĩnh Tân Bình Dương",
+      "tags": [
+        {
+          "id": "5e9c7db7-7598-432e-91bd-d14679f18350",
+          "noiDung": "Bắt buộc xoay ca (được chọn ca ngày hoặc đêm trước)"
+        }
+      ],
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T04:42:06.362Z"
+    },
+    "-Okc-IRhPJUL5-U-gyF1": {
+      "congTy": {
+        "createdAt": 1770197512169,
+        "id": "-OkbzazcuSQirOEUX8hS",
+        "khuVuc": {
+          "id": "-OkbyOgcMBmlwe5Lff4-",
+          "tenKhuVuc": "Vsip 2A"
+        },
+        "quanLy": [
+          {
+            "id": "-Okbxw0-AL0HCW8l5vcs",
+            "soDienThoai": "0559081727",
+            "tenQuanLy": "HR Bi"
+          }
+        ],
+        "tenCongTy": "TCL",
+        "updatedAt": 1770197512169
+      },
+      "createdAt": "2026-02-04T09:34:54.254Z",
+      "hinhThucTuyen": "THOI_VU",
+      "moTa": " 🔔 3 Ngày Lãnh Lương 1 lần.🔔\nLãnh lương vào thứ 5 và chủ Nhật hàng tuần.\n\nCông ty Điện Tử TCL sx TIVI, đường 32 Visip 2a mở rộng.\nThưởng thêm tiền hiệu suất từ 700k-1tr5k [có thêm điều kiện của công ty sản xuất]\n- Ca ngày: 256k/8h\n- Ca đêm: 313k/8h\n- Tăng ca: 35k/1h\n- Chủ nhật ngày: 47k/1h\n- Chủ nhật đêm: 64k/1h\n👉 Bộ Phận: TiVi 100 người \n👉 Bộ Phận kho: 15 người \nCông việc: lắp ráp linh kiện tivi ,bắn ốc vít, sắp xếp hàng hoá ...\n",
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T04:21:37.853Z"
+    },
+    "-Okc-OAqIsaOCR8sxYVi": {
+      "congTy": {
+        "createdAt": 1770197410700,
+        "id": "-OkbzDDA-uGDZ1Dds0yd",
+        "khuVuc": {
+          "id": "-OkbyJvOa5lBb0ZfkV6c",
+          "tenKhuVuc": "Mỹ Phước 1"
+        },
+        "quanLy": [
+          {
+            "id": "-OkbxzAFyiUtqts4zGUO",
+            "soDienThoai": "0374287743",
+            "tenQuanLy": "HR Hòa"
+          }
+        ],
+        "tenCongTy": "Feiliks Media",
+        "updatedAt": 1770197410700
+      },
+      "createdAt": "2026-02-04T09:35:17.751Z",
+      "hinhThucTuyen": "THOI_VU",
+      "moTa": "📢📢📢 ỨNG LƯƠNG TUẦN\n\n(KHO MIDEA) LÀM NHÀN THOẢI MÁI\nKCN Mỹ Phước 1 \n\nThời gian & Thu nhập:\n• Cơm tự túc\n• Ca ngày 8 tiếng: 240.000đ\n• Ca đêm 8 tiếng: 300.000đ\n• Tăng ca: 36.000đ/giờ\n• Làm Chủ nhật: 46.000đ/giờ",
+      "tags": [
+        {
+          "id": "b6fdfad9-776e-46ad-bc97-190bc6a5608f",
+          "noiDung": "Chỉ tuyển nam"
+        }
+      ],
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T04:42:49.514Z"
+    },
+    "-Okc-T4C0EC-F7S2A12Z": {
+      "congTy": {
+        "createdAt": 1770197428520,
+        "id": "-OkbzHZbkvqp6UCayEc1",
+        "khuVuc": {
+          "id": "-OkbyMMd8l1c2fkCLj7e",
+          "tenKhuVuc": "Mỹ Phước 3"
+        },
+        "quanLy": [
+          {
+            "id": "-Okby1dYp6p_2OnDjW34",
+            "soDienThoai": "0972872549",
+            "tenQuanLy": "HR Tiên"
+          }
+        ],
+        "tenCongTy": "Sanaky",
+        "updatedAt": 1770197428520
+      },
+      "createdAt": "2026-02-04T09:35:37.806Z",
+      "hinhThucTuyen": "THOI_VU",
+      "moTa": "CÔNG TY SANAKY \nỨng LƯƠNG Hàng Tuần\nNhận NAM NỮ MỸ PHƯỚC 3 \n7h30- tăng ca đến 20h \n💰8 tiếng : 240k\n💰Tăng ca : 35k/1h\n💰Chủ Nhật: 408k/ 8 tiếng \nChuyên cần 500k/ đủ công theo quy định cty\nChuyên môn 500k/ phụ cấp thêm bộ phận rổ kệ\n💦 Cty bao cơm chỉ cần cccd nhận việc\n",
+      "tags": [
+        {
+          "id": "54f0c7c5-b0fb-4641-bd9a-193b4b2ee701",
+          "noiDung": "Đứng làm"
+        },
+        {
+          "id": "0b8ac547-f57a-4644-b79f-7a8c4227e2f9",
+          "noiDung": "Bộ phận rổ kệ là hàn"
+        },
+        {
+          "id": "8af168eb-2edb-4e2a-a54d-9d268a6c2f46",
+          "noiDung": "chỉ tuyển nam"
+        },
+        {
+          "id": "b92aa14e-f15a-4022-a242-d6c695b3e84c",
+          "noiDung": "khỏe"
+        },
+        {
+          "id": "10e0af91-52d9-4f5d-af4b-f455283169e0",
+          "noiDung": "không sản lượng"
+        },
+        {
+          "id": "c907b262-2d6f-44fa-9f72-4117807b5df5",
+          "noiDung": "không chạy chuyền"
+        }
+      ],
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T04:43:44.806Z"
+    },
+    "-Okc-Y-ZMM7XU4Z0Nv4W": {
+      "congTy": {
+        "createdAt": 1770197330921,
+        "diaChi": "DE5, P, Bến Cát, Bình Dương, Việt Nam",
+        "id": "-OkbyujcnFfvjwzTibtH",
+        "khuVuc": {
+          "id": "-OkbyMMd8l1c2fkCLj7e",
+          "tenKhuVuc": "Mỹ Phước 3"
+        },
+        "mapUrl": "https://maps.app.goo.gl/4JJJMFAERoc64Yn79",
+        "quanLy": [
+          {
+            "id": "-OkbxqBPd5MxgJqfESNf",
+            "soDienThoai": "0941606529",
+            "tenQuanLy": "HR Yến"
+          }
+        ],
+        "tenCongTy": "Click",
+        "updatedAt": 1770263912851
+      },
+      "createdAt": "2026-02-04T09:35:57.989Z",
+      "ghiChu": "\n",
+      "hinhThucTuyen": "THOI_VU",
+      "moTa": "TRẢ LƯƠNG TUẦN + NGỒI LÀM\nCTY Điện Tử CLICK sx Cục Sạc \n- Ca ngày:240k/8h\n- T/c:35k/1h\n- Chủ Nhật:45k/1h\n- Công việc: cắm kiện , đóng gói , gia công soạn hàng...\n🍚Cty bao cơm\nĐ/c:  DE5, khu công nghiệp Mỹ Phước 3\nThời gian: 7h30 - 21h30 (có làm cn)",
+      "phucLoi": [
+        {
+          "id": "ed5bb248-2b05-4e3a-adf7-c30fa7ae79d3",
+          "isDeactivated": false,
+          "noiDung": "Được mang dép"
+        }
+      ],
+      "tags": [
+        {
+          "id": "619e901c-7369-4112-a9f8-0fe5036f1253",
+          "noiDung": "Nhận 17 tuổi"
+        },
+        {
+          "id": "ccc3b73d-9d42-4dee-a9ba-a431497bb212",
+          "noiDung": "ngồi làm máy lạnh"
+        },
+        {
+          "id": "c5fc3899-edfc-4000-91dc-cc784842cbde",
+          "noiDung": "Được mang dép"
+        }
+      ],
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T04:44:31.693Z"
+    },
+    "-Okc-cR_6OvqYU3rJ6dL": {
+      "congTy": {
+        "createdAt": 1770197259201,
+        "diaChi": "Đường NA2, Thới Hoà, Bến Cát, Bình Dương, Việt Nam",
+        "id": "-OkbydE-t50BSkR60o0p",
+        "khuVuc": {
+          "id": "-OkasW94_NTy8zJTd6d4",
+          "tenKhuVuc": "Mỹ Phước 4"
+        },
+        "mapUrl": "https://maps.app.goo.gl/d8iFR6bmuM3oppyx7?g_st=iz",
+        "quanLy": [
+          {
+            "id": "-Okbxhpd3EjLk8RM4T9f",
+            "soDienThoai": "0333928625",
+            "tenQuanLy": "HR Cẩm Ly"
+          }
+        ],
+        "tenCongTy": "Midea MP4",
+        "updatedAt": 1770263122476
+      },
+      "createdAt": "2026-02-04T09:36:20.262Z",
+      "ghiChu": "khoẻ thì vào A5, A6 nhé ( đứng chuyền lắp ráp ) cố định ca ngày\nA4 thì cực nhé ( đứng máy dập, hàn thiên về Cơ Khí ) được xoay ca.\n\nXoay ca ( đêm hay ngày trước là do sản xuất sắp xếp ) kh tư vấn được chọn ca nữa\n\ncông nhân vào A4,A3 là làm cơ khí chứ không phải là làm điện tử",
+      "ghiChuPV": "Dạ 7h có mặt tại công ty\nđem cccd\nmang giày\ntới alo số này 0333928625 hoặc zalo để gặp chị Ly dẫn vô ạ\nLúc tới nhớ nói là ứng viên của Duyên IT là được ạ ",
+      "hinhThucTuyen": "THOI_VU",
+      "moTa": "CÔNG TY ĐIỆN TỬ MIDEA MP4 - Thời vụ\nCÓ CHUYÊN CẦN KHI LÀM 23 công trở lên (10K/1ngày) \n\n🌾 384.000/12H Ngày; CN Ngày 49.000/1H\n490.000/12H Đêm; CN Đêm 60.000/1H\nSau 4 ngày đầu làm việc, ra ca ngày làm việc thứ 5 sẽ thanh toán 5 ngày lương\nQUA NGÀY làm việc thứ 6 trở đi LÀM NGÀY NÀO TRẢ LƯƠNG NGÀY ĐÓ",
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T04:03:51.075Z"
+    },
+    "-Okfoukp9Bwi6Gfob5TI": {
+      "congTy": {
+        "createdAt": 1770197259201,
+        "diaChi": "Đường NA2, Thới Hoà, Bến Cát, Bình Dương, Việt Nam",
+        "id": "-OkbydE-t50BSkR60o0p",
+        "khuVuc": {
+          "id": "-OkasW94_NTy8zJTd6d4",
+          "tenKhuVuc": "Mỹ Phước 4"
+        },
+        "mapUrl": "https://maps.app.goo.gl/d8iFR6bmuM3oppyx7?g_st=iz",
+        "quanLy": [
+          {
+            "id": "-Okbxhpd3EjLk8RM4T9f",
+            "soDienThoai": "0333928625",
+            "tenQuanLy": "HR Cẩm Ly"
+          }
+        ],
+        "tenCongTy": "Midea MP4",
+        "updatedAt": 1770263122476
+      },
+      "createdAt": "2026-02-05T03:23:38.421Z",
+      "ghiChuPV": "Dạ 7h có mặt tại công ty\nđem cccd\nmang giày\ntới alo số này 0333928625 hoặc zalo để gặp chị Ly dẫn vô ạ\nLúc tới nhớ nói là ứng viên của Duyên IT là được ạ ",
+      "hinhThucTuyen": "CHINH_THUC",
+      "moTa": "🏭  CÔNG TY MIDEA – KCN MỸ PHƯỚC 4\n(Sản xuất đồ điện gia dụng) – Chính thức\n\nVị trí: Lao động phổ thông – Lắp ráp, đóng gói, ép nhựa\n💰 Thu nhập: 17 – 19 triệu/tháng\n- Lương cơ bản: 5.682.000đ\n- Chuyên cần: 350.000đ\n- Phụ cấp: 700.000đ\n- Thưởng theo vị trí: 50.000đ – 200.000đ\n\nMôi trường: Sạch – mát – Không ép sản lượng\n\n⏰ Ca xoay:\n* 7h30 – 19h30\n* 9h30 – 7h30\n\nĐộ tuổi: 18 – 45\nHồ sơ: Mang hồ sơ + giày (có thể bổ sung sau)\n=> Phỏng vấn xong nhận việc ngày hôm sau",
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T03:46:38.611Z"
+    },
+    "-Okg5ivxu7AtaEl1KMpJ": {
+      "congTy": {
+        "createdAt": 1770266438363,
+        "diaChi": "Đường 31, KCN Vsip 2A, Vĩnh Tân, Tân Uyên, Bình Dương, Việt Nam",
+        "id": "-Okg5Xfy6bBLWkMvLDJ1",
+        "khuVuc": {
+          "id": "-OkbyOgcMBmlwe5Lff4-",
+          "tenKhuVuc": "Vsip 2A"
+        },
+        "quanLy": [
+          {
+            "id": "-Okbxw0-AL0HCW8l5vcs",
+            "soDienThoai": "0559081727",
+            "tenQuanLy": "HR Bi"
+          }
+        ],
+        "tenCongTy": "NISON",
+        "updatedAt": 1770266438363
+      },
+      "createdAt": "2026-02-05T04:41:28.538Z",
+      "hinhThucTuyen": "THOI_VU",
+      "moTa": "Thời vụ ứng lương tuần \n** TUYỂN NAM \nCông ty NISON sản xuất gậy golf \n@: tuyển nam - thời vụ\n- Ca ngày:255k/8h\n- Ca đêm:300k/8h\n- T/c:35k/1h\n- T/c ngày chủ nhật:45k/1h\n- T/c đêm chủ nhật:60k/1h\n⏰Hành Chánh xoay ca \nBao cơm ca ngày , ca đêm tự túc cty sẽ lại 23k/1phần\n🏢đường 31 ,visip 2 , vĩnh tân,tân uyên, Bình Dương",
+      "tags": [
+        {
+          "id": "897d7553-7eaa-4fef-855f-b2c88af9546d",
+          "noiDung": "Chỉ tuyển nam"
+        }
+      ],
+      "trangThai": "DANG_TUYEN",
+      "updatedAt": "2026-02-05T04:41:28.538Z"
+    }
+  },
+  "ungTuyen": {
+    "-Okd7Hq7B3xd3j8t33tZ": {
+      "congTyId": "-OkbypHNXFgPxQ5nyr4f",
+      "createdAt": "2026-02-04T14:49:26.168Z",
+      "ghiChu": "Nhắn số cũ đuôi 013",
+      "ngayPhongVan": "2026-01-17T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7HidcRTg0RvztWUL",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:26.168Z"
+    },
+    "-Okd7HyYW9LK7sDXVvoh": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:26.707Z",
+      "ghiChu": "Ngày nhắn: 19/1",
+      "ngayPhongVan": "2026-01-20T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7HrA1V_IReXvpwy-",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:26.707Z"
+    },
+    "-Okd7IAOdfzVkpTVlcHk": {
+      "congTyId": "-OkbydE-t50BSkR60o0p",
+      "createdAt": "2026-02-04T14:49:27.529Z",
+      "ghiChu": "Ngày nhắn: 17/1",
+      "ngayPhongVan": "2026-01-21T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7I8n1X4zyt43HJZO",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:27.529Z"
+    },
+    "-Okd7ICsBcTdBEepQ4jr": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:27.688Z",
+      "ghiChu": "Ngày nhắn: 20/1",
+      "ngayPhongVan": "2026-01-22T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7IBHUwkYnkdPS5TM",
+      "trangThaiTuyen": "DA_NGHI_VIEC",
+      "updatedAt": "2026-02-04T14:49:27.688Z"
+    },
+    "-Okd7IFHEoEC4NjTCJNN": {
+      "congTyId": "-OkbypHNXFgPxQ5nyr4f",
+      "createdAt": "2026-02-04T14:49:27.842Z",
+      "ghiChu": "Ngày nhắn: 21/1",
+      "ngayPhongVan": "2026-01-22T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7IDeYYtxJKm8c40b",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:27.841Z"
+    },
+    "-Okd7IHlbE3plyU0itdP": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:28.001Z",
+      "ghiChu": "Ngày nhắn 21/2",
+      "ngayPhongVan": "2026-01-22T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7IGA6pRFUu_AOlFG",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:28.001Z"
+    },
+    "-Okd7IKIhy7qB8CoG9ZA": {
+      "congTyId": "-Okbz15N5uI3YugRrZfv",
+      "createdAt": "2026-02-04T14:49:28.163Z",
+      "ngayPhongVan": "2026-01-22T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7IIaxnW74CCwo7py",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:28.163Z"
+    },
+    "-Okd7IMi9UP3T87iPRJV": {
+      "congTyId": "-OkbyujcnFfvjwzTibtH",
+      "createdAt": "2026-02-04T14:49:28.318Z",
+      "ghiChu": "Ngày nhắn: 21/1, pv lại ngày 26/1",
+      "ngayPhongVan": "2026-01-23T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7IL6I3S8AjKGVKGU",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:28.318Z"
+    },
+    "-Okd7IPC82TVB_bR7oZu": {
+      "congTyId": "-OkbyujcnFfvjwzTibtH",
+      "createdAt": "2026-02-04T14:49:28.477Z",
+      "ghiChu": "Đi chung 2 người",
+      "ngayPhongVan": "2026-01-23T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7INal7XhtN56sd-O",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:28.477Z"
+    },
+    "-Okd7IUN9SDCanWFFFJd": {
+      "congTyId": "-OkbyujcnFfvjwzTibtH",
+      "createdAt": "2026-02-04T14:49:28.808Z",
+      "ngayPhongVan": "2026-01-23T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7IQ4UyqpEqbUlvV5",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:28.808Z"
+    },
+    "-Okd7IWrgpFxoujsOeml": {
+      "congTyId": "-OkbydE-t50BSkR60o0p",
+      "createdAt": "2026-02-04T14:49:28.967Z",
+      "ghiChu": "Đi chung 2 người",
+      "ngayPhongVan": "2026-01-23T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7IVA9L615fkSPdii",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:28.967Z"
+    },
+    "-Okd7I_BETtIPObYjrJP": {
+      "congTyId": "-OkbydE-t50BSkR60o0p",
+      "createdAt": "2026-02-04T14:49:29.180Z",
+      "ngayPhongVan": "2026-01-23T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7IXg4UIQfO_KzW3-",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:29.179Z"
+    },
+    "-Okd7IcIvs8UO5PkOeRQ": {
+      "congTyId": "-Okbz4SEIfIYHep0avSz",
+      "createdAt": "2026-02-04T14:49:29.379Z",
+      "ngayPhongVan": "2026-01-24T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7IaKCk3PO1NTlZng",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:29.379Z"
+    },
+    "-Okd7Ijhdi3gIdHxPjkz": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:29.853Z",
+      "ghiChu": "Đi chung 3 người",
+      "ngayPhongVan": "2026-01-24T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7Id70b_sfBX5NxZm",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:29.853Z"
+    },
+    "-Okd7ImYVMsOprAymALv": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:30.035Z",
+      "ngayPhongVan": "2026-01-24T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7Ik_iOw4HeYpfZzX",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:30.034Z"
+    },
+    "-Okd7Ips0cw2ixhH4PrN": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:30.248Z",
+      "ngayPhongVan": "2026-01-24T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7Inig2dA524_59XT",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:30.248Z"
+    },
+    "-Okd7IsJQaI939-U4R4-": {
+      "congTyId": "-OkbzHZbkvqp6UCayEc1",
+      "createdAt": "2026-02-04T14:49:30.404Z",
+      "ngayPhongVan": "2026-01-24T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7Iqg92yMqT2NQ5tr",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:30.404Z"
+    },
+    "-Okd7Iut85OgEuwnA4Qw": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:30.569Z",
+      "ghiChu": "Đi chung 2 người",
+      "ngayPhongVan": "2026-01-26T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7It6w1vDsv_ES5iC",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:30.569Z"
+    },
+    "-Okd7IxKmknsr7KMIn4l": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:30.725Z",
+      "ngayPhongVan": "2026-01-26T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7Ivi1242d8EcvuIM",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:30.725Z"
+    },
+    "-Okd7Izp15UA7OKT-R3d": {
+      "congTyId": "-Okd3j_mp3y2HaLOVWz_",
+      "createdAt": "2026-02-04T14:49:30.885Z",
+      "ngayPhongVan": "2026-01-26T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7IyATOP0PsPahg8F",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:30.885Z"
+    },
+    "-Okd7J3m5f_-Zf_rauMW": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:31.202Z",
+      "ngayPhongVan": "2026-01-26T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7J-xweM3WBgttxVk",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:31.202Z"
+    },
+    "-Okd7JDB9i6cAEQ-sF-G": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:31.804Z",
+      "ngayPhongVan": "2026-01-26T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7J7l2ZSaW27BDYnX",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:31.804Z"
+    },
+    "-Okd7JHbrcaLH38PMpVf": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:32.087Z",
+      "ngayPhongVan": "2026-01-26T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7JFVLflXxCzemMTs",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:32.087Z"
+    },
+    "-Okd7JLgK6wQZLQkEW1w": {
+      "congTyId": "-OkbzDDA-uGDZ1Dds0yd",
+      "createdAt": "2026-02-04T14:49:32.348Z",
+      "ngayPhongVan": "2026-01-27T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7JJWgkq6hk39irGc",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:32.348Z"
+    },
+    "-Okd7JQo3PUR2MB_sV4x": {
+      "congTyId": "-OkbyujcnFfvjwzTibtH",
+      "createdAt": "2026-02-04T14:49:32.677Z",
+      "ghiChu": "pv lại ngày 27/1",
+      "ngayPhongVan": "2026-01-27T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7JNeDf5pHp2jb1iq",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:32.676Z"
+    },
+    "-Okd7JVJz1mO6u2Fy7Jt": {
+      "congTyId": "-OkbzDDA-uGDZ1Dds0yd",
+      "createdAt": "2026-02-04T14:49:32.964Z",
+      "ghiChu": "Đi chung vs Tuấn Kiệt",
+      "ngayPhongVan": "2026-01-27T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7JSbxR5Jfbw9FSHl",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:32.964Z"
+    },
+    "-Okd7JXyPCu0GoZrRYZN": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:33.134Z",
+      "ghiChu": "Đang chờ lịch hẹn lại",
+      "ngayPhongVan": "2026-01-28T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7JW67rHQJ_Z0I8R4",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:33.134Z"
+    },
+    "-Okd7J_V6LVjwktTuIQg": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:33.296Z",
+      "ngayPhongVan": "2026-01-28T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7JYkij4Ox8r6Oeyi",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:33.296Z"
+    },
+    "-Okd7Jc8JmOe_ZwiK2UY": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:33.465Z",
+      "ngayPhongVan": "2026-01-28T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7JaKUAApwUoWeDXr",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:33.465Z"
+    },
+    "-Okd7JzM8ZN_Urzia5KQ": {
+      "congTyId": "-OkbyujcnFfvjwzTibtH",
+      "createdAt": "2026-02-04T14:49:34.951Z",
+      "ghiChu": "dời thành ngày 28/1",
+      "ngayPhongVan": "2026-01-28T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7JrLHIjuSyHGDG4O",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:34.951Z"
+    },
+    "-Okd7K93y7HV-uX-OdUn": {
+      "congTyId": "-Okd3j_mp3y2HaLOVWz_",
+      "createdAt": "2026-02-04T14:49:35.636Z",
+      "ngayPhongVan": "2026-01-28T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7K-tsR8Usg0SEaMv",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:35.636Z"
+    },
+    "-Okd7KGuYVYQ4JHnLCcq": {
+      "congTyId": "-OkbzUJbBAn9lbQmhmn_",
+      "createdAt": "2026-02-04T14:49:36.138Z",
+      "ngayPhongVan": "2026-01-28T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KEaHu74OCxuu8K3",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:36.138Z"
+    },
+    "-Okd7KL5FXouXhyKl7-_": {
+      "congTyId": "-OkbzUJbBAn9lbQmhmn_",
+      "createdAt": "2026-02-04T14:49:36.406Z",
+      "ngayPhongVan": "2026-01-28T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KINa_LwYr2a8JzM",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:36.406Z"
+    },
+    "-Okd7KNenVtBcuvoOdHy": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:36.570Z",
+      "ngayPhongVan": "2026-01-30T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KLuiQSrntPyRfWv",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:36.570Z"
+    },
+    "-Okd7KQN1KT7bVdh86c7": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:36.744Z",
+      "ngayPhongVan": "2026-01-31T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KOTarnX1g5FsRfK",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:36.744Z"
+    },
+    "-Okd7KSvm80erZ1p7lxu": {
+      "congTyId": "-OkbypHNXFgPxQ5nyr4f",
+      "createdAt": "2026-02-04T14:49:36.907Z",
+      "ngayPhongVan": "2026-01-31T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KRC22fj43kKOeai",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:36.907Z"
+    },
+    "-Okd7KWIYxsLs_Df2sQq": {
+      "congTyId": "-OkbzYncCaDKsfkvWGpP",
+      "createdAt": "2026-02-04T14:49:37.123Z",
+      "ngayPhongVan": "2026-01-31T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KTkf4WwgH4XVcFo",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-05T01:56:24.126Z"
+    },
+    "-Okd7KZB_H-BOiMDZLX9": {
+      "congTyId": "-OkbzHZbkvqp6UCayEc1",
+      "createdAt": "2026-02-04T14:49:37.308Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KX66Gs8iUkrpIl2",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:37.308Z"
+    },
+    "-Okd7KavxIHlY6YENR5z": {
+      "congTyId": "-OkbzHZbkvqp6UCayEc1",
+      "createdAt": "2026-02-04T14:49:37.483Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7K_7JOgA6OYVF_oh",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:37.483Z"
+    },
+    "-Okd7Kd_REEonFMS2cky": {
+      "congTyId": "-OkbyujcnFfvjwzTibtH",
+      "createdAt": "2026-02-04T14:49:37.653Z",
+      "ghiChu": "dki pv lại ngày 2/2",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KbhK8ViT42m_TIy",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:37.653Z"
+    },
+    "-Okd7KghxAzDii3K48fu": {
+      "congTyId": "-OkbzHZbkvqp6UCayEc1",
+      "createdAt": "2026-02-04T14:49:37.853Z",
+      "ghiChu": "dời thành t2",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KePtc1oRC-TCzAf",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:37.853Z"
+    },
+    "-Okd7KjlaB8kYTJzq9u_": {
+      "congTyId": "-OkbyujcnFfvjwzTibtH",
+      "createdAt": "2026-02-04T14:49:38.049Z",
+      "ghiChu": "dki 30/1 pv lại, dời lại qua tháng ",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7Khu7l2togmc3WRG",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:38.049Z"
+    },
+    "-Okd7KmSmc8QmFuxwrs9": {
+      "congTyId": "-OkbyujcnFfvjwzTibtH",
+      "createdAt": "2026-02-04T14:49:38.221Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KkXp8I-HNFU0IFi",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:38.221Z"
+    },
+    "-Okd7Kp8G-i30LXEB6wR": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:38.393Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KnLp4c4RFQqHE7e",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:38.393Z"
+    },
+    "-Okd7KrlPz3uVpxac4Xq": {
+      "congTyId": "-OkbypHNXFgPxQ5nyr4f",
+      "createdAt": "2026-02-04T14:49:38.561Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KpvgATiZBvahkFb",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:38.561Z"
+    },
+    "-Okd7KuNMJ5otDYY4qg9": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:38.728Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KsZYY9BVoM_TvQT",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:38.728Z"
+    },
+    "-Okd7KyJZ8acZEFis2XN": {
+      "congTyId": "-Okbz4SEIfIYHep0avSz",
+      "createdAt": "2026-02-04T14:49:38.980Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KvGdAcrzLDcWwby",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:38.980Z"
+    },
+    "-Okd7L1aNm4i4Eare0k8": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:39.254Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7KzhMKaQZK0ZoLyE",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:39.254Z"
+    },
+    "-Okd7L5urq6d9pxlKSLa": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:39.530Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7L2b9tknej79TLRd",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:39.530Z"
+    },
+    "-Okd7LAD_advSKukE5qN": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:39.806Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7L8Hz7nYw1vT2RTp",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:39.806Z"
+    },
+    "-Okd7LCsyz61UvtNyThX": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:39.976Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LB1Xnxo3sac5lpw",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:39.976Z"
+    },
+    "-Okd7LFUgOA1RDAQWgQt": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:40.143Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LDfglkS6NNHirgE",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:40.143Z"
+    },
+    "-Okd7LI1SM14ibYu9Bok": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:40.306Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LGFeNSMjK_6iR_d",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:40.306Z"
+    },
+    "-Okd7LKl7lkItOAYN19p": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:40.481Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LIsKvfOHWVOL_PX",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:40.481Z"
+    },
+    "-Okd7LNOfjRZweayPZzP": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:40.649Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LLYFjAoLInAeccd",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:40.649Z"
+    },
+    "-Okd7LQ9fSteN7JdnFhQ": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:40.826Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LOHrDKtq21s6tP-",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:40.826Z"
+    },
+    "-Okd7LWL8zJ0dbwO8PwD": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:41.222Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LUQ8yJgPUO_p_Tg",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:41.222Z"
+    },
+    "-Okd7L_InRb2n6aRFd-A": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:41.475Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LX7YOn1xxWqNLqA",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:41.475Z"
+    },
+    "-Okd7Lc2ADFP4vbNDjma": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:41.651Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7La3Sy5xzqfEIiEg",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:41.651Z"
+    },
+    "-Okd7LejAJGEWYLoyXhZ": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:41.823Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LctBZbaTrV-kVWO",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:41.823Z"
+    },
+    "-Okd7LhTIEs1MpCtnuad": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:41.998Z",
+      "ngayPhongVan": "2026-02-02T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LfYrAjbCoL_XNvF",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:41.998Z"
+    },
+    "-Okd7Lk7MwLEFpXcP7Bk": {
+      "congTyId": "-OkbyujcnFfvjwzTibtH",
+      "createdAt": "2026-02-04T14:49:42.168Z",
+      "ghiChu": "hẹn lại 3/2",
+      "ngayPhongVan": "2026-02-03T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LiG1Wh_ARon6szy",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:42.168Z"
+    },
+    "-Okd7Lmk3x8Gbh4YjyrV": {
+      "congTyId": "-OkbyujcnFfvjwzTibtH",
+      "createdAt": "2026-02-04T14:49:42.336Z",
+      "ngayPhongVan": "2026-02-03T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7Lku2tb-m2lxV0ZF",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:42.336Z"
+    },
+    "-Okd7LpUYD4733t2vFfa": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:42.511Z",
+      "ngayPhongVan": "2026-02-03T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LnZ_HMZKYP6JEiT",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:42.510Z"
+    },
+    "-Okd7LsBoDMSPIhdQBsW": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:42.684Z",
+      "ngayPhongVan": "2026-02-03T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LqKANUcummykl0_",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:42.684Z"
+    },
+    "-Okd7LusssjlMnDUhydA": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:42.856Z",
+      "ngayPhongVan": "2026-02-03T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7Lsyf_y_SlgwvnLt",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:42.856Z"
+    },
+    "-Okd7LxePw_9n1qqd7qp": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:43.034Z",
+      "ngayPhongVan": "2026-02-03T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LvlCblMWuUXEPCa",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:43.034Z"
+    },
+    "-Okd7M-N0MYkDARaT4SL": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:43.208Z",
+      "ngayPhongVan": "2026-02-03T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7LyRqpBGoTdmlORF",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:43.208Z"
+    },
+    "-Okd7M5oXNihekSk8Ury": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:43.620Z",
+      "ngayPhongVan": "2026-02-03T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7M0SMwb5m4qn-xFX",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T14:49:43.620Z"
+    },
+    "-Okd7M8gX7LJq8x8kk4G": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:43.804Z",
+      "ngayPhongVan": "2026-02-03T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7M6dwIdrEysJwTRh",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:43.804Z"
+    },
+    "-Okd7MBVwzz-XmIcQc2O": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:43.984Z",
+      "ngayPhongVan": "2026-02-04T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7M9_Ky-YfO9CIhFU",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:43.984Z"
+    },
+    "-Okd7MEDTzivcIZdfc5e": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:44.158Z",
+      "ngayPhongVan": "2026-02-04T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7MCJjMU3AeXf0Y14",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:44.158Z"
+    },
+    "-Okd7MGx-bgCjUZwE8d5": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:44.333Z",
+      "ngayPhongVan": "2026-02-04T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7MF1804NjVqz2ZI5",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:44.333Z"
+    },
+    "-Okd7MKEInpgNHcQZ3XZ": {
+      "congTyId": "-OkbzPorA8Q3N55eVR1M",
+      "createdAt": "2026-02-04T14:49:44.543Z",
+      "ngayPhongVan": "2026-02-04T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7MHumwJyp7y8XYqu",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:44.543Z"
+    },
+    "-Okd7MN9w1GOTY5MseaS": {
+      "congTyId": "-OkbzazcuSQirOEUX8hS",
+      "createdAt": "2026-02-04T14:49:44.730Z",
+      "ngayPhongVan": "2026-02-04T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7ML2fGJjp54xiYUd",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:44.730Z"
+    },
+    "-Okd7MQgXEm9KJw79a0x": {
+      "congTyId": "-OkbzgbDOF4HeJSwhoNC",
+      "createdAt": "2026-02-04T14:49:44.956Z",
+      "ngayPhongVan": "2026-02-04T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7MNwG9Qfk3HG6Nc9",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:44.956Z"
+    },
+    "-Okd7MVaknI5XoiNr3pM": {
+      "congTyId": "-OkbzgbDOF4HeJSwhoNC",
+      "createdAt": "2026-02-04T14:49:45.270Z",
+      "ngayPhongVan": "2026-02-04T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7MSc3kUR2Z8eFGsL",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:45.270Z"
+    },
+    "-Okd7MaYROWzcaqze9Bu": {
+      "congTyId": "-OkbypHNXFgPxQ5nyr4f",
+      "createdAt": "2026-02-04T14:49:45.651Z",
+      "ngayPhongVan": "2026-02-04T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7MWv_ZhOxBVRlzat",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:45.651Z"
+    },
+    "-Okd7Mk92hPeQGOD8wEd": {
+      "congTyId": "-OkbypHNXFgPxQ5nyr4f",
+      "createdAt": "2026-02-04T14:49:46.266Z",
+      "ngayPhongVan": "2026-02-04T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7MiCncAK8ad_D7Zf",
+      "trangThaiTuyen": "TU_CHOI",
+      "updatedAt": "2026-02-04T14:49:46.266Z"
+    },
+    "-Okd7Mn3_FWqw5i9ly99": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:46.452Z",
+      "ngayPhongVan": "2026-02-06T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7Mkz68R66rp3tTZF",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:46.452Z"
+    },
+    "-Okd7N2LQY7KxkZ5WagM": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:47.494Z",
+      "ngayPhongVan": "2026-02-07T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7Ms9N-jpa2fyfpYv",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:47.494Z"
+    },
+    "-Okd7NS0eKi5NyRu6r5G": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:49.137Z",
+      "ghiChu": "ch gửi địa chỉ và tg cụ thể cho a/c  này, có dặn trước 1 ngày nhắn lại để gửi và dki gửi hình cccd vào gr zalo",
+      "ngayPhongVan": "2026-02-07T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7N769t3b95GY2ww8",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:49.137Z"
+    },
+    "-Okd7NWMHiMIrt3feI8D": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:49.415Z",
+      "ngayPhongVan": "2026-02-07T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7NTfMECFcwd3Ik83",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:49.415Z"
+    },
+    "-Okd7NdmF6LWeudiZsqj": {
+      "congTyId": "-Okbyhzd50YGidErRoh2",
+      "createdAt": "2026-02-04T14:49:49.954Z",
+      "ghiChu": "ch gửi địa chỉ và tg cụ thể cho a/c  này, có dặn trước 1 ngày nhắn lại để gửi và dki gửi hình cccd vào gr zalo",
+      "ngayPhongVan": "2026-02-07T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7NY-nWhsHZhsfNA7",
+      "trangThaiTuyen": "CONG_TY_NGUNG_TUYEN",
+      "updatedAt": "2026-02-04T14:49:49.954Z"
+    },
+    "-Okd7Nge_0SrS1NNLYp5": {
+      "congTyId": "-OkbzazcuSQirOEUX8hS",
+      "createdAt": "2026-02-04T14:49:50.138Z",
+      "ngayPhongVan": "2026-02-04T08:00:00.000Z",
+      "nguoiLaoDongId": "-Okd7NeahRJL4wK2goj0",
+      "trangThaiTuyen": "DANG_NHAN_VIEC",
+      "updatedAt": "2026-02-04T15:31:23.077Z"
+    },
+    "-OkfZtHZWg4dP9yPpCaB": {
+      "congTyId": "-OkbzHZbkvqp6UCayEc1",
+      "createdAt": "2026-02-05T09:13:38.084699",
+      "lichSuPhongVan": [
+        {
+          "lyDo": "",
+          "ngayCapNhat": "2026-02-05T03:16:35.257Z",
+          "ngayPhongVanCu": "2026-02-05",
+          "quanLy": [
+            {
+              "id": "-Okby1dYp6p_2OnDjW34",
+              "soDienThoai": "0972872549",
+              "tenQuanLy": "HR Tiên"
+            }
+          ],
+          "tenCongTy": "Sanaky",
+          "trangThaiTuyen": "TU_CHOI"
+        }
+      ],
+      "ngayPhongVan": "2026-02-06",
+      "nguoiLaoDongId": "-OkfZtG2na0umkWkFgmc",
+      "trangThaiTuyen": "CHO_PHONG_VAN",
+      "updatedAt": "2026-02-05T03:16:35.257Z"
+    },
+    "-Okf_xyb_bhX8ZXU1NkX": {
+      "congTyId": "-OkbzHZbkvqp6UCayEc1",
+      "createdAt": "2026-02-05T09:18:19.431905",
+      "lichSuPhongVan": [
+        {
+          "lyDo": "",
+          "ngayCapNhat": "2026-02-05T03:16:30.162Z",
+          "ngayPhongVanCu": "2026-02-05",
+          "quanLy": [
+            {
+              "id": "-Okby1dYp6p_2OnDjW34",
+              "soDienThoai": "0972872549",
+              "tenQuanLy": "HR Tiên"
+            }
+          ],
+          "tenCongTy": "Sanaky",
+          "trangThaiTuyen": "TU_CHOI"
+        }
+      ],
+      "ngayPhongVan": "2026-02-06",
+      "nguoiLaoDongId": "-Okf_xqwcUtUemPB56HE",
+      "trangThaiTuyen": "CHO_PHONG_VAN",
+      "updatedAt": "2026-02-05T03:16:30.162Z"
+    },
+    "-Okfmn7nZL9_S1fDAGn5": {
+      "congTyId": "-OkbzazcuSQirOEUX8hS",
+      "createdAt": "2026-02-05T10:14:22.899432",
+      "ngayPhongVan": "2026-02-06",
+      "nguoiLaoDongId": "-Okfmn6LqcUta44n_wMK",
+      "trangThaiTuyen": "CHO_PHONG_VAN",
+      "updatedAt": "2026-02-05T10:14:22.899455"
+    }
+  }
+}
