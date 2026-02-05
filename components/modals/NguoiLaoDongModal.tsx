@@ -8,7 +8,9 @@ import { NguoiLaoDong, GioiTinh } from '@/types';
 
 const nguoiLaoDongSchema = z.object({
   tenNguoiLaoDong: z.string().min(1, 'Vui lòng nhập tên người lao động'),
-  soDienThoai: z.string().min(10, 'Số điện thoại không hợp lệ').nullable(),
+  soDienThoai: z.string().nullable().optional().refine(val => !val || val.length >= 10, {
+    message: "SĐT phải có ít nhất 10 số"
+  }),
   namSinh: z.number().min(1900, 'Năm sinh không hợp lệ').max(new Date().getFullYear()),
   gioiTinh: z.nativeEnum(GioiTinh),
   cccd: z.string().nullable(),
@@ -61,6 +63,14 @@ const NguoiLaoDongModal: React.FC<NguoiLaoDongModalProps> = ({ isOpen, onClose, 
     }
   }, [isOpen, initialData, reset]);
 
+  const onSubmit = async (values: NguoiLaoDongFormValues) => {
+    await onSave({
+      ...values,
+      soDienThoai: values.soDienThoai || null,
+      cccd: values.cccd || null,
+    });
+  };
+
   const footer = (
     <div className="flex gap-3 w-full">
       <GlassButton
@@ -71,7 +81,7 @@ const NguoiLaoDongModal: React.FC<NguoiLaoDongModalProps> = ({ isOpen, onClose, 
         Hủy
       </GlassButton>
       <GlassButton
-        onClick={handleSubmit(onSave)}
+        onClick={handleSubmit(onSubmit)}
         disabled={isSubmitting || !isValid}
         className="flex-1"
       >
