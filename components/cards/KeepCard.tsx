@@ -49,37 +49,6 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
     }
   };
 
-  const renderTag = (item: any, category: 'yeuCau' | 'phucLoi' | 'phuCap', baseClasses: string) => (
-    <span 
-      key={item.id} 
-      className={`
-        inline-flex items-center gap-1 px-2 py-0.5 border rounded-md text-[10px] font-medium whitespace-nowrap transition-all
-        ${item.isDeactivated ? 'line-through opacity-50 bg-gray-100 text-gray-400 border-gray-200' : baseClasses}
-      `}
-    >
-      <span className="flex-1">{item.noiDung}</span>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggleTag?.(data.id, category, item.id);
-        }}
-        className={`
-          flex-shrink-0 p-0.5 rounded-full hover:bg-black/5 transition-colors
-          ${item.isDeactivated ? 'text-gray-400' : 'text-gray-500 hover:text-red-500'}
-        `}
-        title={item.isDeactivated ? "Kích hoạt lại" : "Tạm dừng"}
-      >
-        <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {item.isDeactivated ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M20 12H4" />
-          )}
-        </svg>
-      </button>
-    </span>
-  );
-
   return (
     <>
       <div 
@@ -197,19 +166,6 @@ export default function KeepCard({ data, onClick, onDelete, onToggleTag }: KeepC
               </div>
             );
           })()}
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-1.5 mb-2">
-            {Array.isArray(data.yeuCau) && data.yeuCau.map((item) => 
-              renderTag(item, 'yeuCau', 'bg-slate-50 border-slate-200 text-slate-600')
-            )}
-            {Array.isArray(data.phucLoi) && data.phucLoi.map((item) => 
-              renderTag(item, 'phucLoi', 'bg-emerald-50 border-emerald-100 text-emerald-700')
-            )}
-            {Array.isArray(data.phuCap) && data.phuCap.map((item) => 
-              renderTag(item, 'phuCap', 'bg-rose-50 border-rose-100 text-rose-700')
-            )}
-          </div>
 
           {/* Ghi chú nội bộ */}
           {data.ghiChu && (
