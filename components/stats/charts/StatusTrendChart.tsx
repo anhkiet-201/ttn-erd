@@ -70,6 +70,24 @@ export const StatusTrendChart: React.FC<StatusTrendChartProps> = ({ data }) => {
                 dot={false} 
                 activeDot={{ r: 6, strokeWidth: 0 }} 
             />
+            <Line 
+                type="monotone" 
+                dataKey="daNghiViec" 
+                name="Đã nghỉ" 
+                stroke="#94a3b8" 
+                strokeWidth={3} 
+                dot={false} 
+                activeDot={{ r: 6, strokeWidth: 0 }} 
+            />
+            <Line 
+                type="monotone" 
+                dataKey="khac" 
+                name="Khác" 
+                stroke="#cbd5e1" 
+                strokeWidth={3} 
+                dot={false} 
+                activeDot={{ r: 6, strokeWidth: 0 }} 
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>

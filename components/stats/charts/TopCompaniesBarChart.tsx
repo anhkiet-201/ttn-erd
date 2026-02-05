@@ -50,9 +50,10 @@ export const TopCompaniesBarChart: React.FC<TopCompaniesBarChartProps> = ({ data
             />
             <Legend wrapperStyle={{ paddingTop: '10px' }} iconType="circle" />
             <Legend wrapperStyle={{ paddingTop: '10px' }} iconType="circle" />
-            <Bar dataKey="dangNhanViec" name="Đang nhận việc" stackId="a" fill="#6366f1" radius={[0, 0, 4, 4]} barSize={30} />
-            <Bar dataKey="choPhongVan" name="Chờ phỏng vấn" stackId="a" fill="#3b82f6" barSize={30} />
+            <Bar dataKey="dangNhanViec" name="Đang nhận" stackId="a" fill="#6366f1" radius={[0, 0, 4, 4]} barSize={30} />
+            <Bar dataKey="choPhongVan" name="Chờ PV" stackId="a" fill="#3b82f6" barSize={30} />
             <Bar dataKey="tuChoi" name="Từ chối" stackId="a" fill="#f43f5e" barSize={30} />
+            <Bar dataKey="daNghiViec" name="Đã nghỉ" stackId="a" fill="#94a3b8" barSize={30} />
             <Bar dataKey="khac" name="Khác" stackId="a" fill="#cbd5e1" radius={[4, 4, 0, 0]} barSize={30} />
           </BarChart>
         </ResponsiveContainer>

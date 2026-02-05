@@ -38,6 +38,7 @@ export interface CompanyStat {
   dangNhanViec: number;
   tuChoi: number;
   choPhongVan: number;
+  daNghiViec: number;
   khac: number;
 }
 
@@ -139,6 +140,7 @@ export const getJobStatusStats = (ungTuyenList: UngTuyen[]): JobStatusStat[] => 
           case TrangThaiTuyen.DANG_NHAN_VIEC: return '#6366f1'; // Indigo-500
           case TrangThaiTuyen.TU_CHOI: return '#f43f5e'; // Rose-500
           case TrangThaiTuyen.CHO_PHONG_VAN: return '#3b82f6'; // Blue-500
+          case TrangThaiTuyen.DA_NGHI_VIEC: return '#94a3b8'; // Slate-400
           default: return '#cbd5e1'; // Slate-300
       }
   }
@@ -219,6 +221,7 @@ export const getTopCompanies = (
                 dangNhanViec: 0, 
                 tuChoi: 0, 
                 choPhongVan: 0, 
+                daNghiViec: 0,
                 khac: 0 
             };
         }
@@ -234,6 +237,9 @@ export const getTopCompanies = (
                 break;
             case TrangThaiTuyen.CHO_PHONG_VAN:
                 stats[name].choPhongVan += 1;
+                break;
+            case TrangThaiTuyen.DA_NGHI_VIEC:
+                stats[name].daNghiViec += 1;
                 break;
             default:
                 stats[name].khac += 1;
@@ -296,6 +302,8 @@ export interface StatusTrendStat {
     dangNhanViec: number;
     tuChoi: number;
     choPhongVan: number;
+    daNghiViec: number;
+    khac: number;
 }
 
 export const getStatusTrendStats = (
@@ -313,7 +321,9 @@ export const getStatusTrendStats = (
             date: key, 
             dangNhanViec: 0, 
             tuChoi: 0, 
-            choPhongVan: 0 
+            choPhongVan: 0,
+            daNghiViec: 0,
+            khac: 0 
         };
         current = new Date(current.setDate(current.getDate() + 1));
     }
@@ -328,8 +338,10 @@ export const getStatusTrendStats = (
              const key = format(date, 'dd/MM');
              if (statsMap[key]) {
                  if (app.trangThaiTuyen === TrangThaiTuyen.DANG_NHAN_VIEC) statsMap[key].dangNhanViec++;
-                 if (app.trangThaiTuyen === TrangThaiTuyen.TU_CHOI) statsMap[key].tuChoi++;
-                 if (app.trangThaiTuyen === TrangThaiTuyen.CHO_PHONG_VAN) statsMap[key].choPhongVan++;
+                 else if (app.trangThaiTuyen === TrangThaiTuyen.TU_CHOI) statsMap[key].tuChoi++;
+                 else if (app.trangThaiTuyen === TrangThaiTuyen.CHO_PHONG_VAN) statsMap[key].choPhongVan++;
+                 else if (app.trangThaiTuyen === TrangThaiTuyen.DA_NGHI_VIEC) statsMap[key].daNghiViec++;
+                 else statsMap[key].khac++;
              }
         }
     });
