@@ -192,6 +192,7 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
   const { register, handleSubmit, setValue, watch, reset, formState: { errors, isValid } } = useForm<TinTuyenDungFormValues>({
     resolver: zodResolver(tinTuyenDungSchema),
     mode: 'onChange',
+    shouldUnregister: false, 
     defaultValues: {
       trangThai: TrangThai.DANG_TUYEN,
       yeuCau: [],
@@ -319,51 +320,65 @@ export default function AddTinModal({ isOpen, onClose, onSuccess, initialData }:
 
   const footer = (
     <div className="flex flex-col md:flex-row items-center justify-between w-full gap-4 md:gap-0">
-      <div className="flex items-center justify-between w-full md:w-auto gap-2">
-        <div className="flex items-center gap-1.5">
-          <button 
-            type="button" 
-            onClick={() => setShowCongTy(!showCongTy)}
-            className={`p-2.5 rounded-2xl transition-all active:scale-90 ${showCongTy || watch('congTyId') ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:bg-gray-100'}`}
-            title="Đơn vị"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-            </svg>
-          </button>
+      <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+        {/* Icons Row */}
+        <div className="flex items-center justify-between w-full md:w-auto gap-1.5">
+          <div className="flex items-center gap-1.5">
+            <button 
+              type="button" 
+              onClick={() => setShowCongTy(!showCongTy)}
+              className={`p-2.5 rounded-2xl transition-all active:scale-90 ${showCongTy || watch('congTyId') ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:bg-gray-100'}`}
+              title="Đơn vị"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </button>
 
-          <button 
-            type="button" 
-            onClick={() => setShowTags(!showTags)}
-            className={`p-2.5 rounded-2xl transition-all active:scale-90 ${showTags ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:bg-gray-100'}`}
-            title="Thông tin nhãn"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-            </svg>
-          </button>
+            <button 
+              type="button" 
+              onClick={() => setShowTags(!showTags)}
+              className={`p-2.5 rounded-2xl transition-all active:scale-90 ${showTags ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:bg-gray-100'}`}
+              title="Thông tin nhãn"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+              </svg>
+            </button>
 
-          <button 
-            type="button" 
-            onClick={() => setShowGhiChu(!showGhiChu)}
-            className={`p-2.5 rounded-2xl transition-all active:scale-90 ${showGhiChu ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:bg-gray-100'}`}
-            title="Ghi chú thêm"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-          </button>
+            <button 
+              type="button" 
+              onClick={() => setShowGhiChu(!showGhiChu)}
+              className={`p-2.5 rounded-2xl transition-all active:scale-90 ${showGhiChu ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:bg-gray-100'}`}
+              title="Ghi chú thêm"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div className="h-5 w-px bg-gray-100 mx-1 hidden md:block"></div>
 
-        <select 
-          {...register('hinhThucTuyen')}
-          className="text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 border-none outline-none focus:ring-0 cursor-pointer px-3 py-2 rounded-xl"
-        >
-          <option value={HinhThucTuyen.CHINH_THUC}>Chính thức</option>
-          <option value={HinhThucTuyen.THOI_VU}>Thời vụ</option>
-        </select>
+        {/* Selects Row - Grid on Mobile, Flex on Desktop */}
+        <div className="grid grid-cols-2 md:flex items-center gap-3 md:gap-2 w-full md:w-auto">
+          <select 
+            {...register('trangThai')}
+            className="w-full md:w-auto text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 border-none outline-none focus:ring-0 cursor-pointer px-3 py-3 md:py-2 rounded-xl text-center md:text-left appearance-none md:appearance-auto"
+          >
+            <option value={TrangThai.DANG_TUYEN}>Đang tuyển</option>
+            <option value={TrangThai.DA_NGUNG}>Đã ngưng</option>
+          </select>
+
+          <select 
+            {...register('hinhThucTuyen')}
+            className="w-full md:w-auto text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 border-none outline-none focus:ring-0 cursor-pointer px-3 py-3 md:py-2 rounded-xl text-center md:text-left appearance-none md:appearance-auto"
+          >
+            <option value={HinhThucTuyen.CHINH_THUC}>Chính thức</option>
+            <option value={HinhThucTuyen.THOI_VU}>Thời vụ</option>
+          </select>
+        </div>
       </div>
 
       <div className="flex gap-3 w-full md:w-auto">
