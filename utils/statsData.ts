@@ -171,19 +171,19 @@ export const getGenderStats = (
   ungTuyenList: UngTuyen[], 
   nguoiLaoDongList: NguoiLaoDong[]
 ): GenderStat[] => {
-    // We only care about gender of candidates who have 'DANG_NHAN_VIEC' (Successfully Hired) 
-    // OR all candidates in the filtered applications? 
-    // Request said "tỷ lệ nam nữ nhận việc" -> Gender ratio of HIRED candidates.
-    
-    const hiredApps = ungTuyenList.filter(ut => ut.trangThaiTuyen === TrangThaiTuyen.DANG_NHAN_VIEC);
-    const hiredWorkerIds = new Set(hiredApps.map(app => app.nguoiLaoDongId));
+    // Create a lookup map for worker gender
+    const workerGenderMap = nguoiLaoDongList.reduce((acc, curr) => {
+        acc[curr.id] = curr.gioiTinh;
+        return acc;
+    }, {} as Record<string, string>);
     
     let nam = 0;
     let nu = 0;
 
-    nguoiLaoDongList.filter(w => hiredWorkerIds.has(w.id)).forEach(w => {
-        if (w.gioiTinh === 'NAM') nam++;
-        if (w.gioiTinh === 'NU') nu++;
+    ungTuyenList.forEach(app => {
+        const gender = workerGenderMap[app.nguoiLaoDongId];
+        if (gender === 'NAM' || gender === 'Nam') nam++;
+        else if (gender === 'NU' || gender === 'Nu' || gender === 'Nữ') nu++;
     });
 
     return [
