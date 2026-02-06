@@ -581,8 +581,8 @@ export default function UngTuyenPage() {
           </GlassCard>
         ) : (
           filteredData.map((item) => (
-            <GlassCard key={item.id} className={getRowHighlightClass(item.ngayPhongVan || null, item.trangThaiTuyen)} noPadding>
-              <div className="p-5">
+            <GlassCard key={item.id} noPadding>
+              <div className={`p-5 ${getRowHighlightClass(item.ngayPhongVan || null, item.trangThaiTuyen)}`}>
                 <div className="flex justify-between items-start mb-5">
                   <div className="flex items-center gap-3">
                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg ${item.nguoiLaoDong.gioiTinh === GioiTinh.NAM ? 'bg-gradient-to-tr from-blue-600 to-blue-400' : 'bg-gradient-to-tr from-pink-600 to-pink-400'}`}>
