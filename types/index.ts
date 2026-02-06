@@ -114,11 +114,11 @@ export interface UngTuyenWithDetails extends Omit<UngTuyen, 'nguoiLaoDongId' | '
 export interface NguyenNhanCam {
   congty: CongTy;
   nguyenNhan: string;
+  ngayNghiViec?: number;
 }
 
 export interface NguoiLaoDongBiCam extends NguoiLaoDong {
   nguyenNhanCam: NguyenNhanCam[];
-  ngayNghiViec?: number;
 }
 
 // Lock interface for edit locking

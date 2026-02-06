@@ -7,11 +7,13 @@ import * as z from 'zod';
 import { NguoiLaoDongBiCam, GioiTinh, CongTy } from '@/types';
 import { CongTyRepository } from '@/repositories/congTy.repository';
 import { NguoiLaoDongRepository } from '@/repositories/nguoiLaoDong.repository';
+import { NguoiLaoDongBiCamRepository } from '@/repositories/nguoiLaoDongBiCam.repository';
 import GlassModal from '../glass/GlassModal';
 import GlassButton from '../glass/GlassButton';
 
 const congTyRepo = new CongTyRepository();
 const nldRepo = new NguoiLaoDongRepository();
+const biCamRepo = new NguoiLaoDongBiCamRepository();
 
 const nguoiLaoDongBiCamSchema = z.object({
   tenNguoiLaoDong: z.string().min(1, 'Vui lòng nhập tên người lao động'),
@@ -21,10 +23,10 @@ const nguoiLaoDongBiCamSchema = z.object({
   namSinh: z.number().min(1900, 'Năm sinh không hợp lệ').max(new Date().getFullYear()),
   gioiTinh: z.nativeEnum(GioiTinh),
   cccd: z.string().nullable(),
-  ngayNghiViec: z.string().optional(),
   nguyenNhanCam: z.array(z.object({
     congTyId: z.string().min(1, 'Chọn công ty'),
     nguyenNhan: z.string().min(1, 'Nhập lý do'),
+    ngayNghiViec: z.string().optional(),
   })),
 });
 
@@ -40,6 +42,7 @@ interface NguoiLaoDongBiCamModalProps {
 const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen, onClose, onSave, initialData }) => {
   const [congTies, setCongTies] = useState<CongTy[]>([]);
   const [isCheckingCCCD, setIsCheckingCCCD] = useState(false);
+  const [foundBannedId, setFoundBannedId] = useState<string | null>(null);
   
   const { register, control, handleSubmit, reset, watch, setValue, formState: { errors, isSubmitting, isValid } } = useForm<NguoiLaoDongBiCamFormValues>({
     resolver: zodResolver(nguoiLaoDongBiCamSchema),
@@ -50,12 +53,11 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
       namSinh: new Date().getFullYear() - 20,
       gioiTinh: GioiTinh.NAM,
       cccd: '',
-      ngayNghiViec: '',
       nguyenNhanCam: [],
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "nguyenNhanCam",
   });
@@ -67,13 +69,38 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
     if (!initialData && cccdValue && cccdValue.length > 9) { // Only check on create mode and when enough chars
       const timeoutId = setTimeout(async () => {
         setIsCheckingCCCD(true);
+        setFoundBannedId(null);
         try {
+          // 1. Check if already banned FIRST
+          const bannedFound = await biCamRepo.findByCCCD(cccdValue);
+          
+          if (bannedFound) {
+             setFoundBannedId(bannedFound.id);
+             setValue('tenNguoiLaoDong', bannedFound.tenNguoiLaoDong);
+             setValue('soDienThoai', bannedFound.soDienThoai || '');
+             setValue('namSinh', bannedFound.namSinh);
+             setValue('gioiTinh', bannedFound.gioiTinh);
+             
+             // Fill existing violations
+             if (bannedFound.nguyenNhanCam) {
+                 const mappedReasons = bannedFound.nguyenNhanCam.map(r => ({
+                     congTyId: r.congty.id,
+                     nguyenNhan: r.nguyenNhan,
+                     ngayNghiViec: r.ngayNghiViec ? new Date(r.ngayNghiViec).toISOString().split('T')[0] : ''
+                 }));
+                 replace(mappedReasons);
+             }
+             return;
+          }
+
+          // 2. If not banned, check regular worker list
           const found = await nldRepo.findByCCCD(cccdValue);
           if (found) {
             setValue('tenNguoiLaoDong', found.tenNguoiLaoDong);
             setValue('soDienThoai', found.soDienThoai || '');
             setValue('namSinh', found.namSinh);
             setValue('gioiTinh', found.gioiTinh);
+            replace([]); // Clear violations if just a worker found
           }
         } catch (error) {
            console.error('Error checking CCCD', error);
@@ -83,7 +110,7 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
       }, 800);
       return () => clearTimeout(timeoutId);
     }
-  }, [cccdValue, initialData, setValue]);
+  }, [cccdValue, initialData, setValue, replace]);
 
   useEffect(() => {
     congTyRepo.getAll().then(setCongTies);
@@ -91,21 +118,18 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
 
   useEffect(() => {
     if (isOpen) {
+      setFoundBannedId(null);
       if (initialData) {
-        const dateStr = initialData.ngayNghiViec 
-          ? new Date(initialData.ngayNghiViec).toISOString().split('T')[0] 
-          : '';
-
         reset({
           tenNguoiLaoDong: initialData.tenNguoiLaoDong,
           soDienThoai: initialData.soDienThoai,
           namSinh: initialData.namSinh,
           gioiTinh: initialData.gioiTinh,
           cccd: initialData.cccd || '',
-          ngayNghiViec: dateStr,
           nguyenNhanCam: initialData.nguyenNhanCam?.map(n => ({
             congTyId: n.congty.id,
-            nguyenNhan: n.nguyenNhan
+            nguyenNhan: n.nguyenNhan,
+            ngayNghiViec: n.ngayNghiViec ? new Date(n.ngayNghiViec).toISOString().split('T')[0] : ''
           })) || [],
         });
       } else {
@@ -115,7 +139,6 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
           namSinh: new Date().getFullYear() - 20,
           gioiTinh: GioiTinh.NAM,
           cccd: '',
-          ngayNghiViec: new Date().toISOString().split('T')[0],
           nguyenNhanCam: [],
         });
       }
@@ -128,7 +151,8 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
       if (!ct) throw new Error('Công ty không tồn tại');
       return {
         congty: ct,
-        nguyenNhan: item.nguyenNhan
+        nguyenNhan: item.nguyenNhan,
+        ngayNghiViec: item.ngayNghiViec ? new Date(item.ngayNghiViec).getTime() : undefined
       };
     });
 
@@ -136,7 +160,6 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
       ...values,
       soDienThoai: values.soDienThoai || null,
       cccd: values.cccd || null,
-      ngayNghiViec: values.ngayNghiViec ? new Date(values.ngayNghiViec).getTime() : undefined,
       nguyenNhanCam: processedNguyenNhan,
     });
   };
@@ -184,6 +207,15 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
                 placeholder="Nhập CCCD để tìm kiếm..."
                 autoFocus={!initialData} 
             />
+             {foundBannedId && (
+                 <div className="mt-2 p-2 bg-red-50 rounded-lg border border-red-100 flex items-start gap-2 animate-fadeIn">
+                     <svg className="w-4 h-4 text-red-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                     <div>
+                         <div className="text-[10px] font-black text-red-500 uppercase">Cảnh báo: Hồ sơ đã tồn tại</div>
+                         <div className="text-[10px] font-bold text-red-400">Người này đã có trong danh sách cấm. Hệ thống đã tự động tải các vi phạm cũ và sẽ gộp thông tin mới vào hồ sơ này.</div>
+                     </div>
+                 </div>
+             )}
          </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -232,7 +264,7 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
                  <span>Thông tin vi phạm</span>
                  <button 
                   type="button" 
-                  onClick={() => append({ congTyId: '', nguyenNhan: '' })}
+                  onClick={() => append({ congTyId: '', nguyenNhan: '', ngayNghiViec: '' })}
                   className="text-[10px] bg-red-50 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors"
                  >
                      + Thêm lý do
@@ -240,15 +272,6 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
              </h3>
 
              <div className="space-y-4">
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Ngày nghỉ việc / Vi phạm</label>
-                    <input
-                    type="date"
-                    {...register('ngayNghiViec')}
-                    className="w-full px-4 py-3 bg-gray-50/50 rounded-2xl text-sm font-bold border border-gray-100 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-                    />
-                </div>
-
                 {fields.map((field, index) => (
                     <div key={field.id} className="bg-red-50/50 p-4 rounded-xl border border-red-100 space-y-3 relative group">
                         <button 
@@ -271,6 +294,7 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
                             </select>
                             {errors.nguyenNhanCam?.[index]?.congTyId && <p className="text-[10px] text-red-500 font-bold ml-1">{errors.nguyenNhanCam[index]?.nguyenNhan?.message}</p>}
                         </div>
+                        
                         <div className="space-y-2">
                              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Lý do cụ thể</label>
                              <textarea
@@ -281,9 +305,17 @@ const NguoiLaoDongBiCamModal: React.FC<NguoiLaoDongBiCamModalProps> = ({ isOpen,
                              />
                              {errors.nguyenNhanCam?.[index]?.nguyenNhan && <p className="text-[10px] text-red-500 font-bold ml-1">{errors.nguyenNhanCam[index]?.nguyenNhan?.message}</p>}
                         </div>
+
+                         <div className="space-y-2">
+                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Ngày nghỉ việc / Vi phạm</label>
+                            <input
+                                type="date"
+                                {...register(`nguyenNhanCam.${index}.ngayNghiViec` as const)}
+                                className="w-full px-4 py-2.5 bg-white rounded-xl text-xs font-medium border border-red-100 focus:ring-2 focus:ring-red-200 outline-none"
+                            />
+                        </div>
                     </div>
                 ))}
-                
                 {fields.length === 0 && (
                     <div className="text-center py-6 border-2 border-dashed border-gray-200 rounded-xl">
                         <span className="text-xs text-gray-400 font-medium">Chưa có lý do vi phạm nào</span>

@@ -48,6 +48,22 @@ export class NguoiLaoDongBiCamRepository {
     return { items: [], hasMore: false };
   }
 
+  async findByCCCD(cccd: string): Promise<NguoiLaoDongBiCam | null> {
+    const dbRef = ref(database, this.dbPath);
+    const q = query(dbRef, orderByChild('cccd'), startAt(cccd), endAt(cccd));
+    const snapshot = await get(q);
+    
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      const key = Object.keys(data)[0];
+      return {
+        ...data[key],
+        id: key,
+      };
+    }
+    return null;
+  }
+
   subscribeAll(callback: (data: NguoiLaoDongBiCam[]) => void) {
     const dbRef = ref(database, this.dbPath);
     onValue(dbRef, (snapshot) => {

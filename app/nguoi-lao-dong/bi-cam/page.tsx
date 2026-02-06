@@ -118,6 +118,44 @@ export default function NguoiLaoDongBiCamPage() {
       if (editingItem) {
         await repo.update(editingItem.id, values);
       } else {
+        // Check duplication
+        if (values.cccd) {
+            const existing = await repo.findByCCCD(values.cccd);
+            if (existing) {
+                // Automatically merge reasons with deduplication
+                const existingReasons = existing.nguyenNhanCam || [];
+                const incomingReasons = values.nguyenNhanCam || [];
+
+                // Use Map to deduplicate based on content
+                const uniqueReasonsMap = new Map();
+
+                // 1. Add existing reasons first
+                existingReasons.forEach(r => {
+                    // Create composite key: CompanyID + Reason + Date
+                    const key = `${r.congty.id}-${r.nguyenNhan.trim()}-${r.ngayNghiViec || ''}`;
+                    uniqueReasonsMap.set(key, r);
+                });
+
+                // 2. Add/Overwrite with incoming reasons (prioritizing new form data)
+                incomingReasons.forEach(r => {
+                    const key = `${r.congty.id}-${r.nguyenNhan.trim()}-${r.ngayNghiViec || ''}`;
+                    uniqueReasonsMap.set(key, r);
+                });
+
+                const mergedReasons = Array.from(uniqueReasonsMap.values());
+                
+                await repo.update(existing.id, {
+                    ...existing,
+                    ...values, // Update personal info if changed
+                    nguyenNhanCam: mergedReasons,
+                    updatedAt: new Date().getTime()
+                });
+                loadInitialData();
+                setIsModalOpen(false);
+                setEditingItem(null);
+                return;
+            }
+        }
         await repo.create(values);
         loadInitialData();
       }
@@ -230,20 +268,30 @@ export default function NguoiLaoDongBiCamPage() {
                     </td>
                     <td className="px-6 py-5">
                         <div className="flex flex-col gap-2">
-                             {item.ngayNghiViec && (
-                                <div className="text-[10px] font-bold text-red-500 uppercase tracking-wide">
-                                    Ngày: {new Date(item.ngayNghiViec).toLocaleDateString('vi-VN')}
-                                </div>
-                             )}
                              <div className="bg-red-50 p-3 rounded-xl border border-red-100 max-w-xs">
                                  {item.nguyenNhanCam && item.nguyenNhanCam.length > 0 ? (
                                      <>
-                                        <div className="text-[10px] font-black text-red-800 uppercase mb-1">
-                                            {item.nguyenNhanCam[item.nguyenNhanCam.length - 1].congty?.tenCongTy || 'Công Ty Ẩn'}
-                                        </div>
-                                        <div className="text-xs font-medium text-red-600 line-clamp-2">
-                                            {item.nguyenNhanCam[item.nguyenNhanCam.length - 1].nguyenNhan}
-                                        </div>
+                                        {(() => {
+                                            const lastReason = item.nguyenNhanCam[item.nguyenNhanCam.length - 1];
+                                            return (
+                                                <>
+                                                    <div className="flex justify-between items-start mb-1">
+                                                        <div className="text-[10px] font-black text-red-800 uppercase">
+                                                            {lastReason.congty?.tenCongTy || 'Công Ty Ẩn'}
+                                                        </div>
+                                                        {lastReason.ngayNghiViec && (
+                                                            <div className="text-[9px] font-bold text-red-500 whitespace-nowrap ml-2">
+                                                                {new Date(lastReason.ngayNghiViec).toLocaleDateString('vi-VN')}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="text-xs font-medium text-red-600 line-clamp-2">
+                                                        {lastReason.nguyenNhan}
+                                                    </div>
+                                                </>
+                                            );
+                                        })()}
+                                        
                                         {item.nguyenNhanCam.length > 1 && (
                                             <div className="mt-2 text-[9px] font-bold text-red-400 italic">
                                                 +{item.nguyenNhanCam.length - 1} lý do khác
@@ -317,11 +365,18 @@ export default function NguoiLaoDongBiCamPage() {
                         <div className="bg-red-50 p-3 rounded-xl border border-red-100 mb-4">
                             {item.nguyenNhanCam && item.nguyenNhanCam.length > 0 ? (
                                 <div className="space-y-1">
-                                    <div className="flex justify-between items-center">
-                                         <span className="text-[9px] font-black text-red-800 uppercase">{item.nguyenNhanCam[item.nguyenNhanCam.length - 1].congty?.tenCongTy}</span>
-                                         {item.ngayNghiViec && <span className="text-[9px] font-bold text-red-400">{new Date(item.ngayNghiViec).toLocaleDateString('vi-VN')}</span>}
-                                    </div>
-                                    <p className="text-xs font-medium text-red-600">{item.nguyenNhanCam[item.nguyenNhanCam.length - 1].nguyenNhan}</p>
+                                    {(() => {
+                                        const lastReason = item.nguyenNhanCam[item.nguyenNhanCam.length - 1];
+                                        return (
+                                            <>
+                                                <div className="flex justify-between items-center">
+                                                     <span className="text-[9px] font-black text-red-800 uppercase">{lastReason.congty?.tenCongTy}</span>
+                                                     {lastReason.ngayNghiViec && <span className="text-[9px] font-bold text-red-400">{new Date(lastReason.ngayNghiViec).toLocaleDateString('vi-VN')}</span>}
+                                                </div>
+                                                <p className="text-xs font-medium text-red-600">{lastReason.nguyenNhan}</p>
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                             ) : (
                                 <span className="text-xs font-medium text-red-400 italic">Chưa ghi nhận lý do</span>

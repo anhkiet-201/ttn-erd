@@ -27,7 +27,7 @@
       ".indexOn": ["soDienThoai", "tenQuanLy"]
     },
     "nguoiLaoDongBiCam": {
-      ".indexOn": ["updatedAt"]
+      ".indexOn": ["updatedAt", "cccd"]
     }
   }
 }
