@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { NguoiLaoDongBiCamRepository } from '@/repositories/nguoiLaoDongBiCam.repository';
-import { NguoiLaoDongBiCam, GioiTinh } from '@/types';
+import { CongTyRepository } from '@/repositories/congTy.repository';
+import { NguoiLaoDongBiCam, GioiTinh, CongTy } from '@/types';
 import NguoiLaoDongBiCamModal from '@/components/modals/NguoiLaoDongBiCamModal';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { useUI } from '@/components/providers/UIProvider';
@@ -12,9 +13,10 @@ import GlassCard from '@/components/glass/GlassCard';
 import GlassButton from '@/components/glass/GlassButton';
 
 const repo = new NguoiLaoDongBiCamRepository();
+const congTyRepo = new CongTyRepository();
 
 // Reusable component for displaying violations with expansion logic
-const ViolationHistory = ({ reasons }: { reasons: NguoiLaoDongBiCam['nguyenNhanCam'] }) => {
+const ViolationHistory = ({ reasons, congTyMap }: { reasons: NguoiLaoDongBiCam['nguyenNhanCam'], congTyMap: Map<string, CongTy> }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const hasHistory = reasons && reasons.length > 1;
   
@@ -36,7 +38,7 @@ const ViolationHistory = ({ reasons }: { reasons: NguoiLaoDongBiCam['nguyenNhanC
                         <div key={originalIndex} className={idx > 0 ? 'pt-2 animate-fadeIn' : ''}>
                             <div className="flex justify-between items-start mb-1">
                                 <div className="text-[10px] font-black text-red-800 uppercase line-clamp-1 flex-1 mr-2">
-                                    {reason.congty?.tenCongTy || 'Công Ty Ẩn'}
+                                    {congTyMap.get(reason.congty.id)?.tenCongTy || reason.congty.tenCongTy || 'Công Ty Ẩn'}
                                 </div>
                                 {reason.ngayNghiViec && (
                                     <div className="text-[9px] font-bold text-red-500 whitespace-nowrap">
@@ -81,6 +83,7 @@ export default function NguoiLaoDongBiCamPage() {
   const [hasMore, setHasMore] = useState(true);
   const pageSize = 15;
   const loaderRef = useRef<HTMLDivElement>(null);
+  const [congTyMap, setCongTyMap] = useState<Map<string, CongTy>>(new Map());
 
   const loadInitialData = async () => {
     setLoading(true);
@@ -138,7 +141,18 @@ export default function NguoiLaoDongBiCamPage() {
         });
       });
     });
-    return () => unsubscribe();
+    
+    // Subscribe to company data for join
+    const unsubCongTy = congTyRepo.subscribeAll((list) => {
+        const map = new Map<string, CongTy>();
+        list.forEach((c) => map.set(c.id, c));
+        setCongTyMap(map);
+    });
+    
+    return () => {
+        unsubscribe();
+        unsubCongTy();
+    };
   }, []);
 
   useEffect(() => {
@@ -323,7 +337,7 @@ export default function NguoiLaoDongBiCamPage() {
                          </div>
                     </td>
                     <td className="px-6 py-5">
-                        <ViolationHistory reasons={item.nguyenNhanCam} />
+                        <ViolationHistory reasons={item.nguyenNhanCam} congTyMap={congTyMap} />
                     </td>
                     <td className="px-6 py-5 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 duration-300">
@@ -384,7 +398,7 @@ export default function NguoiLaoDongBiCamPage() {
                         </div>
                         
                         <div className="mb-4">
-                            <ViolationHistory reasons={item.nguyenNhanCam} />
+                            <ViolationHistory reasons={item.nguyenNhanCam} congTyMap={congTyMap} />
                         </div>
                         
                         <GlassButton 

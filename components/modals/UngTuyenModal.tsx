@@ -335,7 +335,9 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
                         {bannedInfo.nguyenNhanCam?.map((reason, idx) => (
                             <div key={idx} className="bg-red-50 p-2 rounded-lg text-xs border border-red-100/50">
                                  <div className="flex justify-between font-bold text-gray-500 text-[9px] mb-0.5 uppercase">
-                                    <span className="truncate max-w-[120px]">{reason.congty?.tenCongTy}</span>
+                                    <span className="truncate max-w-[120px]">
+                                        {companies.find(c => c.id === reason.congty.id)?.tenCongTy || reason.congty.tenCongTy}
+                                    </span>
                                     {reason.ngayNghiViec && <span>{new Date(reason.ngayNghiViec).toLocaleDateString('vi-VN')}</span>}
                                  </div>
                                  <div className="text-red-700 font-medium leading-tight">{reason.nguyenNhan}</div>

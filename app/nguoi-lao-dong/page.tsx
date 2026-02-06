@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import GlassTooltip from '@/components/glass/GlassTooltip';
 import { NguoiLaoDongRepository } from '@/repositories/nguoiLaoDong.repository';
 import { NguoiLaoDongBiCamRepository } from '@/repositories/nguoiLaoDongBiCam.repository';
-import { NguoiLaoDong, GioiTinh, NguoiLaoDongBiCam } from '@/types';
+import { CongTyRepository } from '@/repositories/congTy.repository';
+import { NguoiLaoDong, GioiTinh, NguoiLaoDongBiCam, CongTy } from '@/types';
 import NguoiLaoDongModal from '@/components/modals/NguoiLaoDongModal';
 import { useAuthContext } from '@/components/auth/AuthProvider';
 import { useUI } from '@/components/providers/UIProvider';
@@ -15,6 +16,7 @@ import GlassButton from '@/components/glass/GlassButton';
 
 const repo = new NguoiLaoDongRepository();
 const bannedRepo = new NguoiLaoDongBiCamRepository();
+const congTyRepo = new CongTyRepository();
 
 export default function NguoiLaoDongPage() {
   const { user } = useAuthContext();
@@ -31,6 +33,7 @@ export default function NguoiLaoDongPage() {
   
   // Store Map of banned CCCDs for quick lookup and details
   const [bannedMap, setBannedMap] = useState<Map<string, NguoiLaoDongBiCam>>(new Map());
+  const [congTyMap, setCongTyMap] = useState<Map<string, CongTy>>(new Map());
 
   const loadInitialData = async () => {
     setLoading(true);
@@ -40,7 +43,7 @@ export default function NguoiLaoDongPage() {
     setLoading(false);
   };
   
-  // Fetch banned list on mount to check against
+  // Fetch banned list and company list on mount
   useEffect(() => {
     const fetchBannedList = () => {
         const unsubscribe = bannedRepo.subscribeAll((list: NguoiLaoDongBiCam[]) => {
@@ -52,8 +55,23 @@ export default function NguoiLaoDongPage() {
         });
         return unsubscribe;
     };
-    const unsub = fetchBannedList();
-    return () => unsub && unsub();
+    
+    const fetchCompanyList = () => {
+        const unsubscribe = congTyRepo.subscribeAll((list: CongTy[]) => {
+            const map = new Map<string, CongTy>();
+            list.forEach((c) => map.set(c.id, c));
+            setCongTyMap(map);
+        });
+        return unsubscribe;
+    };
+
+    const unsubBanned = fetchBannedList();
+    const unsubCongTy = fetchCompanyList();
+    
+    return () => {
+        if (unsubBanned) unsubBanned();
+        if (unsubCongTy) unsubCongTy();
+    };
   }, []);
 
   const loadMore = useCallback(async () => {
@@ -177,7 +195,9 @@ export default function NguoiLaoDongPage() {
             {bannedInfo.nguyenNhanCam?.map((reason, idx) => (
                 <div key={idx} className="flex flex-col gap-0.5">
                     <div className="flex justify-between items-center text-[10px] text-gray-400">
-                        <span className="uppercase font-bold">{reason.congty?.tenCongTy}</span>
+                        <span className="uppercase font-bold">
+                            {congTyMap.get(reason.congty.id)?.tenCongTy || reason.congty.tenCongTy}
+                        </span>
                         {reason.ngayNghiViec && <span>{new Date(reason.ngayNghiViec).toLocaleDateString('vi-VN')}</span>}
                     </div>
                     <div className="text-white text-[11px] leading-tight font-medium">
