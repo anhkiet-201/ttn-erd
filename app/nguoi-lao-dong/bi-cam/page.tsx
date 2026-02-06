@@ -13,6 +13,62 @@ import GlassButton from '@/components/glass/GlassButton';
 
 const repo = new NguoiLaoDongBiCamRepository();
 
+// Reusable component for displaying violations with expansion logic
+const ViolationHistory = ({ reasons }: { reasons: NguoiLaoDongBiCam['nguyenNhanCam'] }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const hasHistory = reasons && reasons.length > 1;
+  
+  if (!reasons || reasons.length === 0) {
+     return <span className="text-xs font-medium text-red-400 italic">Chưa ghi nhận lý do</span>;
+  }
+
+  // If expanded, show all. If not, show only the latest (last item)
+  const displayReasons = isExpanded ? [...reasons].reverse() : [reasons[reasons.length - 1]];
+
+  return (
+    <div className="flex flex-col gap-2">
+         <div className={`bg-red-50 p-3 rounded-xl border border-red-100 max-w-xs transition-all duration-300 ${isExpanded ? 'max-h-96 overflow-y-auto custom-scrollbar' : ''}`}>
+             <div className="space-y-3 divide-y divide-red-200/50">
+                {displayReasons.map((reason, idx) => {
+                    // Start index from 0 if expanded, otherwise it's just the latest one
+                    const originalIndex = isExpanded ? (reasons.length - 1 - idx) : (reasons.length - 1);
+                    return (
+                        <div key={originalIndex} className={idx > 0 ? 'pt-2 animate-fadeIn' : ''}>
+                            <div className="flex justify-between items-start mb-1">
+                                <div className="text-[10px] font-black text-red-800 uppercase line-clamp-1 flex-1 mr-2">
+                                    {reason.congty?.tenCongTy || 'Công Ty Ẩn'}
+                                </div>
+                                {reason.ngayNghiViec && (
+                                    <div className="text-[9px] font-bold text-red-500 whitespace-nowrap">
+                                        {new Date(reason.ngayNghiViec).toLocaleDateString('vi-VN')}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="text-xs font-medium text-red-600 leading-snug">
+                                {reason.nguyenNhan}
+                            </div>
+                        </div>
+                    );
+                })}
+             </div>
+             
+             {hasHistory && (
+                 <button 
+                    onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }}
+                    className="w-full mt-3 pt-2 text-[10px] font-bold text-red-400 hover:text-red-600 border-t border-red-200 uppercase flex items-center justify-center gap-1 transition-colors"
+                 >
+                     {isExpanded ? (
+                         <>Thu gọn <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg></>
+                     ) : (
+                         <>Xem thêm {reasons.length - 1} vi phạm cũ <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg></>
+                     )}
+                 </button>
+             )}
+         </div>
+    </div>
+  );
+};
+
 export default function NguoiLaoDongBiCamPage() {
   const { user } = useAuthContext();
   const { toggleSidebar } = useUI();
@@ -267,42 +323,7 @@ export default function NguoiLaoDongBiCamPage() {
                          </div>
                     </td>
                     <td className="px-6 py-5">
-                        <div className="flex flex-col gap-2">
-                             <div className="bg-red-50 p-3 rounded-xl border border-red-100 max-w-xs">
-                                 {item.nguyenNhanCam && item.nguyenNhanCam.length > 0 ? (
-                                     <>
-                                        {(() => {
-                                            const lastReason = item.nguyenNhanCam[item.nguyenNhanCam.length - 1];
-                                            return (
-                                                <>
-                                                    <div className="flex justify-between items-start mb-1">
-                                                        <div className="text-[10px] font-black text-red-800 uppercase">
-                                                            {lastReason.congty?.tenCongTy || 'Công Ty Ẩn'}
-                                                        </div>
-                                                        {lastReason.ngayNghiViec && (
-                                                            <div className="text-[9px] font-bold text-red-500 whitespace-nowrap ml-2">
-                                                                {new Date(lastReason.ngayNghiViec).toLocaleDateString('vi-VN')}
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <div className="text-xs font-medium text-red-600 line-clamp-2">
-                                                        {lastReason.nguyenNhan}
-                                                    </div>
-                                                </>
-                                            );
-                                        })()}
-                                        
-                                        {item.nguyenNhanCam.length > 1 && (
-                                            <div className="mt-2 text-[9px] font-bold text-red-400 italic">
-                                                +{item.nguyenNhanCam.length - 1} lý do khác
-                                            </div>
-                                        )}
-                                     </>
-                                 ) : (
-                                     <span className="text-xs font-medium text-red-400 italic">Chưa ghi nhận lý do</span>
-                                 )}
-                             </div>
-                        </div>
+                        <ViolationHistory reasons={item.nguyenNhanCam} />
                     </td>
                     <td className="px-6 py-5 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 duration-300">
@@ -362,25 +383,8 @@ export default function NguoiLaoDongBiCamPage() {
                              </button>
                         </div>
                         
-                        <div className="bg-red-50 p-3 rounded-xl border border-red-100 mb-4">
-                            {item.nguyenNhanCam && item.nguyenNhanCam.length > 0 ? (
-                                <div className="space-y-1">
-                                    {(() => {
-                                        const lastReason = item.nguyenNhanCam[item.nguyenNhanCam.length - 1];
-                                        return (
-                                            <>
-                                                <div className="flex justify-between items-center">
-                                                     <span className="text-[9px] font-black text-red-800 uppercase">{lastReason.congty?.tenCongTy}</span>
-                                                     {lastReason.ngayNghiViec && <span className="text-[9px] font-bold text-red-400">{new Date(lastReason.ngayNghiViec).toLocaleDateString('vi-VN')}</span>}
-                                                </div>
-                                                <p className="text-xs font-medium text-red-600">{lastReason.nguyenNhan}</p>
-                                            </>
-                                        );
-                                    })()}
-                                </div>
-                            ) : (
-                                <span className="text-xs font-medium text-red-400 italic">Chưa ghi nhận lý do</span>
-                            )}
+                        <div className="mb-4">
+                            <ViolationHistory reasons={item.nguyenNhanCam} />
                         </div>
                         
                         <GlassButton 
