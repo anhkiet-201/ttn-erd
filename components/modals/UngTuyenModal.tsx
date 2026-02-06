@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { UngTuyen, NguoiLaoDong, TinTuyenDung, TrangThaiTuyen, GioiTinh, CongTy } from '@/types';
+import { UngTuyen, NguoiLaoDong, TinTuyenDung, TrangThaiTuyen, GioiTinh, CongTy, NguoiLaoDongBiCam } from '@/types';
 import { NguoiLaoDongRepository } from '@/repositories/nguoiLaoDong.repository';
 import { CongTyRepository } from '@/repositories/congTy.repository';
+import { NguoiLaoDongBiCamRepository } from '@/repositories/nguoiLaoDongBiCam.repository';
 
 // Helper function to parse CCCD and extract birth year and gender
 // Calculated based on standard formulated logic provided by user
@@ -58,6 +59,7 @@ interface UngTuyenModalProps {
 
 const workerRepo = new NguoiLaoDongRepository();
 const congTyRepo = new CongTyRepository();
+const bannedRepo = new NguoiLaoDongBiCamRepository();
 
 import GlassModal from '../glass/GlassModal';
 import GlassButton from '../glass/GlassButton';
@@ -67,6 +69,8 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
   const [companies, setCompanies] = useState<CongTy[]>([]);
   const [existingWorker, setExistingWorker] = useState<NguoiLaoDong | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [bannedInfo, setBannedInfo] = useState<NguoiLaoDongBiCam | null>(null);
+  const [isCheckingCCCD, setIsCheckingCCCD] = useState(false);
   
   const { register, handleSubmit, reset, watch, setValue, formState: { errors, isSubmitting } } = useForm<UngTuyenFormValues>({
     resolver: zodResolver(ungTuyenSchema),
@@ -83,10 +87,36 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
     },
   });
 
+  const cccdValue = watch('cccd');
+
+  // Debounced CCCD check for banned list
+  useEffect(() => {
+    if (cccdValue && cccdValue.length > 9) { 
+      const timeoutId = setTimeout(async () => {
+        setIsCheckingCCCD(true);
+        setBannedInfo(null);
+        try {
+          const found = await bannedRepo.findByCCCD(cccdValue);
+          if (found) {
+             setBannedInfo(found);
+          }
+        } catch (error) {
+           console.error('Error checking banned CCCD', error);
+        } finally {
+            setIsCheckingCCCD(false);
+        }
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    } else {
+        setBannedInfo(null);
+    }
+  }, [cccdValue]);
+
   // Track modal opening to reset initialization state
   useEffect(() => {
     if (isOpen) {
       setIsInitialized(false);
+      setBannedInfo(null);
     }
   }, [isOpen, initialData?.id]);
 
@@ -276,20 +306,44 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
           </div>
         )}
 
-        <div className="space-y-4 p-5 bg-gray-50/50 rounded-[28px] border border-gray-100/50">
-          <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Hồ sơ người lao động</div>
+        <div className={`space-y-4 p-5 rounded-[28px] border transition-colors ${bannedInfo ? 'bg-red-50 border-red-200' : 'bg-gray-50/50 border-gray-100/50'}`}>
+          <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 flex justify-between items-center">
+             <span>Hồ sơ người lao động</span>
+             {isCheckingCCCD && <div className="w-3 h-3 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />}
+          </div>
+          
           <div className="space-y-3">
-            <div>
+            <div className="relative">
               <input
                 {...register('cccd')}
                 onChange={handleCCCDChange}
                 placeholder="Số CCCD (12 số)"
                 maxLength={12}
-                className={`w-full px-4 py-3 bg-white border rounded-xl text-sm font-mono font-bold outline-none focus:ring-2 focus:ring-blue-100 ${errors.cccd ? 'border-red-300' : 'border-gray-100'}`}
+                className={`w-full px-4 py-3 bg-white border rounded-xl text-sm font-mono font-bold outline-none focus:ring-2 focus:ring-blue-100 ${errors.cccd ? 'border-red-300' : 'border-gray-100'} ${bannedInfo ? '!border-red-500 text-red-700' : ''}`}
               />
               {errors.cccd && <p className="mt-1 text-[10px] text-red-500 font-black ml-1 uppercase">{errors.cccd.message}</p>}
-              {existingWorker && <p className="mt-1 text-[10px] text-emerald-600 font-black ml-1 uppercase">✓ Đã tìm thấy hồ sơ hệ thống</p>}
+              {existingWorker && !bannedInfo && <p className="mt-1 text-[10px] text-emerald-600 font-black ml-1 uppercase">✓ Đã tìm thấy hồ sơ hệ thống</p>}
             </div>
+
+            {bannedInfo && (
+                <div className="p-3 bg-white/80 border border-red-100 rounded-xl animate-fadeIn shadow-sm">
+                    <div className="flex items-center gap-2 mb-2 text-red-600">
+                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                        <span className="text-[10px] font-black uppercase tracking-wide">Cảnh báo: Hồ sơ vi phạm</span>
+                    </div>
+                    <div className="space-y-1.5 max-h-32 overflow-y-auto custom-scrollbar">
+                        {bannedInfo.nguyenNhanCam?.map((reason, idx) => (
+                            <div key={idx} className="bg-red-50 p-2 rounded-lg text-xs border border-red-100/50">
+                                 <div className="flex justify-between font-bold text-gray-500 text-[9px] mb-0.5 uppercase">
+                                    <span className="truncate max-w-[120px]">{reason.congty?.tenCongTy}</span>
+                                    {reason.ngayNghiViec && <span>{new Date(reason.ngayNghiViec).toLocaleDateString('vi-VN')}</span>}
+                                 </div>
+                                 <div className="text-red-700 font-medium leading-tight">{reason.nguyenNhan}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
             
             <div>
               <input
@@ -300,6 +354,7 @@ const UngTuyenModal: React.FC<UngTuyenModalProps> = ({ isOpen, onClose, onSave, 
               {errors.tenNguoiLaoDong && <p className="mt-1 text-[10px] text-red-500 font-black ml-1 uppercase">{errors.tenNguoiLaoDong.message}</p>}
             </div>
             
+
             <div>
               <input
                 {...register('soDienThoai')}
