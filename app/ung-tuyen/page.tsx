@@ -207,6 +207,24 @@ export default function UngTuyenPage() {
     }
   }, [searchQuery, filterGioiTinh, filterCongTyId, filterTrangThai, filteredData.length, hasMore, loadingMore, loading, loadMore]);
 
+  // Helper: Get display status (UI only, doesn't update database)
+  const getDisplayStatus = (item: UngTuyenWithDetails): TrangThaiTuyen => {
+    if (!item.ngayPhongVan) return item.trangThaiTuyen;
+    
+    const interviewDate = new Date(item.ngayPhongVan);
+    interviewDate.setHours(0, 0, 0, 0);
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // If interview is today and status is CHO_PHONG_VAN, display as TOI_LICH_PHONG_VAN
+    if (interviewDate.getTime() === today.getTime() && item.trangThaiTuyen === TrangThaiTuyen.CHO_PHONG_VAN) {
+      return TrangThaiTuyen.TOI_LICH_PHONG_VAN;
+    }
+    
+    return item.trangThaiTuyen;
+  };
+
   const handleSave = async (values: Omit<UngTuyen, 'id'>, id?: string) => {
     const targetId = id || editingItem?.id;
     try {
@@ -323,7 +341,12 @@ export default function UngTuyenPage() {
   };
 
   const getRowHighlightClass = (dateStr?: string | null, status?: TrangThaiTuyen) => {
-    if (!dateStr || status !== TrangThaiTuyen.CHO_PHONG_VAN) return 'hover:bg-gray-50/50';
+    if (!dateStr) return 'hover:bg-gray-50/50';
+    
+    // Only highlight for pending or arrived interview statuses
+    if (status !== TrangThaiTuyen.CHO_PHONG_VAN && status !== TrangThaiTuyen.TOI_LICH_PHONG_VAN) {
+      return 'hover:bg-gray-50/50';
+    }
     
     const date = new Date(dateStr);
     if (isToday(date)) return 'bg-amber-50/60 hover:bg-amber-100/70 shadow-[inset_4px_0_0_0_#f59e0b]';
@@ -468,7 +491,7 @@ export default function UngTuyenPage() {
                           <select
                             value={item.trangThaiTuyen}
                             onChange={(e) => handleQuickStatusUpdate(item.id, e.target.value)}
-                            className={`text-[10px] font-black uppercase pl-3 pr-8 py-2 rounded-xl border-0 ring-1 ring-inset transition-all cursor-pointer appearance-none ${getStatusConfig(item.trangThaiTuyen).color}`}
+                            className={`text-[10px] font-black uppercase pl-3 pr-8 py-2 rounded-xl border-0 ring-1 ring-inset transition-all cursor-pointer appearance-none ${getStatusConfig(getDisplayStatus(item)).color}`}
                           >
                             {Object.entries(TrangThaiTuyen).map(([key, value]) => (
                                 <option key={key} value={value} className="bg-white text-gray-800 font-bold">{getStatusConfig(value).label}</option>
@@ -598,8 +621,8 @@ export default function UngTuyenPage() {
                       </div>
                     </div>
                   </div>
-                  <div className={`px-2.5 py-1 rounded-lg text-[9px] font-black tracking-widest shadow-sm whitespace-nowrap ${getStatusConfig(item.trangThaiTuyen).color}`}>
-                    {getStatusConfig(item.trangThaiTuyen).label.toUpperCase()}
+                  <div className={`px-2.5 py-1 rounded-lg text-[9px] font-black tracking-widest shadow-sm whitespace-nowrap ${getStatusConfig(getDisplayStatus(item)).color}`}>
+                    {getStatusConfig(getDisplayStatus(item)).label.toUpperCase()}
                   </div>
                 </div>
 
@@ -641,16 +664,18 @@ export default function UngTuyenPage() {
                 </div>
 
                 <div className="flex gap-2.5">
-                  <a 
-                    href={`tel:${item.nguoiLaoDong.soDienThoai}`}
-                    className="flex-1 inline-flex items-center justify-center gap-2 bg-emerald-600 text-white h-11 rounded-xl font-black shadow-lg shadow-emerald-200 active:scale-95 transition-all text-[10px]"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                    GỌI
-                  </a>
+                  {item.nguoiLaoDong.soDienThoai && (
+                    <a 
+                      href={`tel:${item.nguoiLaoDong.soDienThoai}`}
+                      className="flex-1 inline-flex items-center justify-center gap-2 bg-emerald-600 text-white h-11 rounded-xl font-black shadow-lg shadow-emerald-200 active:scale-95 transition-all text-[10px]"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                      GỌI
+                    </a>
+                  )}
                   <GlassButton 
                     variant="secondary" 
-                    className="h-11 !rounded-xl flex-1 !text-[10px]" 
+                    className={`h-11 !rounded-xl !text-[10px] ${item.nguoiLaoDong.soDienThoai ? 'flex-1' : 'w-full'}`}
                     onClick={() => handleEdit(item)}
                     icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>}
                   >
