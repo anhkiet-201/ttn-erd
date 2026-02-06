@@ -598,7 +598,7 @@ export default function UngTuyenPage() {
                       </div>
                     </div>
                   </div>
-                  <div className={`px-2.5 py-1 rounded-lg border text-[9px] font-black tracking-widest ${getStatusConfig(item.trangThaiTuyen).label.toUpperCase()} shadow-sm whitespace-nowrap`}>
+                  <div className={`px-2.5 py-1 rounded-lg text-[9px] font-black tracking-widest shadow-sm whitespace-nowrap ${getStatusConfig(item.trangThaiTuyen).color}`}>
                     {getStatusConfig(item.trangThaiTuyen).label.toUpperCase()}
                   </div>
                 </div>
