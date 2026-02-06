@@ -612,7 +612,7 @@ export default function UngTuyenPage() {
                       {item.nguoiLaoDong.tenNguoiLaoDong[0].toUpperCase()}
                     </div>
                     <div>
-                      <h3 className="font-black text-gray-900 text-base tracking-tight mb-0.5 uppercase line-clamp-1">{item.nguoiLaoDong.tenNguoiLaoDong}</h3>
+                      <h3 className="font-black text-gray-900 text-sm tracking-tight mb-0.5 uppercase leading-tight">{item.nguoiLaoDong.tenNguoiLaoDong}</h3>
                       <div className="flex items-center gap-2">
                         <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-md border ${item.nguoiLaoDong.gioiTinh === GioiTinh.NAM ? 'bg-blue-50 text-blue-600 border-blue-100' : 'bg-pink-50 text-pink-600 border-pink-100'}`}>
                           {item.nguoiLaoDong.gioiTinh === GioiTinh.NAM ? 'NAM' : 'NỮ'}
