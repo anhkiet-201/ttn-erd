@@ -155,6 +155,12 @@ firebase-realtime-db/
         ├── nguoiLaoDongId (foreign key)
         ├── tinTuyenDungId (foreign key)
         └── ...
+├── nguoiLaoDongBiCam/
+│   └── {id}/
+│       ├── cccd (indexed)
+│       ├── tenNguoiLaoDong
+│       ├── nguyenNhanCam[]
+│       └── timestamps
 ```
 
 ### Security Rules

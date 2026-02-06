@@ -12,11 +12,12 @@ Hệ thống ERD (Employee Recruitment Database) cho phép quản lý thông tin
 - ⚡ **Real-time updates** - thay đổi từ máy A hiển thị ngay trên máy B
 - 🔒 **Edit Locking** - chỉ 1 người chỉnh sửa tại một thời điểm
 - 🔐 **Firebase Google Login** - whitelist only, không cho đăng ký công khai
+- 🚫 **Blacklist Warning** - cảnh báo khi tuyển dụng nhân sự bị cấm
 - 📱 **Responsive Design** - hỗ trợ mobile, tablet, desktop
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** Next.js 15 (App Router)
+- **Frontend:** Next.js 16 (App Router)
 - **Backend:** Firebase Realtime Database + Next.js API Routes
 - **Authentication:** Firebase Auth (Google Provider)
 - **UI:** TailwindCSS + Framer Motion + Radix UI
@@ -75,15 +76,12 @@ FIREBASE_ADMIN_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE K
 2. Click **Create Database**
 3. Chọn region gần nhất (ví dụ: Singapore)
 
-#### d. Update Security Rules
+#### d. Update Security Rules & Indexes
 
-```json
-{
-  "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
-  }
-}
+Sử dụng file `database.rules.json` trong source code để cập nhật Rules và Index cho database.
+
+```bash
+firebase deploy --only database
 ```
 
 ### 4. Chạy Development Server
