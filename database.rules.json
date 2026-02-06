@@ -25,6 +25,9 @@
     },
     "quanLy": {
       ".indexOn": ["soDienThoai", "tenQuanLy"]
+    },
+    "nguoiLaoDongBiCam": {
+      ".indexOn": ["updatedAt"]
     }
   }
 }

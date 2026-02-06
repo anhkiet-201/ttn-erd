@@ -111,6 +111,16 @@ export interface UngTuyenWithDetails extends Omit<UngTuyen, 'nguoiLaoDongId' | '
   congTy: CongTy;
 }
 
+export interface NguyenNhanCam {
+  congty: CongTy;
+  nguyenNhan: string;
+}
+
+export interface NguoiLaoDongBiCam extends NguoiLaoDong {
+  nguyenNhanCam: NguyenNhanCam[];
+  ngayNghiViec?: number;
+}
+
 // Lock interface for edit locking
 export interface Lock {
   userId: string;
